@@ -8,6 +8,7 @@ final = {}
 
 combination = {0:[0,0,0,0,0], 100:[0,0,0,0,0]}
 
+
 def cost(n, d1, d2, d3, d4, d5):
     # n: the minimum number of coins to represents the price  
     # d1 - d5: the denomination
@@ -91,7 +92,7 @@ def cost(n, d1, d2, d3, d4, d5):
     print "previous is ", previous
     print "denom is", denom
     """
-    return costMap[n]
+    # return costMap[n]
 
 def cost1(n, d1, d2, d3, d4, d5):
     # initial value of min cost should have been calculated
@@ -180,26 +181,7 @@ def cost1(n, d1, d2, d3, d4, d5):
     print "previous is ", previous
     print "denom is", denom
     """
-    return costMap[n]
-
-#test function cost
-def test1():
-    start = time.time()
-    for i in range(1,100):
-        cost(i, 1, 2, 15, 25, 50)
-
-    for i in range(1,100):
-        cost1(100-i, 1, 2, 15, 25, 50)
-        
-    elapsed = time.time() - start 
-
-    for n in range(1,100):
-        print "---"
-        print "for price n", n, "cost is", costMap[n]
-        print "combination is", combination[n]
-        print ""
-
-    print "time", elapsed
+    # return costMap[n]
 
 def getScore(d1, d2, d3, d4, d5, N):
     # init variable costMap, final, combination
@@ -279,10 +261,32 @@ def cal(N):
     for i in range(0,101):
         print "price",i,"combination",minCombi[i]
 
-
+########################################################
+# TEST   
+########################################################
 def pureTest():
     for d1 in range(1, 50):
         for d2 in range(d1+1, 50):
             for d3 in range(d2+1, 50):
                 for d4 in range(d3+1, 50):
                     print d1, d2, d3, d4
+
+
+#test function cost
+def test1():
+    start = time.time()
+    for i in range(1,100):
+        cost(i, 1, 2, 15, 25, 50)
+
+    for i in range(1,100):
+        cost1(100-i, 1, 2, 15, 25, 50)
+        
+    elapsed = time.time() - start 
+
+    for n in range(1,100):
+        print "---"
+        print "for price n", n, "cost is", costMap[n]
+        print "combination is", combination[n]
+        print ""
+
+    print "time", elapsed
