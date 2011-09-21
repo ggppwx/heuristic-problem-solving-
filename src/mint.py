@@ -1,4 +1,5 @@
 import time
+import sys
 
 costMap = {}
 costMap[0] = 0
@@ -9,17 +10,17 @@ final = {}
 combination = {0:[0,0,0,0,0], 100:[0,0,0,0,0]}
 
 def cost(d1, d2, d3, d4, d5):
-    # n: the minimum number of coins to represents the price  
     # d1 - d5: the denomination
-    
     costMap[1] = 1
     combination[1] = [1,0,0,0,0]
     for price in range(2,100+d5):
         minCost = 100
         denom = 0
+        
         previous = -1
         if price == 100:
             continue
+
         if price >= d1:
             temp = costMap[price - d1]
             if price == d1:
@@ -63,6 +64,7 @@ def cost(d1, d2, d3, d4, d5):
                 minCost = temp
                 denom = 4
                 previous = price - d4
+
         if price >= d5:
             temp = costMap[price - d5]
             if price == d5:
@@ -74,17 +76,16 @@ def cost(d1, d2, d3, d4, d5):
                 denom = 5
                 previous = price - d5
                 
-        #print "price",price,"previous", previous, "denom", denom
-        #print combination[previous]
-        costMap[price] = minCost + 1
-        combination[price] = list(combination[previous])
-        combination[price][denom - 1] = combination[price][denom - 1] + 1
-        
+        if denom > 0:
+            costMap[price] = minCost + 1
+            combination[price] = list(combination[previous])
+            combination[price][denom - 1] = combination[price][denom - 1] + 1
+        else:
+            # error
+            print "ERROR"
 
 def cost1(d1, d2, d3, d4, d5):
-    # initial value of min cost should have been calculated
-    
-
+    # initial value of min cost should have been calculated    
     for m in range(1,100):
         denom = 0
         previous = -1
@@ -95,29 +96,33 @@ def cost1(d1, d2, d3, d4, d5):
             minCost = temp
             denom = -1
             previous = price + d1
+
         temp = costMap[price + d2]
         if temp < minCost :
             minCost = temp
             denom = -2
             previous = price + d2
+
         temp = costMap[price + d3]
         if temp < minCost :
             minCost = temp
             denom = -3
             previous = price + d3
+
         temp = costMap[price + d4]
         if temp < minCost :
             minCost = temp
             denom = -4
             previous = price + d4
+
         temp = costMap[price + d5]
         if temp < minCost :
             minCost = temp
             denom = -5
             previous = price + d5
+
         costMap[price] = minCost + 1
-        if denom < 0 :
-            
+        if denom < 0 :            
             combination[price] = list(combination[previous])
             combination[price][0-denom-1] = combination[price][0-denom-1] - 1
         
@@ -188,8 +193,8 @@ def cal(N):
                             minScore = score 
                             minCombi = combi.copy()
                             denomination = [d1, d2, d3, d4, d5]
-                            print "for denomination: ",d1, d2, d3, d4, d5
-                            print minScore 
+                            # print "for denomination: ",d1, d2, d3, d4, d5
+                            # print minScore 
     
     # the optimal denomination
     elapsed = time.time() - start 
@@ -199,17 +204,16 @@ def cal(N):
     for i in range(0,101):
         print "price",i,"combination",minCombi[i]
 
+def main(N):
+    cal(N)
 
+if __name__ == "__main__":
+    main(int(sys.argv[1]))
+    
         
 ########################################
 ##    test
 ########################################
-def pureTest():
-    for d1 in range(1, 50):
-        for d2 in range(d1+1, 50):
-            for d3 in range(d2+1, 50):
-                for d4 in range(d3+1, 50):
-                    print d1, d2, d3, d4
 
 #test function cost
 def test1():
