@@ -10,6 +10,7 @@ travelling salesman  puzzles
 #include <set>
 #include <deque>
 #include <math.h>
+#include <assert.h>
 
 struct coor
 {
@@ -30,7 +31,7 @@ float calQue(const std::deque<int> &que)
 {
   // get the total cost in the queue
   float sum = 0;
-  for(int i=0;i!=que.size()-1;i++){
+  for(int i=0; i!=que.size()-1; ++i){
     sum += calCost(city[que[i]-1],city[que[i+1]-1]);
   }
   return sum;
@@ -49,11 +50,9 @@ void f(const std::deque<int> &que,const std::set<int> &s)
     c++; 
     std::cout << std::endl;
   }
-  
-
 
   // for i in set s
-  for(std::set<int>::iterator it = s.begin();it!=s.end();it++){
+  for(std::set<int>::iterator it = s.begin(); it!=s.end(); ++it){
     std::set<int> s_next = s;
     std::deque<int> q_next = que;
     s_next.erase(*it);
@@ -63,31 +62,89 @@ void f(const std::deque<int> &que,const std::set<int> &s)
 
 }
 
+float  findPath(int start, std::set<int> s, std::deque<int> &q )
+{
+  // init 
+  s.erase(start);
+  q.push_back(start);
+
+  int current = start ;
+  float sum = 0.0;
+  while(!s.empty()){ // s is not empty  
+    float minCost = 10000000;
+    int nextCity = -1; 
+    // for item in set s, calculate the cost 
+    for (std::set<int>::iterator it = s.begin() ; it != s.end(); ++it){ // get the point with minimum cost 
+      // for it in set 
+      float temp = calCost(city[current-1], city[*it -1]);
+      if (temp < minCost) {
+	  minCost = temp;
+	  nextCity = *it;
+	}
+    } 
+    
+    assert(nextCity != -1);
+    // nextCity is the city choosed 
+    // push nextCity into a queue
+    q.push_back(nextCity);
+    current = nextCity; 
+    // pop nextCity out of the set 
+    s.erase(nextCity);
+    sum +=  minCost; 
+    std::cout << minCost << std::endl;
+  }
+  return sum;  
+  
+}
+
+
+
+
 int main(int argc, char* argv[])
 {
   // input is the path of a file.
-  
-  /*
   std::string path = argv[1];
   std::fstream myfile;
   int index; 
-  std::vector<coor> city; // city starts from 0 -??
+  
+  std::set<int> s;
+
   myfile.open(path.c_str());
-  while(!myfile.eof()){
-    coor item;
-    myfile >> index >> item.x >> item.y >> item.z;
+  coor item;
+  while(myfile >> index >> item.x >> item.y >> item.z){
     city.push_back(item);
+    s.insert(index);
   }
   myfile.close();
-  */
+  std::cout << "cities size " << city.size() << s.size()<< std::endl;
+
   //calculate.
+
+  std::deque<int> que; 
+  float weight = findPath(1,s,que);
+  
+  std::cout << "cost is: "<< weight << std::endl;
+  for(int i = 0 ; i != que.size(); ++i){
+    std::cout << que[i] << "-" ;
+  }
+  
+  int p = que.back(); // 
+  que.clear();
+  weight = findPath(p,s,que);
+
+  std::cout << "cost is: "<< weight << std::endl;  
+  for(int i = 0 ; i != que.size(); ++i){
+    std::cout << que[i] << "-" ;
+  }
+  std::cout << std::endl;
+  /*
   std::deque<int> q(1,1);
   int myset[] = {2,3,4,5,6,7,8};
   std::set<int> s(myset,myset+7);
   f(q, s);
   std::cout << c <<std::endl;
-
-
+  */
+  
 
   return 0;
 }
