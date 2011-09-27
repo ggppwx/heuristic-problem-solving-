@@ -24,7 +24,6 @@ struct coor
 
 float cityCost[1001][1001];
 
-
 std::vector<coor> city;
 
 float calCost(const coor &a, const coor &b)
@@ -100,7 +99,7 @@ std::vector<int> generateNewPath(std::vector<int> que);
 void proceed(std::vector<int> que)
 {
   // init a que 
-  const double tempRatio = 0.9999;  // !!key variable 
+  const double tempRatio = 0.99995;  // !!key variable 
   const double hightemperature = 100;  // !!key variable 
   
 
@@ -115,58 +114,56 @@ void proceed(std::vector<int> que)
   bool done =false;
   double temperature = hightemperature;
   while(temperature > 0.00001){  
-    
     while(true){
       ite ++;
       if(ite > 10000000){
 	done =true;
 	break;
       }
-    new_q = generateNewPath(que);
-    new_w = calQue(new_q);
-    //std::cout << new_w<<"-- "<<w<<std::endl;
-    if(temp_w > new_w){
-      temp_w = new_w;
-      temp_q = new_q;
-      std::cout << "------------------------"<<temp_w<<std::endl;
-    }
-
-
-    float delta = new_w - w;
-    if (delta < 0 ){
-      // replace
-      /*
+      new_q = generateNewPath(que);
+      new_w = calQue(new_q);
+      //std::cout << new_w<<"-- "<<w<<std::endl;
       if(temp_w > new_w){
-	std::cout << "------------------------"<<temp_w<<std::endl;
 	temp_w = new_w;
 	temp_q = new_q;
+	std::cout << "optimal weight: "<<temp_w<<std::endl;
       }
-      */
-      que = new_q;
-      w = new_w;
-      break;
-      //temp_w = w;
-      //temp_q = que;
-    }else{
-      
-      double rangen= rand()/double(RAND_MAX);
-      //std::cout <<delta<<" "<<exp((0-delta)/temperature)<<" "<<rangen << std::endl;
 
-      if(exp((0-delta)/temperature) > rangen){
+
+      float delta = new_w - w;
+      if (delta < 0 ){
 	// replace
+	/*
+	  if(temp_w > new_w){
+	  std::cout << "------------------------"<<temp_w<<std::endl;
+	  temp_w = new_w;
+	  temp_q = new_q;
+	  }
+	*/
 	que = new_q;
 	w = new_w;
 	break;
 	//temp_w = w;
 	//temp_q = que;
+      }else{
+	
+	double rangen= rand()/double(RAND_MAX);
+	//std::cout <<delta<<" "<<exp((0-delta)/temperature)<<" "<<rangen << std::endl;
+	
+	if(exp((0-delta)/temperature) > rangen){
+	  // replace
+	  que = new_q;
+	  w = new_w;
+	  break;
+
+	}	
+	// else do nothin
       }
       
-      // else do nothin
     }
-
-    }
-    if(done)
+    if(done){
       break;
+    }
     temperature *= tempRatio;  
 
   }
@@ -206,7 +203,7 @@ std::vector<int> initQue(const std::set<int> &s)
 
   while (true){ //
     ite++;
-    if(ite > 100){
+    if(ite > 10){
       return minQue;
     }
  
@@ -256,7 +253,6 @@ std::vector<int> initQue(const std::set<int> &s)
 
 int main(int argc, char* argv[])
 {
-
   std::cout << "start" << std::endl;
   // input is the path of a file.
   srand( time(NULL) );
@@ -275,14 +271,12 @@ int main(int argc, char* argv[])
   myfile.close();
   std::cout << "cities size " << city.size() <<" "<< s.size()<< std::endl;
   
-  for(int i=1; i<1001; i++){
-    for(int j=1; j<1001; j++){
-  
+  for(int i=1; i<=city.size(); i++){
+    for(int j=i; j<=city.size(); j++){
       	calCost1(i,j);
-      
     }
   }
-
+  
   // first implement a greedy alg to generate a relatively optimal circle
   std::vector<int> re;
   re = initQue(s);
