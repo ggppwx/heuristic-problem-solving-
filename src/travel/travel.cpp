@@ -93,13 +93,13 @@ float  findPath(int start, std::set<int> s, std::vector<int> &q )
 
 
 
-std::vector<int> generateNewPath(std::vector<int> que);
+std::vector<int> generateNewPath(std::vector<int> que, double oldCost, double& newCost);
 
 
 void proceed(std::vector<int> que)
 {
   // init a que 
-  const double tempRatio = 0.99995;  // !!key variable 
+  const double tempRatio = 0.999999;  // !!key variable 
   const double hightemperature = 100;  // !!key variable 
   
 
@@ -113,15 +113,15 @@ void proceed(std::vector<int> que)
   double new_w;
   bool done =false;
   double temperature = hightemperature;
-  while(temperature > 0.00001){  
+  while(temperature > 0.0000){  
     while(true){
       ite ++;
-      if(ite > 10000000){
+      if(ite > 20000000){
 	done =true;
 	break;
       }
-      new_q = generateNewPath(que);
-      new_w = calQue(new_q);
+      new_q = generateNewPath(que,w,new_w);
+      //new_w = calQue(new_q);
       //std::cout << new_w<<"-- "<<w<<std::endl;
       if(temp_w > new_w){
 	temp_w = new_w;
@@ -178,15 +178,41 @@ void proceed(std::vector<int> que)
 }
 
 
-std::vector<int> generateNewPath(std::vector<int> que)
+std::vector<int> generateNewPath(std::vector<int> que,double const oldCost, double &newCost )
 {
   int size = que.size();
   int randomIndex = rand() % size ;  // que  from 0 to size-1  
   int randomIndex1 = rand() % size; 
+
+  // when u generate a new path, calculate the new sum 
+  
+  int indexA = (randomIndex-1+size)%size;
+  int indexB = (randomIndex+1)%size;
+  int indexC = (randomIndex1-1+size)%size;
+  int indexD = (randomIndex1+1)%size;
+
+  float deltaCost = 0 
+    -cityCost[que[indexA]][que[randomIndex]]
+    -cityCost[que[indexB]][que[randomIndex]]
+    -cityCost[que[indexC]][que[randomIndex1]]
+    -cityCost[que[indexD]][que[randomIndex1]];
+
+    int temp = que[randomIndex];
+    que[randomIndex] = que[randomIndex1];
+    que[randomIndex1] = temp;
+
+    deltaCost = deltaCost 
+      +cityCost[que[indexA]][que[randomIndex]]
+      +cityCost[que[indexB]][que[randomIndex]]
+      +cityCost[que[indexC]][que[randomIndex1]]
+      +cityCost[que[indexD]][que[randomIndex1]];
+
+    //std::cout << deltaCost;
+    newCost = oldCost + deltaCost;
+    
+    //std::cout <<oldCost<<"--"<< newCost<<std::endl;
   // change swap randomIndex and ramdomIndex + 1
-  int temp = que[randomIndex];
-  que[randomIndex] = que[randomIndex1];
-  que[randomIndex1] = temp;
+
   return que;
 }
 
