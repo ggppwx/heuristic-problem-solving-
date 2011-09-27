@@ -35,14 +35,11 @@ float calCost(const coor &a, const coor &b)
 
 float calCost1(int index1, int index2)
 {
-  
-  if(cityCost[index1][index2] >= 0){
-    return cityCost[index1][index2];
-  }else{
-    cityCost[index1][index2] = calCost(city[index1-1], city[index2 - 1]);
-    cityCost[index2][index1] = cityCost[index1][index2];
-    return cityCost[index1][index2];
-  }
+  // get cost between two cities, which are indicated by index(starts from 1)
+  cityCost[index1][index2] = calCost(city[index1-1], city[index2 - 1]);
+  //    std::cout << cityCost[index1][index2];
+  cityCost[index2][index1] = cityCost[index1][index2];
+  return cityCost[index1][index2];
 }
 
 float calQue(const std::vector<int> &que)
@@ -51,37 +48,15 @@ float calQue(const std::vector<int> &que)
   float sum = 0;
   for(int i=0; i!=que.size()-1; ++i){
     // sum += calCost(city[que[i]-1],city[que[i+1]-1]);
-    sum += calCost1(que[i],que[i+1]);
+    //sum += calCost1(que[i],que[i+1]);
+    sum += cityCost[que[i]][que[i+1]];
   }
   //sum += calCost(city[que[0]-1],city[que[que.size()-1] - 1]);
-  sum += calCost1(que[0],que[que.size()-1] );
+  //  sum += calCost1(que[0],que[que.size()-1] );
+  sum += cityCost[que[0]][que[que.size()-1]];
   return sum;
 }
 
-
-int c=0;
-
-void f(const std::deque<int> &que,const std::set<int> &s)
-{
-  if (s.empty()){
-    for(int i=0;i!=que.size();i++){
-      std::cout << que[i]<<" ";
-      
-    }
-    c++; 
-    std::cout << std::endl;
-  }
-
-  // for i in set s
-  for(std::set<int>::iterator it = s.begin(); it!=s.end(); ++it){
-    std::set<int> s_next = s;
-    std::deque<int> q_next = que;
-    s_next.erase(*it);
-    q_next.push_back(*it);
-    f(q_next,s_next);
-  }
-
-}
 
 float  findPath(int start, std::set<int> s, std::vector<int> &q )
 {
@@ -112,56 +87,87 @@ float  findPath(int start, std::set<int> s, std::vector<int> &q )
     // pop nextCity out of the set 
     s.erase(nextCity);
     sum +=  minCost; 
-    std::cout << minCost << std::endl;
+    //std::cout << minCost << std::endl;
   }
   return sum;  
 }
 
 
-std::vector<int> test1(std::set<int> s);
+
 std::vector<int> generateNewPath(std::vector<int> que);
+
 
 void proceed(std::vector<int> que)
 {
   // init a que 
+  const double tempRatio = 0.9999;  // !!key variable 
+  const double hightemperature = 100;  // !!key variable 
+  
+
   std::vector<int> temp_q;
   double w = calQue(que);
-  double temperature = 10000.0;
+     
   double temp_w = w;
   int ite = 0;
-  while(temperature > 0.00001){
-    ite++;
-    std::vector<int> new_q;
+  
+  std::vector<int> new_q;
+  double new_w;
+  bool done =false;
+  double temperature = hightemperature;
+  while(temperature > 0.00001){  
+    
+    while(true){
+      ite ++;
+      if(ite > 10000000){
+	done =true;
+	break;
+      }
     new_q = generateNewPath(que);
-    double new_w = calQue(new_q);
+    new_w = calQue(new_q);
     //std::cout << new_w<<"-- "<<w<<std::endl;
+    if(temp_w > new_w){
+      temp_w = new_w;
+      temp_q = new_q;
+      std::cout << "------------------------"<<temp_w<<std::endl;
+    }
+
 
     float delta = new_w - w;
     if (delta < 0 ){
-      // replace 
+      // replace
+      /*
       if(temp_w > new_w){
-	//std::cout << "------------------------"<<temp_w<<std::endl;
+	std::cout << "------------------------"<<temp_w<<std::endl;
 	temp_w = new_w;
 	temp_q = new_q;
       }
+      */
       que = new_q;
       w = new_w;
+      break;
       //temp_w = w;
       //temp_q = que;
     }else{
+      
       double rangen= rand()/double(RAND_MAX);
       //std::cout <<delta<<" "<<exp((0-delta)/temperature)<<" "<<rangen << std::endl;
-      
+
       if(exp((0-delta)/temperature) > rangen){
 	// replace
 	que = new_q;
 	w = new_w;
+	break;
 	//temp_w = w;
 	//temp_q = que;
       }
+      
       // else do nothin
     }
-    temperature *= 0.99999;
+
+    }
+    if(done)
+      break;
+    temperature *= tempRatio;  
 
   }
 
@@ -188,15 +194,66 @@ std::vector<int> generateNewPath(std::vector<int> que)
 }
 
 
+
+std::vector<int> initQue(const std::set<int> &s)
+{
+  int start = 1;  // start point is 1 
+  std::vector<float> st;
+  float minWeight = 100000000; 
+  std::vector<int> minQue;
+
+  int ite = 0;   // !!! determin the max number of interation.
+
+  while (true){ //
+    ite++;
+    if(ite > 100){
+      return minQue;
+    }
+ 
+    std::vector<int> que; 
+    float weight = findPath(start, s, que); 
+    /*
+    for(int i = 0 ; i != que.size(); ++i){
+      std::cout << que[i] << "-" ;
+    }
+    std::cout << std::endl;
+    */
+    int end = que.back(); // end point  
+    weight += calCost(city[end-1], city[start-1]);
+    // std::cout << "cost is: "<< weight << std::endl;
+    if(weight < minWeight){
+      minQue = que;
+    }
+
+    que.clear();
+    weight = findPath(end,s,que);
+    /*
+    for(int i = 0 ; i != que.size(); ++i){
+      std::cout << que[i] << "-" ;
+    }
+    std::cout << std::endl;
+    */
+    int p = que.back();
+    weight += calCost(city[end-1],city[p-1]);
+    // std::cout << "cost is: "<< weight << std::endl;
+    if (weight < minWeight){
+      minQue = que;
+    }
+
+    if (start == p ) { // end the loop 
+      return minQue;
+    }else{
+      start = p; 
+    }  
+  }
+  
+}
+
+
 int main(int argc, char* argv[])
 {
 
-  for(int i=0; i<1001; i++){
-    for(int j=0; j<1001; j++){
-      cityCost[i][j] = -1.0;
-    }
-  }
-
+  std::cout << "start" << std::endl;
   // input is the path of a file.
   srand( time(NULL) );
   std::string path = argv[1];
@@ -213,16 +270,24 @@ int main(int argc, char* argv[])
   }
   myfile.close();
   std::cout << "cities size " << city.size() << s.size()<< std::endl;
+  
+  for(int i=1; i<1001; i++){
+    for(int j=1; j<1001; j++){
+  
+      	calCost1(i,j);
+      
+    }
+  }
 
   //calculate.
   std::vector<int> re(1000);
-  //re = test1(s);
-   std::cout << "init cost: "<<  calQue(re)<< std::endl;
+  re = initQue(s);
+  std::cout << "init cost: "<<  calQue(re)<< std::endl;
    for(int i=0;i < re.size(); ++i){
-     re[i] = i+1;
+     //      re[i] = i+1;
      std::cout << re[i] << ">";
    }
-   std::cout << std::endl;
+   std::cout << "size "<< re.size()<<std::endl;
 
    /*
    re = generateNewPath(re);
@@ -231,53 +296,7 @@ int main(int argc, char* argv[])
    }
    std::cout << std::endl;
    */
-   proceed(re);
-
-
-  
+    proceed(re); 
 
   return 0;
-}
-
-std::vector<int> test1(std::set<int> s)
-{
-  int start = 1;  // start point is 1 
-  std::vector<float> st;
-  
-  while (true){ // 
-    std::vector<int> que; 
-    float weight = findPath(start, s, que); 
-    for(int i = 0 ; i != que.size(); ++i){
-      std::cout << que[i] << "-" ;
-    }
-    std::cout << std::endl;
-    int end = que.back(); // end point  
-    weight += calCost(city[end-1], city[start-1]);
-    // std::cout << "cost is: "<< weight << std::endl;
-    st.push_back(weight);
-
-    que.clear();
-    weight = findPath(end,s,que);
-    for(int i = 0 ; i != que.size(); ++i){
-      std::cout << que[i] << "-" ;
-    }
-    std::cout << std::endl;
-    int p = que.back();
-    weight += calCost(city[end-1],city[p-1]);
-    // std::cout << "cost is: "<< weight << std::endl;
-    st.push_back(weight);
-
-    if (start == p ) { // end the loop 
-      return que;
-      break;
-    }else{
-      start = p; 
-    }
-
-    
-  }
-  for(int i =0; i< st.size(); ++i){
-    std::cout << st[i] <<"  ";
-  }
-
 }
