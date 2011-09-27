@@ -96,7 +96,7 @@ float  findPath(int start, std::set<int> s, std::vector<int> &q )
 std::vector<int> generateNewPath(std::vector<int> que, double oldCost, double& newCost);
 
 
-void proceed(std::vector<int> que)
+std::vector<int> proceed(std::vector<int> que)
 {
   // init a que 
   const double tempRatio = 0.999999;  // !!key variable 
@@ -170,17 +170,18 @@ void proceed(std::vector<int> que)
 
   
   for(int i = 0; i< temp_q.size(); ++i){
-    std::cout <<temp_q[i]<<std::endl;
+    std::cout <<temp_q[i]<<" ";
   }
   std::cout <<std::endl; 
   std::cout <<" the min cost: "<<temp_w <<" "<<temp_q.size()<< std::endl; 
-
+  return temp_q;
 }
 
 
 std::vector<int> generateNewPath(std::vector<int> que,double const oldCost, double &newCost )
 {
   int size = que.size();
+  
   int randomIndex = rand() % size ;  // que  from 0 to size-1  
   int randomIndex1 = rand() % size; 
 
@@ -314,7 +315,29 @@ int main(int argc, char* argv[])
    std::cout << "size "<< re.size()<<std::endl;
 
    // use annealing to refine the result. 
-   proceed(re); 
+   std::vector<int> result;
+   std::vector<int> temp;
+   std::vector<int> final;
+   result = proceed(re);
+
+   bool flag = false;
+   for(int i=0;i<result.size();++i){
+     if(result[i] != 1 && flag != true){
+       temp.push_back(result[i]);
+     }else{
+       flag = true;
+       final.push_back(result[i]);
+     }
+   }
+   for(int i = 0 ;i<temp.size();++i){
+     final.push_back(temp[i]);
+   }
+   for(int i=0;i< final.size();++i){
+     std::cout << final[i] << "-";
+   }
+   std::cout << std::endl;
+   std::cout << "size: "<< final.size()<<std::endl;
+   
 
    return 0;
 }
