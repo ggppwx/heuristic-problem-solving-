@@ -108,7 +108,7 @@ void proceed(std::vector<int> que)
   double w = calQue(que);
      
   double temp_w = w;
-  int ite = 0;
+  int ite = 0;  // !!key the max number of iteration
   
   std::vector<int> new_q;
   double new_w;
@@ -173,10 +173,10 @@ void proceed(std::vector<int> que)
 
   std::cout <<" the min cost: "<<temp_w <<" "<<temp_q.size()<< std::endl; 
   for(int i = 0; i< temp_q.size(); ++i){
-    std::cout << temp_q[i]<<"~";
+    std::cout << "city"<<i+1<<":"<<temp_q[i]<<"~~";
   }
   std::cout <<std::endl; 
-  std::cout << ite << std::endl;   
+  
 
 }
 
@@ -222,6 +222,8 @@ std::vector<int> initQue(const std::set<int> &s)
     weight += calCost(city[end-1], city[start-1]);
     // std::cout << "cost is: "<< weight << std::endl;
     if(weight < minWeight){
+      std::cout << "proceeding..."<< std::endl;
+      minWeight = weight;
       minQue = que;
     }
 
@@ -237,6 +239,8 @@ std::vector<int> initQue(const std::set<int> &s)
     weight += calCost(city[end-1],city[p-1]);
     // std::cout << "cost is: "<< weight << std::endl;
     if (weight < minWeight){
+      std::cout << "proceeding..."<< std::endl;      
+      minWeight = weight;
       minQue = que;
     }
 
@@ -269,7 +273,7 @@ int main(int argc, char* argv[])
     s.insert(index);
   }
   myfile.close();
-  std::cout << "cities size " << city.size() << s.size()<< std::endl;
+  std::cout << "cities size " << city.size() <<" "<< s.size()<< std::endl;
   
   for(int i=1; i<1001; i++){
     for(int j=1; j<1001; j++){
@@ -279,8 +283,8 @@ int main(int argc, char* argv[])
     }
   }
 
-  //calculate.
-  std::vector<int> re(1000);
+  // first implement a greedy alg to generate a relatively optimal circle
+  std::vector<int> re;
   re = initQue(s);
   std::cout << "init cost: "<<  calQue(re)<< std::endl;
    for(int i=0;i < re.size(); ++i){
@@ -289,14 +293,8 @@ int main(int argc, char* argv[])
    }
    std::cout << "size "<< re.size()<<std::endl;
 
-   /*
-   re = generateNewPath(re);
-   for(int i=0;i < re.size(); ++i){
-     std::cout << re[i] << ">";
-   }
-   std::cout << std::endl;
-   */
-    proceed(re); 
+   // use annealing to refine the result. 
+   proceed(re); 
 
-  return 0;
+   return 0;
 }
