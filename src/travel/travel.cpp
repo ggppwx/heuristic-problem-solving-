@@ -112,21 +112,26 @@ void proceed(std::vector<int> que)
   
   std::vector<int> temp_q;
   float w = calQue(que);
-  float temperature = 10000000;
+  float temperature = w;
   float temp_w = w;
 
-  while(temperature > 0.000001){
+  while(temperature > 0.00001){
     std::vector<int> new_q;
     new_q = generateNewPath(que);
     float new_w = calQue(new_q);
     std::cout << new_w<<std::endl;
+
     float delta = new_w - w;
     if (delta < 0 ){
       // replace 
+      if(temp_w > new_w){
+	std::cout << "------------------------"<<temp_w<<std::endl;
+	temp_w = new_w;
+	temp_q = new_q;
+      }
       que = new_q;
       w = new_w;
-
-      //      temp_w = w;
+      //temp_w = w;
       //temp_q = que;
     }else{
       float rangen= rand()/float(RAND_MAX);
@@ -134,8 +139,8 @@ void proceed(std::vector<int> que)
       
       if(exp((0-delta)/temperature) > rangen){
 	// replace
-	que = new_q;
-	w = new_w;
+	//que = new_q;
+	//w = new_w;
 	//temp_w = w;
 	//temp_q = que;
       }
@@ -144,8 +149,6 @@ void proceed(std::vector<int> que)
     temperature *= 0.9999;
 
   }
-  temp_w = w;
-  temp_q = que;
 
   std::cout <<" the min cost: "<<temp_w <<" "<<temp_q.size()<< std::endl; 
   for(int i = 0; i< temp_q.size(); ++i){
@@ -161,12 +164,11 @@ std::vector<int> generateNewPath(std::vector<int> que)
 {
   int size = que.size();
   int randomIndex = rand() % size ;  // que  from 0 to size-1  
-  
+  int randomIndex1 = rand() % size; 
   // change swap randomIndex and ramdomIndex + 1
   int temp = que[randomIndex];
-  que[randomIndex] = que[(randomIndex+1)% size];
-  que[(randomIndex+1)%size] = temp;
-
+  que[randomIndex] = que[randomIndex1];
+  que[randomIndex1] = temp;
   return que;
 }
 
