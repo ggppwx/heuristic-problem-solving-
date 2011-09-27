@@ -22,6 +22,8 @@ struct coor
 };
 
 
+float cityCost[1001][1001];
+
 
 std::vector<coor> city;
 
@@ -31,14 +33,28 @@ float calCost(const coor &a, const coor &b)
   return sqrt( pow(a.x - b.x, 2)+pow(a.y-b.y, 2)+pow(a.z-b.z,2) );
 }
 
+float calCost1(int index1, int index2)
+{
+  
+  if(cityCost[index1][index2] >= 0){
+    return cityCost[index1][index2];
+  }else{
+    cityCost[index1][index2] = calCost(city[index1-1], city[index2 - 1]);
+    cityCost[index2][index1] = cityCost[index1][index2];
+    return cityCost[index1][index2];
+  }
+}
+
 float calQue(const std::vector<int> &que)
 {
   // get the total cost in the queue
   float sum = 0;
   for(int i=0; i!=que.size()-1; ++i){
-    sum += calCost(city[que[i]-1],city[que[i+1]-1]);
+    // sum += calCost(city[que[i]-1],city[que[i+1]-1]);
+    sum += calCost1(que[i],que[i+1]);
   }
-  sum += calCost(city[que[0]-1],city[que[que.size()-1] - 1]);
+  //sum += calCost(city[que[0]-1],city[que[que.size()-1] - 1]);
+  sum += calCost1(que[0],que[que.size()-1] );
   return sum;
 }
 
@@ -107,25 +123,24 @@ std::vector<int> generateNewPath(std::vector<int> que);
 
 void proceed(std::vector<int> que)
 {
-
-  // init a que
-  
+  // init a que 
   std::vector<int> temp_q;
-  float w = calQue(que);
-  float temperature = w;
-  float temp_w = w;
-
+  double w = calQue(que);
+  double temperature = 10000.0;
+  double temp_w = w;
+  int ite = 0;
   while(temperature > 0.00001){
+    ite++;
     std::vector<int> new_q;
     new_q = generateNewPath(que);
-    float new_w = calQue(new_q);
-    std::cout << new_w<<std::endl;
+    double new_w = calQue(new_q);
+    //std::cout << new_w<<"-- "<<w<<std::endl;
 
     float delta = new_w - w;
     if (delta < 0 ){
       // replace 
       if(temp_w > new_w){
-	std::cout << "------------------------"<<temp_w<<std::endl;
+	//std::cout << "------------------------"<<temp_w<<std::endl;
 	temp_w = new_w;
 	temp_q = new_q;
       }
@@ -134,19 +149,19 @@ void proceed(std::vector<int> que)
       //temp_w = w;
       //temp_q = que;
     }else{
-      float rangen= rand()/float(RAND_MAX);
-      std::cout <<delta<<" "<<exp((0-delta)/temperature)<<" "<<rangen << std::endl;
+      double rangen= rand()/double(RAND_MAX);
+      //std::cout <<delta<<" "<<exp((0-delta)/temperature)<<" "<<rangen << std::endl;
       
       if(exp((0-delta)/temperature) > rangen){
 	// replace
-	//que = new_q;
-	//w = new_w;
+	que = new_q;
+	w = new_w;
 	//temp_w = w;
 	//temp_q = que;
       }
       // else do nothin
     }
-    temperature *= 0.9999;
+    temperature *= 0.99999;
 
   }
 
@@ -155,7 +170,7 @@ void proceed(std::vector<int> que)
     std::cout << temp_q[i]<<"~";
   }
   std::cout <<std::endl; 
-      
+  std::cout << ite << std::endl;   
 
 }
 
@@ -175,6 +190,13 @@ std::vector<int> generateNewPath(std::vector<int> que)
 
 int main(int argc, char* argv[])
 {
+
+  for(int i=0; i<1001; i++){
+    for(int j=0; j<1001; j++){
+      cityCost[i][j] = -1.0;
+    }
+  }
+
   // input is the path of a file.
   srand( time(NULL) );
   std::string path = argv[1];
@@ -193,10 +215,11 @@ int main(int argc, char* argv[])
   std::cout << "cities size " << city.size() << s.size()<< std::endl;
 
   //calculate.
-  std::vector<int> re;
-   re = test1(s);
+  std::vector<int> re(1000);
+  //re = test1(s);
    std::cout << "init cost: "<<  calQue(re)<< std::endl;
    for(int i=0;i < re.size(); ++i){
+     re[i] = i+1;
      std::cout << re[i] << ">";
    }
    std::cout << std::endl;
