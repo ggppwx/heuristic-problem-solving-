@@ -168,12 +168,12 @@ void proceed(std::vector<int> que)
 
   }
 
-  std::cout <<" the min cost: "<<temp_w <<" "<<temp_q.size()<< std::endl; 
+  
   for(int i = 0; i< temp_q.size(); ++i){
-    std::cout << "city"<<i+1<<":"<<temp_q[i]<<"~~";
+    std::cout <<temp_q[i]<<std::endl;
   }
   std::cout <<std::endl; 
-  
+  std::cout <<" the min cost: "<<temp_w <<" "<<temp_q.size()<< std::endl; 
 
 }
 
