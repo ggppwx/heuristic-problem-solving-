@@ -11,6 +11,8 @@ travelling salesman  puzzles
 #include <deque>
 #include <math.h>
 #include <assert.h>
+#include <time.h>
+#include <stdlib.h>
 
 struct coor
 {
@@ -18,6 +20,8 @@ struct coor
   float y;
   float z; 
 };
+
+
 
 std::vector<coor> city;
 
@@ -27,13 +31,14 @@ float calCost(const coor &a, const coor &b)
   return sqrt( pow(a.x - b.x, 2)+pow(a.y-b.y, 2)+pow(a.z-b.z,2) );
 }
 
-float calQue(const std::deque<int> &que)
+float calQue(const std::vector<int> &que)
 {
   // get the total cost in the queue
   float sum = 0;
   for(int i=0; i!=que.size()-1; ++i){
     sum += calCost(city[que[i]-1],city[que[i+1]-1]);
   }
+  sum += calCost(city[que[0]-1],city[que[que.size()-1] - 1]);
   return sum;
 }
 
@@ -62,7 +67,7 @@ void f(const std::deque<int> &que,const std::set<int> &s)
 
 }
 
-float  findPath(int start, std::set<int> s, std::deque<int> &q )
+float  findPath(int start, std::set<int> s, std::vector<int> &q )
 {
   // init 
   s.erase(start);
@@ -94,15 +99,82 @@ float  findPath(int start, std::set<int> s, std::deque<int> &q )
     std::cout << minCost << std::endl;
   }
   return sum;  
-  
 }
 
 
+std::vector<int> test1(std::set<int> s);
+std::vector<int> generateNewPath(std::vector<int> que);
+
+void proceed(std::vector<int> que)
+{
+
+  // init a que
+  
+  std::vector<int> temp_q;
+  float w = calQue(que);
+  float temperature = 10000000;
+  float temp_w = w;
+
+  while(temperature > 0.000001){
+    std::vector<int> new_q;
+    new_q = generateNewPath(que);
+    float new_w = calQue(new_q);
+    std::cout << new_w<<std::endl;
+    float delta = new_w - w;
+    if (delta < 0 ){
+      // replace 
+      que = new_q;
+      w = new_w;
+
+      //      temp_w = w;
+      //temp_q = que;
+    }else{
+      float rangen= rand()/float(RAND_MAX);
+      std::cout <<delta<<" "<<exp((0-delta)/temperature)<<" "<<rangen << std::endl;
+      
+      if(exp((0-delta)/temperature) > rangen){
+	// replace
+	que = new_q;
+	w = new_w;
+	//temp_w = w;
+	//temp_q = que;
+      }
+      // else do nothin
+    }
+    temperature *= 0.9999;
+
+  }
+  temp_w = w;
+  temp_q = que;
+
+  std::cout <<" the min cost: "<<temp_w <<" "<<temp_q.size()<< std::endl; 
+  for(int i = 0; i< temp_q.size(); ++i){
+    std::cout << temp_q[i]<<"~";
+  }
+  std::cout <<std::endl; 
+      
+
+}
+
+
+std::vector<int> generateNewPath(std::vector<int> que)
+{
+  int size = que.size();
+  int randomIndex = rand() % size ;  // que  from 0 to size-1  
+  
+  // change swap randomIndex and ramdomIndex + 1
+  int temp = que[randomIndex];
+  que[randomIndex] = que[(randomIndex+1)% size];
+  que[(randomIndex+1)%size] = temp;
+
+  return que;
+}
 
 
 int main(int argc, char* argv[])
 {
   // input is the path of a file.
+  srand( time(NULL) );
   std::string path = argv[1];
   std::fstream myfile;
   int index; 
@@ -119,32 +191,68 @@ int main(int argc, char* argv[])
   std::cout << "cities size " << city.size() << s.size()<< std::endl;
 
   //calculate.
+  std::vector<int> re;
+   re = test1(s);
+   std::cout << "init cost: "<<  calQue(re)<< std::endl;
+   for(int i=0;i < re.size(); ++i){
+     std::cout << re[i] << ">";
+   }
+   std::cout << std::endl;
 
-  std::deque<int> que; 
-  float weight = findPath(1,s,que);
-  
-  std::cout << "cost is: "<< weight << std::endl;
-  for(int i = 0 ; i != que.size(); ++i){
-    std::cout << que[i] << "-" ;
-  }
-  
-  int p = que.back(); // 
-  que.clear();
-  weight = findPath(p,s,que);
+   /*
+   re = generateNewPath(re);
+   for(int i=0;i < re.size(); ++i){
+     std::cout << re[i] << ">";
+   }
+   std::cout << std::endl;
+   */
+   proceed(re);
 
-  std::cout << "cost is: "<< weight << std::endl;  
-  for(int i = 0 ; i != que.size(); ++i){
-    std::cout << que[i] << "-" ;
-  }
-  std::cout << std::endl;
-  /*
-  std::deque<int> q(1,1);
-  int myset[] = {2,3,4,5,6,7,8};
-  std::set<int> s(myset,myset+7);
-  f(q, s);
-  std::cout << c <<std::endl;
-  */
+
   
 
   return 0;
+}
+
+std::vector<int> test1(std::set<int> s)
+{
+  int start = 1;  // start point is 1 
+  std::vector<float> st;
+  
+  while (true){ // 
+    std::vector<int> que; 
+    float weight = findPath(start, s, que); 
+    for(int i = 0 ; i != que.size(); ++i){
+      std::cout << que[i] << "-" ;
+    }
+    std::cout << std::endl;
+    int end = que.back(); // end point  
+    weight += calCost(city[end-1], city[start-1]);
+    // std::cout << "cost is: "<< weight << std::endl;
+    st.push_back(weight);
+
+    que.clear();
+    weight = findPath(end,s,que);
+    for(int i = 0 ; i != que.size(); ++i){
+      std::cout << que[i] << "-" ;
+    }
+    std::cout << std::endl;
+    int p = que.back();
+    weight += calCost(city[end-1],city[p-1]);
+    // std::cout << "cost is: "<< weight << std::endl;
+    st.push_back(weight);
+
+    if (start == p ) { // end the loop 
+      return que;
+      break;
+    }else{
+      start = p; 
+    }
+
+    
+  }
+  for(int i =0; i< st.size(); ++i){
+    std::cout << st[i] <<"  ";
+  }
+
 }
