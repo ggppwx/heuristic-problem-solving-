@@ -116,7 +116,7 @@ std::vector<int> proceed(std::vector<int> que)
   while(temperature > 0.0000){  
     while(true){
       ite ++;
-      if(ite > 20000000){
+      if(ite > 40000000){
 	done =true;
 	break;
       }
@@ -309,7 +309,7 @@ int main(int argc, char* argv[])
   re = initQue(s);
   std::cout << "init cost: "<<  calQue(re)<< std::endl;
    for(int i=0;i < re.size(); ++i){
-     //      re[i] = i+1;
+     //        re[i] = i+1;
      std::cout << re[i] << ">";
    }
    std::cout << "size "<< re.size()<<std::endl;

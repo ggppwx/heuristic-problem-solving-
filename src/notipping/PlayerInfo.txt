@@ -1,0 +1,43 @@
+# This file contains the port numbers of all the registered players of this game
+
+cjs285@nyu.edu = 9000
+cjs285 = 10000
+
+getzoyan@alum.mit.edu = 9001
+getzoyan = 10001
+
+jsh269@nyu.edu = 9002
+jsh269 = 10002
+
+kse213@nyu.edu = 9003
+kse213 = 10003
+
+ky304@nyu.edu = 9004
+ky304 = 10004
+
+mizhenb@ms.com = 9005
+mizhenb = 10005
+
+nishith@cs.nyu.edu = 9006
+nishith = 10006
+
+nyu@boriska.com = 9007
+nyu = 10007
+
+rgm5977@cs.nyu.edu = 9008
+rgm = 10008
+
+ssikorevich@hotmail.com = 9009
+ssikorevich = 10009
+
+zml200@nyu.edu = 9010
+zml200 = 10010
+
+jonathansharris@yahoo.com = 9011
+jonathansharris = 10011
+
+srl200@hotmail.com = 9012
+srl200 = 10012
+
+jg3057@nyu.edu = 9013
+jg3057 = 10012
