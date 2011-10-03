@@ -1,0 +1,10 @@
+# This file contains the port numbers of all the registered players of this game
+
+EdgarAndres = 10000
+AzamNaomi = 10001
+ZiyaoLin = 10002
+Mallikarjun = 10003
+RandKaushik = 10004
+
+
+
