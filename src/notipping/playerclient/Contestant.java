@@ -4,6 +4,9 @@ import java.util.*;
 
 class Contestant extends NoTippingPlayer {
 	private static BufferedReader br;
+	private String myColor;
+	
+	
 	private int Lsupport; 
 	private int Rsupport;
 	
@@ -11,6 +14,8 @@ class Contestant extends NoTippingPlayer {
 	private int[] Red;
 	private int[] Blue;
 	private int[] Green;
+	
+	private int[][] Block;
 	
 	private int[] optimalBlock;
 	private int[] optimalMove;  // best move 
@@ -42,10 +47,21 @@ class Contestant extends NoTippingPlayer {
 		for(int i=1;i<=10;++i){
 			Blue[i] = -100;
 		}
+		Block = new int[2][11];
+		for(int i = 0;i<2;++i){
+			for(int j=1;j<=10;++j){
+				Block[i][j] = -100;
+			}
+		}
+		
+		
+		
 		optimalBlock = new int[20];
 		optimalMove = new int[20];	
 		
 		optimalRemove = new int[20];
+		
+		
 
 		System.out.println(command);  // print the current state
 		parseState(command);
@@ -74,6 +90,7 @@ class Contestant extends NoTippingPlayer {
         String str;
         BufferedReader buffer_reader = new BufferedReader(new StringReader(command));
         String delims = "[ ]+";
+        boolean allEmpty = true;
         try{
         while((str = buffer_reader.readLine()) != null){
         	String[] tokens = str.split(delims);
@@ -88,15 +105,18 @@ class Contestant extends NoTippingPlayer {
         		int block = Integer.parseInt(tokens[3]);
            		if (color.equals("Red") && number == 1){
         			Red[block] = pos;
+        			Block[0][block] = pos;
         			Board[pos+15] = block;
         			Lsupport = Lsupport - block*(pos+3);
         			Rsupport = Rsupport - block*(pos+1);
-        			
+        			allEmpty = false;
         		}else if(color.equals("Blue") && number == 1){
         			Blue[block] = pos;
+        			Block[1][block] = pos; 
         			Board[pos+15] = block;
         			Lsupport = Lsupport - block*(pos+3);
         			Rsupport = Rsupport - block*(pos+1);
+        			allEmpty = false;
         		}else if(color.equals("Green") && number == 1 ){
         			// Green[block] = pos;
         			Board[pos+15] = block; 
@@ -105,7 +125,14 @@ class Contestant extends NoTippingPlayer {
         		}
 
         	}
+        	
         }
+        if(myColor==null && allEmpty){
+        	myColor = "red";  // i am red
+        }else if(myColor == null && !allEmpty){
+        	myColor = "blue";
+        }
+        
         }catch(IOException ev){
         	System.out.println("reading error");
         }
@@ -135,6 +162,16 @@ class Contestant extends NoTippingPlayer {
 		
 	}
 	
+	private boolean isInSet1(int weight, int i )
+	{
+		int[][] set1 = {{-12,-4},{-7,-3},{-6,-2},{-5,-2},{-4,-2},{-4,-2},{-4,-2},{-4,-2},{-3,-2},{-3,-2}};
+		if(i-15 >= set1[weight-1][0] && i-15 <= set1[weight-1][1]){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 	/**
 	 * get heristic score according to current state 
 	 * @return
@@ -149,16 +186,18 @@ class Contestant extends NoTippingPlayer {
 					// in the set1 
 					score --;
 				}
-				score ++; 
+				
 			}
 		}
 		//System.out.println(score);
 		return score;
 	}
 	
-	private int minMax(int weight, int pos, int step){  // starts from 0
+	private int minMax(int weight, int pos, int step, int color){  // starts from 0
 		//TBD
-		// I AM RED.    
+		// color:   0 for red   1 for blue 
+		// red[i] : Block[0][i]
+		// blue[i]: Block[1][i]
 		//minmax alg, N(weight,pos)
 		//calulate posible moves in current state
 		
@@ -176,36 +215,40 @@ class Contestant extends NoTippingPlayer {
 			return 0;  //tie
 		}
 		*/
-		if (step == 5){
+		if (step == 4){   // red 
 			// return a heuristic score 
 			// System.out.println("return heuristic score");
-			return heuristicScore();
+			if (color == 0){
+				return heuristicScore();
+			}else if(color == 1){
+				return -heuristicScore();
+			}
 		}
 		
-		
-		
-		if (step%2 == 0){
+		if (step%2 == 0){   // i move
 			// find successors
 			// current player himself moves
 			// max in minMax(w,p,1), w, p indicates possible move
 			// max{minMax(w,p,step+1) .... }
-			 
-			// if the red is used up 
-
-			
-			int maxScore = -1;
+			int maxScore = -10000;
 			for (int i=1;i<= 10;++i){ 
-				if(Red[i] == -100){ // this block has not been used
+				if(Block[color][i] == -100){ // this block has not been used
 					ArrayList<Integer> que = findStable(i);
+					if(color == 1){  //blue
+						Collections.reverse(que);
+					}
 					for (int move : que){ //posible move for block i 
 						// int move = que[j];
 						Board[move+15] = i;
-						Red[i] = move;
-						
-						int temp = minMax(i,move,step+1);
+						Block[color][i] = move;
+	        			Lsupport = Lsupport - i*(move+3);
+	        			Rsupport = Rsupport - i*(move+1);
+						int temp = minMax(i,move,step+1,color);
+	        			Lsupport = Lsupport + i*(move+3);
+	        			Rsupport = Rsupport + i*(move+1);
 						Board[move+15] = 0;
-						Red[i] = -100;
-						if(temp == 10){ // winning score
+						Block[color][i] = -100;
+						if(temp == 100){ // winning score
 							maxScore = temp;
 							optimalBlock[step] = i;
 							optimalMove[step] = move;
@@ -221,18 +264,18 @@ class Contestant extends NoTippingPlayer {
 				}
 			}
 			
-			if (maxScore == -1){ // cannot find an possible solution, reaching the leaf
+			if (maxScore == -10000){ // cannot find an possible solution, reaching the leaf
 				boolean red_used = true;
 				for(int i=1;i<=10;++i){
-					if(Red[i] == -100){  // some red not placed 
+					if(Block[color][i] == -100){  // some red not placed 
 						red_used = false;
 					}
 				}
 				if(red_used){
 					return 0;
 				}
-				System.out.println("reaching the leaf");
-				return -10;  //lose 
+				//System.out.println("reaching the leaf");
+				return -100;  //lose 
 			}
 			
 			//System.out.println(maxScore);
@@ -241,25 +284,28 @@ class Contestant extends NoTippingPlayer {
 		}
 		if (step%2 == 1){
 			// adversary moves 
-			// min in minMax()
-
-			
-			
-			
+			// min in minMax()			
 			int minScore = 10000;
 			for (int i=1;i<= 10;++i){
-				if(Blue[i] == -100){
+				if(Block[1-color][i] == -100){
 					ArrayList<Integer> que = findStable(i);
+					if(color == 0){
+						Collections.reverse(que);
+					}
 					for (int move : que){
 						// int move = que[j];
 						Board[move+15] = i;
-						Blue[i] = move;
-						int temp = minMax(i, move, step+1);
+						Block[1-color][i] = move;
+	        			Lsupport = Lsupport - i*(move+3);
+	        			Rsupport = Rsupport - i*(move+1);
+						int temp = minMax(i, move, step+1,color);
+	        			Lsupport = Lsupport + i*(move+3);
+	        			Rsupport = Rsupport + i*(move+1);
 						//trace back 
 						Board[move+15] = 0;
-						Blue[i] = -100;
+						Block[1-color][i] = -100;
 						
-						if(temp == -10){ // losing score
+						if(temp == -100){ // losing score
 							minScore = temp;
 							optimalBlock[step] = i;
 							optimalMove[step] = move;
@@ -279,7 +325,7 @@ class Contestant extends NoTippingPlayer {
 			if(minScore == 10000){ // adversary cannot find a solution, win 
 				boolean blue_used = true;
 				for(int i=1;i<=10;++i){
-					if(Blue[i] == -100){
+					if(Block[1-color][i] == -100){
 						blue_used = false;
 					}
 				}
@@ -287,7 +333,7 @@ class Contestant extends NoTippingPlayer {
 					return 0;
 				}
 				System.out.println("reaching leaf 2");
-				return 10;
+				return 100;
 			}
 			
 
@@ -298,18 +344,37 @@ class Contestant extends NoTippingPlayer {
 	}
 	
 	
-	private int removingMinMax(int pos, int step){
+	private int removingMinMax(int pos, int step,int color){
 		// check current state.
+		
+		if (step == 6){
+			// return a heuristic score 
+			// System.out.println("return heuristic score");
+			if(color == 0){
+				return heuristicScore();
+			}else{
+				return -heuristicScore();
+			}
+		}
+		
+		
 		if(step%2 == 0){ // i move 
-			int maxScore = -1;
+			int maxScore = -1000;
+			
+			if(color == 1){ //blue
 			for(int i=0;i<=30;++i){
 				if(Board[i] != 0){ 
 					if(isStable(i-15)){
+
 						int block = Board[i]; 
 						Board[i] = 0;
-						int temp = removingMinMax(i-15,step+1);
+						Lsupport = Lsupport + block*(i-15+3);
+						Rsupport = Rsupport + block*(i-15+1);
+						int temp = removingMinMax(i-15,step+1,color);
+						Lsupport = Lsupport - block*(i-15+3);
+						Rsupport = Rsupport - block*(i-15+1);
 						Board[i] = block;
-						if (temp == 10){ // winning score
+						if (temp == 100){ // winning score
 							maxScore = temp;
 							optimalRemove[step] = i -15;
 							return maxScore;
@@ -324,22 +389,59 @@ class Contestant extends NoTippingPlayer {
 				}
 			
 			}
-			if (maxScore == -1) { // can't find a move, lose
-				System.out.println("reach the leaf..");
-				return -10;
+			}else{// red
+				for(int i=30;i>=0;--i){
+					if(Board[i] != 0){ 
+						if(isStable(i-15)){
+
+							int block = Board[i]; 
+							Board[i] = 0;
+							Lsupport = Lsupport + block*(i-15+3);
+							Rsupport = Rsupport + block*(i-15+1);
+							int temp = removingMinMax(i-15,step+1,color);
+							Lsupport = Lsupport - block*(i-15+3);
+							Rsupport = Rsupport - block*(i-15+1);
+							Board[i] = block;
+							if (temp == 100){ // winning score
+								maxScore = temp;
+								optimalRemove[step] = i -15;
+								return maxScore;
+							}
+							
+							if(temp > maxScore){
+								maxScore = temp;
+								optimalRemove[step] = i - 15;
+				             
+							}
+						}
+					}
+				
+				}
+				
+			}
+			if (maxScore == -1000) { // can't find a move, lose
+
+				//System.out.println("reach the leaf..");
+				return -100;
 			}
 			return maxScore;
 			
 		}else{  // adversary move 
 			int minScore = 1000;
-			for(int i=0;i<=30;++i){
+			
+			if(color == 1){//blue
+			for(int i=30;i>=0;--i){
 				if(Board[i] != 0){
 					if(isStable(i-15)){
 						int block = Board[i]; 
 						Board[i] = 0;
-						int temp = removingMinMax(i-15,step+1);
+						Lsupport = Lsupport + block*(i-15+3);
+						Rsupport = Rsupport + block*(i-15+1);
+						int temp = removingMinMax(i-15,step+1,color);
+						Lsupport = Lsupport - block*(i-15+3);
+						Rsupport = Rsupport - block*(i-15+1);
 						Board[i] = block;
-						if(temp == -10){ // losing score
+						if(temp == -100){ // losing score
 							minScore = temp;
 							optimalRemove[step] = i -15;
 							return minScore;
@@ -354,9 +456,37 @@ class Contestant extends NoTippingPlayer {
 					}
 				}
 			}
+			}else{//red
+				for(int i=0;i<=30;++i){
+					if(Board[i] != 0){
+						if(isStable(i-15)){
+							int block = Board[i]; 
+							Board[i] = 0;
+							Lsupport = Lsupport + block*(i-15+3);
+							Rsupport = Rsupport + block*(i-15+1);
+							int temp = removingMinMax(i-15,step+1,color);
+							Lsupport = Lsupport - block*(i-15+3);
+							Rsupport = Rsupport - block*(i-15+1);
+							Board[i] = block;
+							if(temp == -100){ // losing score
+								minScore = temp;
+								optimalRemove[step] = i -15;
+								return minScore;
+							}
+							
+							if (temp < minScore){
+								minScore = temp;
+								optimalRemove[step] = i -15;
+								
+							}
+							
+						}
+					}
+				}
+			}
 			if (minScore == 1000){ // win 
 				//System.out.println("reach the leaf 2..");
-				return 10;
+				return 100;
 			}
 			return minScore;
 		}
@@ -385,21 +515,44 @@ class Contestant extends NoTippingPlayer {
 	protected String analyze(){
 		//TBD
 		// check in which phase it is
+		System.out.println("my color is: "+myColor);
 		if (flag == 1){  // adding phase
 			System.out.println("adding phase");
-			int score = minMax(0,0,0);
-			if (score == -10){
-				System.out.println("Fuck.. i lose!!!!!!!");
+			
+			if(myColor == "red"){
+				int score = minMax(0,0,0,0);
+				if (score == -100){
+					System.out.println("damn.. i lose!!!!!!!");
+					
+				}
 				
+			}else if(myColor == "blue"){
+				int score = minMax(0,0,0,1);
+				if (score == -100){
+					System.out.println("damn.. i lose!!!!!!!");
+					
+				}
 			}
+			
 			System.out.format("optimal block %d, move %d\n", optimalBlock[0],optimalMove[0]);
 			// check optimalBlock[0], optimalMove[0]
 			return Integer.toString(optimalMove[0]) + " " + Integer.toString(optimalBlock[0]);
 		}else{ // removing phase
 			System.out.println("removing phase");
-			int score = removingMinMax(0,0);
-			if (score == -10){
-				System.out.println("fucking lose !!!");
+			if(myColor == "red"){
+				int score = removingMinMax(0,0,0);
+				if (score == -100){
+					
+					System.out.println("damn...i lose !!!");
+					return "";
+				}
+			}else if(myColor == "blue"){
+				int score = removingMinMax(0,0,1);
+				if (score == -100){
+					System.out.println("damn ... lose !!!");
+					return "";
+				}
+				
 			}
 			System.out.format("optimal move %d\n",optimalRemove[0]);
 			return Integer.toString(optimalRemove[0])+ " " + Integer.toString(Board[15+optimalRemove[0]]);

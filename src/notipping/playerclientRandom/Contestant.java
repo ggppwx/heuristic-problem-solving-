@@ -105,7 +105,9 @@ public class Contestant extends NoTippingPlayer {
 			return makeAnAdd(myCommands);
 		} 
 		try {
-			return br.readLine();
+			myCommands.remove(0);
+			return makeAnRemove(myCommands);
+			//return br.readLine();
 			
 		} catch (Exception ev) {
 			System.out.println(ev.getMessage());
@@ -123,6 +125,42 @@ public class Contestant extends NoTippingPlayer {
 				}
         return false;
     }
+
+	    private boolean isStable1(int weight, int pos)
+    {
+     
+				if ((Lsupport + weight*(pos+3))*(Rsupport + weight*(pos+1)) <= 0){
+					// no tipping
+					// put i into
+					return true;
+				}
+        return false;
+    }
+
+
+	private String makeAnRemove(List<String> command)
+	{
+		Random generator = new Random();
+		int count = 0;
+		int des = 0;
+		do{
+		if(count == 100){
+			System.out.println("fuck i lose");
+			return "";
+		}
+		count ++;
+		des = generator.nextInt(31);  // 0 - 30
+		}		
+		while(Board[des] == 0 || isStable1(Board[des], des-15) != true);
+
+		System.out.println((des-15) + " "+ Board[des]);
+		return new String((des-15)+" "+Board[des]);		
+		
+
+
+	}
+
+
 
 	private String makeAnAdd(List<String> command)
 	{
