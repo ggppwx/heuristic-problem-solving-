@@ -165,7 +165,7 @@ class Contestant extends NoTippingPlayer {
 		//if we put weight in pos, for next step, we have several ways to go. 
 		// Board[pos+15] = weight;
 		//System.out.println(step);
-		
+		/*
 		int c=0;
 		for(int i=0;i<=30;++i){
 			if(Board[i]!=0){
@@ -175,7 +175,7 @@ class Contestant extends NoTippingPlayer {
 		if(c==20){
 			return 0;  //tie
 		}
-		
+		*/
 		if (step == 5){
 			// return a heuristic score 
 			// System.out.println("return heuristic score");
@@ -190,7 +190,8 @@ class Contestant extends NoTippingPlayer {
 			// max in minMax(w,p,1), w, p indicates possible move
 			// max{minMax(w,p,step+1) .... }
 			 
-			// judge if it is leaf
+			// if the red is used up 
+
 			
 			int maxScore = -1;
 			for (int i=1;i<= 10;++i){ 
@@ -221,6 +222,15 @@ class Contestant extends NoTippingPlayer {
 			}
 			
 			if (maxScore == -1){ // cannot find an possible solution, reaching the leaf
+				boolean red_used = true;
+				for(int i=1;i<=10;++i){
+					if(Red[i] == -100){  // some red not placed 
+						red_used = false;
+					}
+				}
+				if(red_used){
+					return 0;
+				}
 				System.out.println("reaching the leaf");
 				return -10;  //lose 
 			}
@@ -233,6 +243,9 @@ class Contestant extends NoTippingPlayer {
 			// adversary moves 
 			// min in minMax()
 
+			
+			
+			
 			int minScore = 10000;
 			for (int i=1;i<= 10;++i){
 				if(Blue[i] == -100){
@@ -264,6 +277,15 @@ class Contestant extends NoTippingPlayer {
 			}
 			
 			if(minScore == 10000){ // adversary cannot find a solution, win 
+				boolean blue_used = true;
+				for(int i=1;i<=10;++i){
+					if(Blue[i] == -100){
+						blue_used = false;
+					}
+				}
+				if(blue_used){
+					return 0;
+				}
 				System.out.println("reaching leaf 2");
 				return 10;
 			}
@@ -276,40 +298,53 @@ class Contestant extends NoTippingPlayer {
 	}
 	
 	
-	private int removing(int pos, int step){
+	private int removingMinMax(int pos, int step){
 		// check current state.
-		if(step%2 == 0){
-			int maxScore = -10;
+		if(step%2 == 0){ // i move 
+			int maxScore = -1;
 			for(int i=0;i<=30;++i){
 				if(Board[i] != 0){ 
 					if(isStable(i-15)){
 						int block = Board[i]; 
 						Board[i] = 0;
-						int temp = removing(i-15,step);
+						int temp = removingMinMax(i-15,step+1);
 						Board[i] = block;
+						if (temp == 10){ // winning score
+							maxScore = temp;
+							optimalRemove[step] = i -15;
+							return maxScore;
+						}
+						
 						if(temp > maxScore){
 							maxScore = temp;
 							optimalRemove[step] = i - 15;
-						
-						              
+			             
 						}
-					
 					}
 				}
 			
 			}
-			
+			if (maxScore == -1) { // can't find a move, lose
+				System.out.println("reach the leaf..");
+				return -10;
+			}
 			return maxScore;
 			
-		}else{
+		}else{  // adversary move 
 			int minScore = 1000;
 			for(int i=0;i<=30;++i){
 				if(Board[i] != 0){
 					if(isStable(i-15)){
 						int block = Board[i]; 
 						Board[i] = 0;
-						int temp = removing(i-15,step);
+						int temp = removingMinMax(i-15,step+1);
 						Board[i] = block;
+						if(temp == -10){ // losing score
+							minScore = temp;
+							optimalRemove[step] = i -15;
+							return minScore;
+						}
+						
 						if (temp < minScore){
 							minScore = temp;
 							optimalRemove[step] = i -15;
@@ -319,7 +354,10 @@ class Contestant extends NoTippingPlayer {
 					}
 				}
 			}
-			
+			if (minScore == 1000){ // win 
+				//System.out.println("reach the leaf 2..");
+				return 10;
+			}
 			return minScore;
 		}
 		
@@ -348,15 +386,27 @@ class Contestant extends NoTippingPlayer {
 		//TBD
 		// check in which phase it is
 		if (flag == 1){  // adding phase
+			System.out.println("adding phase");
 			int score = minMax(0,0,0);
+			if (score == -10){
+				System.out.println("Fuck.. i lose!!!!!!!");
+				
+			}
 			System.out.format("optimal block %d, move %d\n", optimalBlock[0],optimalMove[0]);
 			// check optimalBlock[0], optimalMove[0]
 			return Integer.toString(optimalMove[0]) + " " + Integer.toString(optimalBlock[0]);
 		}else{ // removing phase
+			System.out.println("removing phase");
+			int score = removingMinMax(0,0);
+			if (score == -10){
+				System.out.println("fucking lose !!!");
+			}
+			System.out.format("optimal move %d\n",optimalRemove[0]);
+			return Integer.toString(optimalRemove[0])+ " " + Integer.toString(Board[15+optimalRemove[0]]);
 			
 		}
 
-		return "error";
+		
 	}
 	
 	
