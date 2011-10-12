@@ -5,9 +5,10 @@
 
 struct person
 {
+  // rescue time > traveling time + uploading & unloading time 
   int xloc;
   int yloc;
-  int rescueTime;
+  int rescueTime;  
 };
 
 struct hospital
@@ -19,11 +20,34 @@ struct hospital
 
 
 
+
+
 void rescue(const std::vector<hospital> &hospitals,
 	    const std::vector<person> &persons)
 {
   
-  // return vector<set> ambulance 
+  // return vector<set> ambulance
+  // use ant-colony alg 
+  // the first ant starting from the first 
+  // ambulance in the first hospital. save as many patients as possible. 
+  // iterate 100 times?? 100 ants?
+  for(std::vector<hospital>::iterator it = hospitals.begin();
+      it != hospitals.end(); ++it){
+    int numAm = it->numAmbulance;
+    for(int i = 1; i<= numAm; ++i){ // ant in ith ambulance starts 
+      // randomly save as many patient as possible 
+      
+      // 1. find all patients savable.  * 4 times   
+      // find patients savable is a heuristic procedure. 
+      // save the current elapsed time, 
+      // if rescue time - 2 > elapsed time not feasible.  
+      // if any one in the ambulance dies when choose another patient. not
+      // feasible. 
+      
+    }
+  }
+
+ 
 }
 
 bool processText(const std::string &text, int &p1, int &p2, int &p3)
