@@ -2,6 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <stdlib.h>
+#include <stdlib.h>
 
 struct person
 {
@@ -20,7 +21,42 @@ struct hospital
 
 
 
+int calTime(int startX, int startY, int selX, int selY)
+{
+  int distance = abs(startX - selX)  + abs(startY - selY);
+  
+}
 
+void pickPatients(int startX, int startY, std::vector<person> patientLeft, std::vector<hospital> hospitals )
+{
+  int currentTime ;
+  for(std::vector<person>::iterator it = patientLeft.begin(); it != patient.end(); ++it){
+    int disToStart = abs(it->xloc - startX) + abs(it->yloc - startY) ;
+    int minDisToEnd = 100000;
+    for (std::vector<hospital>::iterator it1 = hospitals.begin(); it1 != hospitals.end(); ++it1 ){
+      int temp = abs(it->xloc - it1->xloc ) + abs(it->yloc - it1->yloc);
+      if(temp < minDisToEnd){
+	minDisToEnd = temp; 
+      }
+    }
+    int totalTime = disToStart + minDisToEnd + 2; 
+    int remainTime = it->rescueTime - totalTime;
+    if(remainTime >= 0){  // savable for 1st slot. 
+
+    }
+  
+  }
+  // pick an patient 
+  // delete the selected patient. 
+  
+
+  for(){
+
+  }
+
+
+
+}
 
 void rescue(const std::vector<hospital> &hospitals,
 	    const std::vector<person> &persons)
@@ -43,6 +79,10 @@ void rescue(const std::vector<hospital> &hospitals,
       // if rescue time - 2 > elapsed time not feasible.  
       // if any one in the ambulance dies when choose another patient. not
       // feasible. 
+      it->xloc
+      
+      
+      
       
     }
   }
