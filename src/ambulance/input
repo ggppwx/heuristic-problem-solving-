@@ -1,5 +1,4 @@
-
-people(xloc,yloc,rescuetime)
+person(xloc,yloc,rescuetime)
 38,77,21
 17,23,29
 17,20,102
