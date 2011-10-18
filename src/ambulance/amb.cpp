@@ -22,7 +22,12 @@ struct hospital
   int numAmbulance;
 };
 
-
+struct coord
+{
+  int x;
+  int y;
+  int pflag;
+};
 
 int calTime(int startX, int startY, int selX, int selY)
 {
@@ -30,14 +35,17 @@ int calTime(int startX, int startY, int selX, int selY)
   
 }
 
-int ToHospital(int x, int y, const std::vector<hospital> & hospitals)
+int ToHospital(int x, int y, const std::vector<hospital> &hospitals, coord &st)
 {
   // closest distance to hospital
   int minDisToEnd = 100000;
-  for (std::vector<hospital>::iterator it1 = hospitals.begin(); it1 != hospitals.end(); ++it1 ){
-      int temp = abs(it->xloc - it1->xloc ) + abs(it->yloc - it1->yloc);
+  for (std::vector<hospital>::const_iterator it = hospitals.begin(); it != hospitals.end(); ++it ){
+      int temp = abs(it->xloc - x ) + abs(it->yloc - y);
       if(temp < minDisToEnd){
 	minDisToEnd = temp; 
+	st.x = it->xloc;
+	st.y = it->yloc;
+	st.pflag = 0; 
       }
   }
   return minDisToEnd; 
@@ -45,14 +53,20 @@ int ToHospital(int x, int y, const std::vector<hospital> & hospitals)
 
 
 std::vector<person> findSavable(int startX, int startY, 
-				std::vector<person> patientLeft, std::vector<hospital> hospitals, 
-				int currentTime, const std::vector<person> &patientsPicked)
+				const std::vector<person> &patientLeft, 
+				const std::vector<hospital> &hospitals, 
+				int currentTime, 
+				const std::vector<person> &patientsPicked, 
+				const int flag[1000][1000])
 {
   std::vector<person> patientSavable;
-  for(std::vector<person>::iterator it = patientLeft.begin(); it != patient.end(); ++it){
+  for(std::vector<person>::const_iterator it = patientLeft.begin(); it != patientLeft.end(); ++it){
+    if(flag[it->xloc][it->yloc] != 0){  // picked 
+      continue;
+    }
     int disToStart = abs(it->xloc - startX) + abs(it->yloc - startY) ;
     int minDisToEnd = 100000;
-    for (std::vector<hospital>::iterator it1 = hospitals.begin(); it1 != hospitals.end(); ++it1 ){
+    for (std::vector<hospital>::const_iterator it1 = hospitals.begin(); it1 != hospitals.end(); ++it1 ){
       int temp = abs(it->xloc - it1->xloc ) + abs(it->yloc - it1->yloc);
       if(temp < minDisToEnd){
 	minDisToEnd = temp; 
@@ -66,11 +80,12 @@ std::vector<person> findSavable(int startX, int startY,
       for(int i = 0; i<patientsPicked.size(); ++i){
 	if(patientsPicked[i].rescueTime - totalTime < 0){
 	  sFlag = false;
-	}
-
+	}      
       }
       if(sFlag){
-	patientSavable.push_back(*it);
+	if(flag[it->xloc][it->yloc] == 0){
+	  patientSavable.push_back(*it);
+	}
       }
     }
   
@@ -78,7 +93,7 @@ std::vector<person> findSavable(int startX, int startY,
   return patientSavable;
 }
 
-person heurPick(int currentX, int currentY,std::vector<person> patientsSavable, const int traceMap[][])
+person heurPick(int currentX, int currentY,std::vector<person> patientSavable, const int traceMap[1000][1000], int flag[1000][1000])
 {
   // heuristically pick a patient
   int distanceSum = 0;
@@ -95,9 +110,9 @@ person heurPick(int currentX, int currentY,std::vector<person> patientsSavable, 
   std::vector<float> prob(patientSavable.size());
   float weightSum = 0;
   for(int i=0; i< patientSavable.size(); ++i){
-    float distanceP = (abs(patientSavable[i].xloc - currentX) + abs(patientSavable[i].yloc - currentY))/(float)nceSum;
-    float timeP = (timeSum*2/size - patientSavable[i].rescueTime)/ (float)timeSum;
-    prob[i] = (distanceP + timeP)/2*(1+traceMap[patientSavable[i].xloc][patientSavable[i].yloc]); 
+    int distance = abs(patientSavable[i].xloc - currentX) + abs(patientSavable[i].yloc - currentY);
+    int time =  patientSavable[i].rescueTime;
+    prob[i] = (1+traceMap[patientSavable[i].xloc][patientSavable[i].yloc])/(float)(distance + time); 
     weightSum += prob[i];
   }
 
@@ -113,7 +128,7 @@ person heurPick(int currentX, int currentY,std::vector<person> patientsSavable, 
   }
 
   // select a patient.
-  float random =   rand() % RAND_MAX; // random from [0,1)
+  float random =   rand() /(float)RAND_MAX; // random from [0,1)
   int indexSel;
   if(random >= 0 && random < prob[0]){
     indexSel = 0;
@@ -125,43 +140,69 @@ person heurPick(int currentX, int currentY,std::vector<person> patientsSavable, 
       }
     }
   }
+  
+  // flag[patientSavable[indexSel].xloc][patientSavable[indexSel].yloc] = 1;
   // return the selected patient 
   return patientSavable[indexSel];
 }
 
 
 void pickPatients(int startX, int startY, 
-		  std::vector<person> &patientLeft, std::? &patientSaved 
+		  const std::vector<person> &patientLeft,   //gloabal
+		  std::vector<person> &patientSaved ,
 		  const std::vector<hospital> &hospitals, 
-		  const int traceMap[][] )
+		  const int traceMap[1000][1000],
+		  std::vector<coord> &trace,
+		  int flag[1000][1000])  // flag indicates which is picked
 {
+  coord st;   
+  st.x = startX;   // put start point to solution 
+  st.y = startY;
+  st.pflag  = 0;
+  trace.push_back(st);
+
   int currentTime = 0;
   // starts from hospital 
-  std::? patientsSaved; 
+  int currentX = startX;
+  int currentY = startY;
 
-  while(true){
-
-    std::vector<person> patientsPicked;
-    int currentX = startX;
-    int currentY = startY;
+  while(true){  // one amb
+    std::cout <<"ambulance go!!!----------------" << std::endl;
+    std::vector<person> patientsPicked;   // at most 4
+    
     for(int i = 0; i < 4; ++i){ // loop 4 times 
-      std::vector<person> patientsSavable = findSavable(currentX, currentY, patientLeft, hospitals, currentTime,patientsPicked);
-      if(patientSavable.empty()){ //TBD: no savable patient, back to hospital
+      std::vector<person> patientsSavable = findSavable(currentX, currentY, patientLeft, hospitals, currentTime,patientsPicked,flag);
+      if(patientsSavable.empty()){ 
 	break;
       }
       // pick an patient 
-      person pick = heurPick(patientSavable,traceMap);
+      person pick = heurPick(currentX,currentY,patientsSavable,traceMap, flag);
+      std::cout <<"pick "<< pick.xloc <<"," << pick.yloc<<std::endl;
+      flag[pick.xloc][pick.yloc] = 1;  // indicates it has been picked 
       patientsPicked.push_back(pick);
-      //TBD:  delete the selected patient. 
-      currentTime += pick.pickTime;
+      
+      // delete in patient  left 
+      
+      currentTime += abs(pick.xloc - currentX) + abs(pick.yloc - currentY)+1;
       currentX = pick.xloc;
       currentY = pick.yloc;
+      
+      st.x = currentX; // put it into solution 
+      st.y = currentY;
+      st.pflag = 1; // patient
+      trace.push_back(st);
     }
     // back to hospital
-    if(!patientsPicked.empty()){ 
-      currentTime += ToHospital(patientsPicked.back().xloc, patientsPicked.back().yloc) + 1;
-      //TBD: put patients in amb into hospital
-      patientsSaved.add(patientsPicked);
+    if(!patientsPicked.empty()){   // unload patients 
+      currentTime += ToHospital(patientsPicked.back().xloc, patientsPicked.back().yloc,hospitals, st) + 1;
+      currentX = st.x;
+      currentY = st.y;
+      std::cout <<"return to hospital "<< currentX <<","<< currentY<<std::endl;
+      trace.push_back(st);
+      
+      for(std::vector<person>::iterator it = patientsPicked.begin() ; it != patientsPicked.end(); ++it){  
+	patientSaved.push_back(*it);
+      }
       
     }else{ // break the while loop. finish.
       break;
@@ -171,7 +212,7 @@ void pickPatients(int startX, int startY,
 
 }
 
-void rescue(const std::vector<hospital> &hospitals,
+std::vector< std::vector<coord> > rescue(const std::vector<hospital> &hospitals,
 	    const std::vector<person> &persons)
 {
   
@@ -179,16 +220,33 @@ void rescue(const std::vector<hospital> &hospitals,
   // use ant-colony alg 
   // the first ant starting from the first 
   // ambulance in the first hospital. save as many patients as possible. 
-  // iterate 100 times?? 100 ants?
+  // iterate 100 times 100 ants?
   int c = 0; // c is a count. 
   int traceMap[1000][1000];
+  for(int i = 0; i< 1000; ++i){
+    for(int j = 0; j< 1000; ++j){
+      traceMap[i][j] = 0;
+    }
+  }
+  
   int bestScore = 0;
-  std::? bestSolution;
-  while(){ // interate several times
+  std::vector< std::vector<coord> > bestSolution;
+  std::vector<person> bestPatientsSaved;
+  int ite = 0;
+  while(ite < 1000){ // interate several times
+    std::cout << "ant go!!!!-----------" << std::endl;
+    int flag[1000][1000];
+    for(int i = 0; i< 1000; ++i){
+      for(int j = 0; j< 1000; ++j){
+	flag[i][j] = 0;
+      }
+    }
+    ite ++;
     // this is one ant
-    std::? patientsLeft;
-    std::? patientsSaved; 
-    for(std::vector<hospital>::iterator it = hospitals.begin();
+    // std::vector<person> patientsLeft;
+    std::vector<person> patientsSaved;
+    std::vector< std::vector<coord> > solutions;
+    for(std::vector<hospital>::const_iterator it = hospitals.begin();
 	it != hospitals.end(); ++it){
       int numAm = it->numAmbulance;
       for(int i = 1; i<= numAm; ++i){ // ant in ith ambulance starts 
@@ -200,8 +258,9 @@ void rescue(const std::vector<hospital> &hospitals,
 	// if rescue time - 2 > elapsed time not feasible.  
 	// if any one in the ambulance dies when choose another patient. not
 	// feasible. 
-	pickPatients(it->xloc, it->yloc,patientsLeft,patientSaved,hospitals,traceMap);
-	
+	std::vector<coord> solution;
+	pickPatients(it->xloc, it->yloc,persons,patientsSaved,hospitals,traceMap,solution,flag);   // solution is for a ambulance
+	solutions.push_back(solution);
 	
       }
     }
@@ -212,31 +271,31 @@ void rescue(const std::vector<hospital> &hospitals,
     }
 
     // leave trace on tracemap
-    for(){ // patient saved. 
-      traceMap[][] += ;
+    for(std::vector<person>::iterator it = patientsSaved.begin() ; it != patientsSaved.end(); ++it){ 
+      traceMap[it->xloc][it->yloc] += 1;
     }
 
     // calculate the score 
     // get the best score
-    int tempScore = 0;
-    for(){ //patient saved
-      tempScore = ;
-    }
+    int tempScore = patientsSaved.size();
+    
     if(tempScore > bestScore){
-      bestScore = temp; 
-      bestSolution = ;
+      bestScore = tempScore; 
+      bestSolution = solutions;
+      bestPatientsSaved = patientsSaved;
+      //std::cout <<">>>current score is: "<< bestScore <<std::endl;
     }
     
     // global update the pheromone
-    if(c == 20){
+    if(c == 10){
       c ++;
-      for(){ // bestSolution
-	traceMap[][] +=; 
+      for(std::vector<person>::iterator it = bestPatientsSaved.begin() ; it != bestPatientsSaved.end(); ++it){ 
+	traceMap[it->xloc][it->yloc] += 1; 
       }
       c = 0;
     }
   }
- 
+  return bestSolution;
 }
 
 bool processText(const std::string &text, int &p1, int &p2, int &p3)
@@ -315,7 +374,20 @@ int main(int argv, char* argc[])
   readInputFile("input",persons,hospitals);
   // start gaming
   
+  std::vector< std::vector<coord> > result = rescue(hospitals, persons); 
+  std::cout << "the result " << std::endl;
+  for(std::vector< std::vector<coord> >::const_iterator it = result.begin(); it != result.end(); ++it){
+    
+    for(std::vector<coord>::const_iterator it1 = (*it).begin() ; it1 != (*it).end(); ++it1){
+      if((*it1).pflag == 0){
+	std::cout << "hostpiatl -------"<<(*it1).x << " " << (*it1).y << std::endl; 
+      }else{
+	std:: cout << (*it1).x << " " << (*it1).y << std::endl; 
+      }
+    }
+  }
   
   
   return 0; 
 }
+
