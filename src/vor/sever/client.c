@@ -6,19 +6,52 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h> 
+#include "vorImp.h"
 
 int g_num_turns;
 int g_num_players;
 int g_my_player;
+int g_play_score[20];
+int g_board[1000][1000];
+
 
 void parseMessage( char buffer[1024] ) {
-    
     /* Parsing the GLOBALS */
-    sscanf( buffer, "GLOBALS\nTotal Turns: %d\nTotal Players: %d\nYou are Player: %d", 
+    sscanf( buffer, "GLOBALS\nTotal Turns: %d\nTotal Players: %d\nYou are Player: %d\n\n", 
             &g_num_turns, &g_num_players, &g_my_player );
 
     /*TBD parse other informations */
+    /*
+      PLAYER SCORES
+      0: 0
+      1: 0
 
+      BOARD STATE
+      0: 100 20
+
+      Enter new position "X Y":200 300
+    */
+    char line[100];
+    int pos = 0;
+    
+    while(get_line(buffer,line, &pos)){
+      int player_num, player_score;
+      int x, y;
+      if (sscanf(line, "%d: %d %d\n",&player_num, &x, &y) == 3){
+	printf("state : %d %d %d\n",player_num, x, y);
+	//TBD  save
+	g_board[x][y] = player_num;
+
+      }else if(sscanf(line,"%d: %d \n",&player_num, &player_score) == 2){
+	printf("scre : %d %d\n",player_num, player_score);
+	//TBD  save
+	g_play_score[player_num] = player_score;
+	
+      }else{ // nothing
+
+      }
+    }
+ 
 }
 
 
