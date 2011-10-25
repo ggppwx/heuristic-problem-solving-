@@ -334,11 +334,14 @@ public class Client {
 			}
 			// System.out.print("\n");
 		}
+		
+		System.out.println("--- this is current score before adding----");
+		System.out.format("my team: %d\n",g_my_player);
 		for(int i=0;i<g_num_players;++i){
 			System.out.print("score: ");
 			System.out.println(score[i]);
 		}	
-		
+		System.out.println("------------------------------------------");
 		
 	}
 	
