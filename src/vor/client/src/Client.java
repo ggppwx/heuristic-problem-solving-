@@ -20,6 +20,8 @@ public class Client {
 	private class square{
 		public double score;
 		public boolean picked;
+		public int belongs;
+		public double dis;
 	}
 	
 	private class playInfo{
@@ -60,6 +62,8 @@ public class Client {
 			for(int j=0; j< grid_len; ++j){
 				board[i][j] = new square();
 				board[i][j].picked = false;
+				board[i][j].belongs = -1; // belongs no one
+				board[i][j].dis = 10000000;
 				if(i<grid_len/2 && j<grid_len/2){
 					board[i][j].score = evlScore(i,j,grid_len*4/10,grid_len*4/10);
 				}
@@ -141,7 +145,7 @@ public class Client {
 					
 				}	
 				if (3 == stage && 4 == tokens.length){
-					int index = Integer.parseInt(tokens[0]);
+					int index = Integer.parseInt(tokens[0]); 
 					int x = Integer.parseInt(tokens[2]);
 					int y = Integer.parseInt(tokens[3]);
 					System.out.format("state %d: %d %d\n", index, x ,y);
@@ -173,6 +177,7 @@ public class Client {
 	
 	
 	private playInfo belongsTo(int posX, int posY,  ArrayList<Position>[] player_coords){ // find the square belongs to which player
+		// TODO optimize the calculation
 		double min = 10000000;
 		int player = -1;
 		for(int i = 0; i<g_num_players; ++i){
@@ -192,6 +197,17 @@ public class Client {
 		
 	}
 	
+	private playInfo belongsTo1(int posX, int posY, int probePlayer, Position probePos){
+		double currentDis = Math.sqrt((Math.pow(posX - probePos.getX(),2)+Math.pow(posY - probePos.getY(),2))); 
+		int prePlayer = board[posX/square_len][posY/square_len].belongs;
+		double preDis = board[posX/square_len][posY/square_len].dis;
+		if(currentDis < preDis){
+			return new playInfo(probePlayer,currentDis);
+		}else{
+			return new playInfo(prePlayer,preDis);
+		}
+	}
+	
 	private double evlScore(int xPos, int yPos, int centerX, int centerY){ // x, y here is for the grid
 		// evaluate the intrinsic score of the square
 		double score_h = 20;
@@ -199,6 +215,30 @@ public class Client {
 		return (score_h - distance/10);
 	}
 	
+	
+	private void calBelongs(ArrayList<Position>[] playerC){
+		boolean emptyFlag = true;
+		for(int i=0; i<g_num_players; ++i){
+			if(playerC[i].size() != 0){
+				emptyFlag = false; 
+			}
+		}
+		if(emptyFlag){//belongs to nothing
+			return;
+		}
+		
+		for(int i=0; i<grid_len; ++i){
+			for(int j=0; j<grid_len;++j){
+				int centerX = square_len/2 + square_len*i;
+				int centerY = square_len/2 + square_len*j;
+				// int minDis = 0;
+				playInfo player = belongsTo(centerX,centerY,playerC);
+				board[i][j].belongs = player.player;
+				board[i][j].dis = player.distance;
+			}
+		}
+		return;
+	}
 	
 	
 	private String analyze(){
@@ -210,6 +250,10 @@ public class Client {
 		double max_net_score = -1000000;
 		int pickPosX = -1;
 		int pickPosY = -1;
+		//calculate the belong, and the score of the previous state.
+		// without probe !!!!
+		calBelongs(player_coords);
+		// scoreHelper();
 		
 		for(int i =0; i< grid_len; ++i){
 			for(int j=0; j< grid_len; ++j){ // try each square 
@@ -218,19 +262,23 @@ public class Client {
 				if(board[i][j].picked){ // the square is picked, ignore it  
 					continue;
 				}
-				//pick the score.
+
 				board[i][j].picked = true;
-				player_coords[g_my_player].add(new Position(square_len/2+i*square_len,square_len/2+j*square_len));
+				Position probePos = new Position(square_len/2+i*square_len,square_len/2+j*square_len);
+				player_coords[g_my_player].add(probePos);
 				//calculate the score 
 						
-				// get the score of all players
+				// get the score of all players, 
+				// TODO   optimize the calculation. 
 				double[] raw_player_score = new double[g_num_players];
 				for(int x=0; x<grid_len; ++x){
-					for(int y=0; y<grid_len; ++y){
+					for(int y=0; y<grid_len; ++y){						
 						int centerX = square_len/2 + square_len*x;
 						int centerY = square_len/2 + square_len*y;
 						// int minDis = 0;
-						playInfo player = belongsTo(centerX,centerY,player_coords);
+						playInfo player = belongsTo1(centerX,centerY,g_my_player,probePos);
+						assert player.getPlayer() != -1;
+						//playInfo player = belongsTo(centerX,centerY,player_coords);
 						raw_player_score[player.getPlayer()] += board[x][y].score/(double)(player.getDistance()+1);
 								
 					}
@@ -266,7 +314,32 @@ public class Client {
 		return Integer.toString(pickPosX)+" "+Integer.toString(pickPosY);
 	}
 	
-	
+	private void scoreHelper(){ 
+		// this is a helper function
+		// get the score and print 
+		int[] score = new int[g_num_players];
+		for(int i=0; i<grid_len; ++i){
+			for(int j=0; j<grid_len;++j){
+				//int centerX = square_len/2 + square_len*i;
+				//int centerY = square_len/2 + square_len*j;
+				// int minDis = 0;
+				//playInfo player = belongsTo(centerX,centerY,playerC);
+				if(board[i][j].belongs == -1){
+					System.out.print("X");
+				}else{
+					score[board[i][j].belongs]++; 
+					System.out.print(board[j][grid_len-1-i].belongs);
+				}
+			}
+			System.out.print("\n");
+		}
+		for(int i=0;i<g_num_players;++i){
+			System.out.print("score: ");
+			System.out.println(score[i]);
+		}	
+		
+		
+	}
 	
 	
 	
