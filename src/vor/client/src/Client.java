@@ -7,6 +7,7 @@ import java.io.*;
 public class Client {
 	private static BufferedReader br;
 	
+	private static final double intrinsicScore = 20;
 	private static final int grid_len = 100;  // divide to grid_len * grid_len grid
 	private static final int square_len = 1000/grid_len;
 	
@@ -210,9 +211,9 @@ public class Client {
 	
 	private double evlScore(int xPos, int yPos, int centerX, int centerY){ // x, y here is for the grid
 		// evaluate the intrinsic score of the square
-		double score_h = 20;
+		// double score_h = intrinsicScore;
 		double distance = Math.abs(xPos-centerX)+Math.abs(yPos-centerY);
-		return (score_h - distance/10);
+		return (intrinsicScore - distance/10);
 	}
 	
 	
@@ -253,12 +254,12 @@ public class Client {
 		//calculate the belong, and the score of the previous state.
 		// without probe !!!!
 		calBelongs(player_coords);
-		// scoreHelper();
+		// TODO  test function
+		scoreHelper();
 		
 		for(int i =0; i< grid_len; ++i){
 			for(int j=0; j< grid_len; ++j){ // try each square 
 				//pick the square
-				double score = board[i][j].score;
 				if(board[i][j].picked){ // the square is picked, ignore it  
 					continue;
 				}
@@ -325,13 +326,13 @@ public class Client {
 				// int minDis = 0;
 				//playInfo player = belongsTo(centerX,centerY,playerC);
 				if(board[i][j].belongs == -1){
-					System.out.print("X");
+					// System.out.print("X");
 				}else{
 					score[board[i][j].belongs]++; 
-					System.out.print(board[j][grid_len-1-i].belongs);
+					// System.out.print(board[j][grid_len-1-i].belongs);
 				}
 			}
-			System.out.print("\n");
+			// System.out.print("\n");
 		}
 		for(int i=0;i<g_num_players;++i){
 			System.out.print("score: ");
@@ -346,7 +347,7 @@ public class Client {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		br = new BufferedReader(new InputStreamReader(System.in));
-		Client c= new Client(args[0],Integer.parseInt(args[1]));
+		new Client(args[0],Integer.parseInt(args[1]));
 	}
 	
 }
