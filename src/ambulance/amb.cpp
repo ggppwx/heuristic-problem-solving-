@@ -280,14 +280,14 @@ std::vector< std::vector<coord> > rescue(const std::vector<hospital> &hospitals,
     for(int i = 0; i < 500; ++i){
       for(int j = 0; j < 500; ++j){
 	if(traceMap[i][j] != 0){
-	  traceMap[i][j] *= 0.5;
+	  traceMap[i][j] *= 0.9;
 	}
       }
     }
 
     // leave trace on tracemap
     for(std::vector<person>::iterator it = patientsSaved.begin() ; it != patientsSaved.end(); ++it){ 
-      traceMap[it->xloc][it->yloc] += 1.0;
+      traceMap[it->xloc][it->yloc] += 8.0;
     }
 
     // calculate the score 
@@ -306,7 +306,7 @@ std::vector< std::vector<coord> > rescue(const std::vector<hospital> &hospitals,
     if(c == 100){
       
       for(std::vector<person>::iterator it = bestPatientsSaved.begin() ; it != bestPatientsSaved.end(); ++it){ 
-	traceMap[it->xloc][it->yloc] += 2.0; 
+	traceMap[it->xloc][it->yloc] += 8.0; 
 	// std::cout << traceMap[it->xloc][it->yloc] << std::endl;
       }
       c = 0;
@@ -457,7 +457,7 @@ void kMeans(const std::vector<person> &persons, std::vector<hospital> &hospitals
       int mindis = 10000;
       int minmean = -1;
       for(int j = 0; j<hospitals.size(); ++j){  // for each mean j
-	int dis = calDistance(persons[i],mean[j])/hospitals[j].numAmbulance;
+	int dis = calDistance(persons[i],mean[j]);///hospitals[j].numAmbulance;
 	if(dis < mindis){
 	  mindis = dis;
 	  minmean = j;
