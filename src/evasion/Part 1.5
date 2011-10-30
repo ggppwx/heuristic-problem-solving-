@@ -1,0 +1,58 @@
+
+On Oct 29, 2011, at 10:01 AM, Brandon Reiss wrote:
+
+> I think that you forgot to attach myplot2.py?
+> 
+> -B
+> 
+> On Thu, Oct 27, 2011 at 3:26 PM, Nathaniel Weinman <nsw233@nyu.edu> wrote:
+>> Hey,
+>> 
+>> So here's the current server (and really simple client example) for Evasion. To run the server:
+>> 
+>> python evasion_game_server.py M N host1 port1 host2 port2.
+>> 
+>> So a specific example would be:
+>> python evasion_game_server.py 3 3 localhost 8000 localhost 8001
+>> 
+>> To run the sample client:
+>> python evasion_game_client.py host port
+>> 
+>> There are two versions of the server, evasion_game_server_two.py is just the server without the GUI. We're attaching the second version in case you want to test your clients on Energon, since there seems to be an issue running the GUI on Energon.
+>> 
+>> 
+>> 
+>> Each player will get a string in this format to describe the board state:
+>> You are _____
+>> Hunter: x y delta_x delta_y
+>> Prey: x y
+>> Walls: [wall_index (x0, y0, x1, y1), wall_index (x0, y0, x1, y1), ...]
+>> 
+>> The hunter should send back a string in the format:
+>> Remove:[wall_i_1, wall_i_2,...] Build:dir min_coord max_coord Remove:[wall_i_1, wall_i_2,...] Build:dir min_coord max_coord
+>> Note: It is important that there are no spaces after the colons, but are spaces before Remove and Build (except the first Remove)
+>> Also, the Hunter makes 2 moves at a time.
+>> 
+>> The prey should send back a string in the format:
+>> delta_x delta_y
+>> 
+>> 
+>> 
+>> Concrete examples:
+>> 
+>> Input:
+>> You are Hunter
+>> Hunter: 23 93 -1 1
+>> Prey: 234 184
+>> Walls: [0 (1, -1, 1, 500)]
+>> 
+>> Hunter Output:
+>> Remove:[] Build: Remove:[1,3] Build:0 10 180
+>> 
+>> Prey Output:
+>> 0 1
+>> 
+>> Nathaniel
+>> 
+>> 
+
