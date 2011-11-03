@@ -1,0 +1,1 @@
+/usr/bin/c++   -g    CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.o  -o nanomunchers_serialize_gtest -rdynamic libnanomunchers_serialize.a ../gtest-1.6.0/libgtest.a -lpthread 

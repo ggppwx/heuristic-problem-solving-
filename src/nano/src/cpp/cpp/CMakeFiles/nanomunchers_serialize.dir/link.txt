@@ -1,0 +1,2 @@
+/usr/bin/ar cr libnanomunchers_serialize.a  CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.o
+/usr/bin/ranlib libnanomunchers_serialize.a

@@ -1,0 +1,4 @@
+/home/roy/src/nano/src/cpp/gtest-1.6.0/CMakeFiles/gtest.dir
+/home/roy/src/nano/src/cpp/gtest-1.6.0/CMakeFiles/gtest_main.dir
+/home/roy/src/nano/src/cpp/cpp/CMakeFiles/nanomunchers_serialize.dir
+/home/roy/src/nano/src/cpp/cpp/CMakeFiles/nanomunchers_serialize_gtest.dir

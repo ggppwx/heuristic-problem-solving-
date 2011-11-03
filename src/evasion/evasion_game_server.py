@@ -3,7 +3,6 @@ try:
   import myplot2
   graphics = True
 except ImportError:
-  print "fail to import"
   graphics = False
 
 time_steps = 0
@@ -108,11 +107,11 @@ class Hunter(Player):
     if dir == 0:
       if self.x < min_coord or self.x > max_coord:
         return
-      self.last_build_wall_i = self.board.AddWall(dir, min_coord, max_coord, self.x)
+      self.last_build_wall_i = self.board.AddWall(dir, min_coord, max_coord, self.y)
     else:
       if self.y < min_coord or self.y > max_coord:
         return
-      self.last_build_wall_i = self.board.AddWall(dir, min_coord, max_coord, self.y)
+      self.last_build_wall_i = self.board.AddWall(dir, min_coord, max_coord, self.x)
     self.last_built = 0
 
   def DestroyWall(self, wall_index):
@@ -138,6 +137,7 @@ class BoardState(object):
     self.AddWall(1, 0, 499, 500)
 
   def AddWall(self, dir, min_coord, max_coord, fixed_coord):
+    print dir, min_coord, max_coord, fixed_coord
     if len(self.indices_avail) == 0:
       return -1
     wall_i = self.indices_avail[0]
@@ -196,7 +196,7 @@ class BoardState(object):
     wall_strs = []
     for i, wall in enumerate(self.walls[:-4]):
       if wall:
-        if wall[0] == 0:
+        if wall[0] == 1:
           wall_strs.append("%d (%d, %d, %d, %d)" % (i, wall[3], wall[1], wall[3], wall[2]))
         else:
           wall_strs.append("%d (%d, %d, %d, %d)" % (i, wall[1], wall[3], wall[2], wall[3]))
@@ -208,7 +208,6 @@ if graphics:
   root, canvas = myplot2.main() 
   myplot2.update(root, canvas, board.guiwalls, board.hunter.x, board.hunter.y,
                board.prey.x, board.prey.y)
-  print "graphic displays"
 
 HOST1 = sys.argv[3]
 PORT1 = int(sys.argv[4])
@@ -235,6 +234,7 @@ while 1:
   h_t_left -= (time.time()-t0)
   r = re.compile('Remove:\[(.*)\] Build:(.*) Remove:\[(.*)\] Build:(.*)')
   h_params = r.split(h_move)
+  print h_params
   h_rem = h_params[1].split(',')
   for wall_in in h_rem:
     if wall_in:
@@ -242,6 +242,7 @@ while 1:
   h_add = h_params[2]
   if h_add:
     h_add = h_add.split()
+    print h_add
     board.hunter.BuildWall(int(h_add[0]), int(h_add[1]), int(h_add[2]))
   board.hunter.Move()
   if board.Caught():
@@ -274,3 +275,19 @@ conn1.send("END")
 conn2.send("END")
 s1.close()
 s2.close()
+
+"""
+for i in range(2000):
+  if (i == 30):
+    board.hunter.BuildWall(0, 20, 100)
+  if (i == 349):
+    board.hunter.BuildWall(0, 300, 499)
+  if (i == 449):
+    board.hunter.BuildWall(1, 350, 499)
+  board.hunter.Move()
+  if (i%2 == 0):
+    board.prey.Move(-1, -1)
+    myplot2.update(root, canvas, board.guiwalls, board.hunter.x, board.hunter.y,
+                   board.prey.x, board.prey.y)
+  print board.Caught()
+"""

@@ -12,6 +12,10 @@ public abstract class Client {
 	
 	private BufferedReader br;
 	
+	protected int wallNum = 0;
+	protected int interTime = 0;
+	protected int timer = 0;
+	
 	private void ReadWrite(BufferedReader in, PrintWriter out) throws IOException{
 		
 		while(true){
@@ -25,14 +29,17 @@ public abstract class Client {
 				command[i] = line;
 				System.out.println(line);
 			}
-			process(command);
-			// out.println(process(command));
-			out.println(br.readLine());
+			//process(command);
+			out.println(process(command));
+			//out.println(br.readLine());
 		}
 		
 	}
 	
-	public Client(String host, int port) {
+	public Client(String host, int port, int wallNum, int interTime) {
+		this.wallNum = wallNum;
+		this.interTime = interTime;
+		this.timer = 0;
 		// TODO Auto-generated constructor stub
 		Socket socket = null;
 		BufferedReader in = null;
