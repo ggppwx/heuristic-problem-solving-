@@ -27,6 +27,8 @@ int main(int argc, char** argv)
   my_muncher::My_munchers m;
   m.loadData("data_0");
   // m.analyze();
+  // FOR TEST: OK
+  // _hps_nanomunchers_data_file_gtest_h_::PrintNodeInfo(m.getGraph(), 79);
 
 
 }
