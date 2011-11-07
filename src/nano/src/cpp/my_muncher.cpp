@@ -15,7 +15,7 @@ namespace my_muncher
   };
 
 
-
+  
   void My_munchers::loadData(std::string path){
     std::cout << "loading data......"<< std::endl;
     // TODO 
@@ -34,10 +34,10 @@ namespace my_muncher
   void My_munchers::writeData(){
     std::cout << "writing the data ...." << std::endl;
     // TODO 
-     
-
+ 
     return;
   }
+
 
   bool My_munchers::checkPos(Position currentPos, Position nextPos, Muncher::Instruction ins){
     /// for TEST
@@ -70,8 +70,7 @@ namespace my_muncher
       return false;
     }
 
-  }
-  
+  } 
 
   int My_munchers::getScore(const MyMuncher& m){
     // TODO   get the maximum score of a muncher. 
@@ -102,16 +101,13 @@ namespace my_muncher
     std::map<int, int> currentNodeIndex;
     std::map<int, std::deque<Muncher::Instruction> > program;
     std::map<int, int> score;    
-
     for(int i =0; i< ml.size(); ++i){
       currentNodeIndex[i] = ml[i].startNodeIndex;
       std::deque<Muncher::Instruction> p(ml[i].program, ml[i].program+sizeof(ml[i].program)/sizeof(Muncher::Instruction));
       program[i] = p;
       score[i] = 0;
       node_map[ml[i].startNodeIndex] = i;
-    }
-
-    
+    } 
     
     while(true){ // one step
       std::cout << "this is step "<<globleTime<<"-------------"<<std::endl;
@@ -122,11 +118,7 @@ namespace my_muncher
 	  
 	}
       }
-      /*
-      for(std::map<int,int>::iterator it = currentNodeIndex.begin();
-	  it!= currentNodeIndex.end();it++){	
-      }
-      */
+      
       bool all_move_flags = false;
       for(std::map<int,int>::iterator it = currentNodeIndex.begin();
 	  it!= currentNodeIndex.end();it++){
@@ -135,8 +127,7 @@ namespace my_muncher
 	bool move_flag = moveOneStep(currentNodeIndex[muncherId],
 				     program[muncherId],
 				     score[muncherId]);
-	/// currentNodeIndex, program, score has changed.
-	
+	/// currentNodeIndex, program, score has changed.	
 	if(!move_flag){
 	  std::cout<<"muncher "<<it->first<<" ends "<<std::endl;
 	  continue;
@@ -187,8 +178,8 @@ namespace my_muncher
     for(int i =0; i< ml.size(); ++i){
       std::cout <<"score is "<<score[i] <<std::endl;
     }
-
   }
+
 
   bool My_munchers::moveOneStep(int& currentNodeIndex, 
 				std::deque<Muncher::Instruction>& program,

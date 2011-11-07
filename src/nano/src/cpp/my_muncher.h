@@ -55,8 +55,8 @@ namespace my_muncher{
       muncher.program[2] = Muncher::Left;
       muncher.program[3] = Muncher::Up;
 
-      muncher.startNodeIndex = 44;
-      std::cout<<getScore(muncher)<<std::endl;
+      muncher.startNodeIndex = 47;
+      std::cout<<"score is "<<getScore(muncher)<<std::endl;
 
 
 
@@ -79,7 +79,7 @@ namespace my_muncher{
       m2.program[2] = Muncher::Left;
       m2.program[3] = Muncher::Up;
       m1.startNodeIndex = 0;
-      m2.startNodeIndex = 44;
+      m2.startNodeIndex = 47;
       
       std::vector<MyMuncher> ml;
       // ml.push_back(m1);
