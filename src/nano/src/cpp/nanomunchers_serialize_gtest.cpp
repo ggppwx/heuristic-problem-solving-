@@ -31,6 +31,8 @@ int main(int argc, char** argv)
   // FOR TEST: OK
   // PrintNodeInfo(m.getGraph(), 0);
   // FOR TEST:
-  m.MYSINGLETEST();
+  
   // m.MYTEST();
+  m.MYSINGLETEST();
+  m.MYMULTTEST();
 }

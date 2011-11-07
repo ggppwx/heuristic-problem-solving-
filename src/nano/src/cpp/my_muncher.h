@@ -46,13 +46,15 @@ namespace my_muncher{
     
     /// test private member functions
     void MYSINGLETEST(){
+      std::cout << "---------------" << std::endl;
+      node_map.clear();
       MyMuncher muncher;
       muncher.startTime = 0;
       muncher.program[0] = Muncher::Right;
-      muncher.program[1] = Muncher::Up;
+      muncher.program[1] = Muncher::Down;
       muncher.program[2] = Muncher::Left;
-      muncher.program[3] = Muncher::Down;
-   
+      muncher.program[3] = Muncher::Up;
+
       muncher.startNodeIndex = 126;
       std::cout<<getScore(muncher)<<std::endl;
 
@@ -60,15 +62,39 @@ namespace my_muncher{
 
     }
 
+    void MYMULTTEST(){
+      std::cout <<"----------------"<<std::endl;
+      node_map.clear();
+      MyMuncher m1;
+      MyMuncher m2;
+      m1.startTime = 0;
+      m2.startTime = 0;
+      m1.program[0] = Muncher::Right;
+      m1.program[1] = Muncher::Down;
+      m1.program[2] = Muncher::Left;
+      m1.program[3] = Muncher::Up;
 
+      m2.program[0] = Muncher::Right;
+      m2.program[1] = Muncher::Down;
+      m2.program[2] = Muncher::Left;
+      m2.program[3] = Muncher::Up;
+      m1.startNodeIndex = 0;
+      m2.startNodeIndex = 126;
+      
+      std::vector<MyMuncher> ml;
+      ml.push_back(m1);
+      ml.push_back(m2);
+      getMultScore(ml);
+      
+    }
 
     void MYTEST(){  
       MyMuncher muncher;
       muncher.startTime = 0;
-      muncher.program[0] = Muncher::Right;
-      muncher.program[1] = Muncher::Up;
-      muncher.program[2] = Muncher::Left;
-      muncher.program[3] = Muncher::Down;
+      muncher.program[0] = Muncher::Right;  // 3
+      muncher.program[1] = Muncher::Up; // 0 
+      muncher.program[2] = Muncher::Left; // 2
+      muncher.program[3] = Muncher::Down; // 1
       // muncher.startNodeIndex = 126;
       // std::cout<<getScore(muncher)<<std::endl;
       
@@ -150,6 +176,37 @@ namespace my_muncher{
 	return true;
       }else{  // the position has been taken
 	return false;
+      }
+    }
+    
+    /// current node move one step. 
+    bool moveOneStep(int& currentNodeIndex, 
+		     std::deque<Muncher::Instruction>& program,
+		     int& score);
+
+    /// compare the priority of two muncher
+    bool insGL(Muncher::Instruction in1, Muncher::Instruction in2){
+      int insInt1 = convertToP(in1);
+      int insInt2 = convertToP(in2);
+      if(insInt1 > insInt2){
+	return true;
+      }
+      return false; 
+    }
+    /// convert enum to priority, the larger the higher
+    int convertToP(Muncher::Instruction ins){
+      switch(ins){
+      case Muncher::Up:
+	return 4;
+      case Muncher::Left:
+	return 3;
+      case Muncher::Down:
+	return 2;
+      case Muncher::Right:
+	return 1;
+      default:
+	std::cerr<<"error"<<std::endl;
+
       }
     }
 
