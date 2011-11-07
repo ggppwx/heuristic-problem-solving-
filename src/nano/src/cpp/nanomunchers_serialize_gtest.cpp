@@ -33,6 +33,9 @@ int main(int argc, char** argv)
   // FOR TEST:
   
   // m.MYTEST();
-  m.MYSINGLETEST();
-  m.MYMULTTEST();
+  //m.MYSINGLETEST();
+  //m.MYMULTTEST();
+  
+  m.analyze();
+
 }

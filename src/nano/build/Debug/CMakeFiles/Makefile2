@@ -38,16 +38,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/bin/cmake
+CMAKE_COMMAND = "/Applications/CMake 2.8-6.app/Contents/bin/cmake"
 
 # The command to remove a file.
-RM = /usr/bin/cmake -E remove -f
+RM = "/Applications/CMake 2.8-6.app/Contents/bin/cmake" -E remove -f
+
+# The program to use to edit the cache.
+CMAKE_EDIT_COMMAND = "/Applications/CMake 2.8-6.app/Contents/bin/ccmake"
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/roy/src/nano/src
+CMAKE_SOURCE_DIR = /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/roy/src/nano/build/Debug
+CMAKE_BINARY_DIR = /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug
 
 #=============================================================================
 # Directory level rules for directory cpp
@@ -73,7 +76,7 @@ cpp/preinstall:
 cpp/CMakeFiles/nanomunchers_serialize.dir/all:
 	$(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/depend
 	$(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/roy/src/nano/build/Debug/CMakeFiles  3 4 5
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles  3 4 5
 	@echo "Built target nanomunchers_serialize"
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize.dir/all
 
@@ -83,9 +86,9 @@ all: cpp/CMakeFiles/nanomunchers_serialize.dir/all
 
 # Build rule for subdir invocation for target.
 cpp/CMakeFiles/nanomunchers_serialize.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/roy/src/nano/build/Debug/CMakeFiles 3
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 cpp/CMakeFiles/nanomunchers_serialize.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/roy/src/nano/build/Debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles 0
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize.dir/rule
 
 # Convenience name for target.
@@ -109,7 +112,7 @@ cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/all: cpp/CMakeFiles/nanomunchers
 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/all: gtest-1.6.0/CMakeFiles/gtest.dir/all
 	$(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build.make cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/depend
 	$(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build.make cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/roy/src/nano/build/Debug/CMakeFiles  6
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles  6
 	@echo "Built target nanomunchers_serialize_gtest"
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/all
 
@@ -119,9 +122,9 @@ all: cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/all
 
 # Build rule for subdir invocation for target.
 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/roy/src/nano/build/Debug/CMakeFiles 5
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles 5
 	$(MAKE) -f CMakeFiles/Makefile2 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/roy/src/nano/build/Debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles 0
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/rule
 
 # Convenience name for target.
@@ -161,7 +164,7 @@ gtest-1.6.0/preinstall:
 gtest-1.6.0/CMakeFiles/gtest.dir/all:
 	$(MAKE) -f gtest-1.6.0/CMakeFiles/gtest.dir/build.make gtest-1.6.0/CMakeFiles/gtest.dir/depend
 	$(MAKE) -f gtest-1.6.0/CMakeFiles/gtest.dir/build.make gtest-1.6.0/CMakeFiles/gtest.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/roy/src/nano/build/Debug/CMakeFiles  1
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles  1
 	@echo "Built target gtest"
 .PHONY : gtest-1.6.0/CMakeFiles/gtest.dir/all
 
@@ -171,9 +174,9 @@ all: gtest-1.6.0/CMakeFiles/gtest.dir/all
 
 # Build rule for subdir invocation for target.
 gtest-1.6.0/CMakeFiles/gtest.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/roy/src/nano/build/Debug/CMakeFiles 1
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles 1
 	$(MAKE) -f CMakeFiles/Makefile2 gtest-1.6.0/CMakeFiles/gtest.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/roy/src/nano/build/Debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles 0
 .PHONY : gtest-1.6.0/CMakeFiles/gtest.dir/rule
 
 # Convenience name for target.
@@ -196,7 +199,7 @@ clean: gtest-1.6.0/CMakeFiles/gtest.dir/clean
 gtest-1.6.0/CMakeFiles/gtest_main.dir/all: gtest-1.6.0/CMakeFiles/gtest.dir/all
 	$(MAKE) -f gtest-1.6.0/CMakeFiles/gtest_main.dir/build.make gtest-1.6.0/CMakeFiles/gtest_main.dir/depend
 	$(MAKE) -f gtest-1.6.0/CMakeFiles/gtest_main.dir/build.make gtest-1.6.0/CMakeFiles/gtest_main.dir/build
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/roy/src/nano/build/Debug/CMakeFiles  2
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles  2
 	@echo "Built target gtest_main"
 .PHONY : gtest-1.6.0/CMakeFiles/gtest_main.dir/all
 
@@ -206,9 +209,9 @@ all: gtest-1.6.0/CMakeFiles/gtest_main.dir/all
 
 # Build rule for subdir invocation for target.
 gtest-1.6.0/CMakeFiles/gtest_main.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/roy/src/nano/build/Debug/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles 2
 	$(MAKE) -f CMakeFiles/Makefile2 gtest-1.6.0/CMakeFiles/gtest_main.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/roy/src/nano/build/Debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles 0
 .PHONY : gtest-1.6.0/CMakeFiles/gtest_main.dir/rule
 
 # Convenience name for target.

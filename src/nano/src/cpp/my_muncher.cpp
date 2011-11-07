@@ -18,7 +18,6 @@ namespace my_muncher
   
   void My_munchers::loadData(std::string path){
     std::cout << "loading data......"<< std::endl;
-    // TODO 
     LoadDataFile(path, LoadDataFuncHelper(), &my_graph);
     return;
   }
@@ -26,8 +25,35 @@ namespace my_muncher
   void My_munchers::analyze(){
     std::cout << "analyzing the data ...." << std::endl;
     // TODO 
+    //
+    std::vector< std::vector<Muncher::Instruction> > programList = getAllCombinations();
     
-    
+
+    MyMuncher muncher;
+    for(int i = 0; i< my_graph.nodes.size(); ++i){
+      // try each node in the graph
+      // each node. try every combinations
+      muncher.startNodeIndex = i;
+      std::cout << "----------------------------------------------"<<std::endl;
+      std::cout <<"muncher starts "<<muncher.startNodeIndex<<std::endl;
+      for(int j =0; j< programList.size(); ++j){
+	std::vector<Muncher::Instruction> program = programList[j];
+
+
+	muncher.program[0] = program[0];
+	muncher.program[1] = program[1];
+	muncher.program[2] = program[2];
+	muncher.program[3] = program[3];
+	std::cout <<"muncher prog " <<muncher.program[0]<<muncher.program[1]
+			      <<muncher.program[2]<<muncher.program[3]
+			      << std::endl;
+	node_map.clear();
+	std::cout <<getScore(muncher)<<std::endl;
+	
+      }
+    }
+
+
     return;
   }
 
@@ -191,7 +217,7 @@ namespace my_muncher
     /// for test
     
     for(int i = 0; i< 4; ++i ){ // try four direction. 
-      std::cout << "trying "<<program.front()<<std::endl;
+      // std::cout << "trying "<<program.front()<<std::endl;
       for(int j = 0; j< currentNode.adjacencyList.size(); ++j ){
 	Graph<Position>::Node* adjNodePtr = currentNode.adjacencyList[j];
 	if (checkPos(currentPos, adjNodePtr->data, program.front()) ){
@@ -202,7 +228,7 @@ namespace my_muncher
 	  if(checkNodeId(nextNodeIndex)){
 	    // move
 	    // std::cout << "moving "<<program.front()<<std::endl;
-	    std::cout << "moving to "<< nextNodeIndex << std::endl;
+	    // std::cout << "moving to "<< nextNodeIndex << std::endl;
 	    
 	    score ++; 
 	    currentNodeIndex = nextNodeIndex;

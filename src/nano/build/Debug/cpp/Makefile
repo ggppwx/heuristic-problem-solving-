@@ -30,24 +30,27 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/bin/cmake
+CMAKE_COMMAND = "/Applications/CMake 2.8-6.app/Contents/bin/cmake"
 
 # The command to remove a file.
-RM = /usr/bin/cmake -E remove -f
+RM = "/Applications/CMake 2.8-6.app/Contents/bin/cmake" -E remove -f
+
+# The program to use to edit the cache.
+CMAKE_EDIT_COMMAND = "/Applications/CMake 2.8-6.app/Contents/bin/ccmake"
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/roy/src/nano/src
+CMAKE_SOURCE_DIR = /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/roy/src/nano/build/Debug
+CMAKE_BINARY_DIR = /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug
 
 #=============================================================================
 # Targets provided globally by CMake.
 
 # Special rule for the target edit_cache
 edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running interactive CMake command-line interface..."
-	/usr/bin/cmake -i .
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake cache editor..."
+	"/Applications/CMake 2.8-6.app/Contents/bin/ccmake" -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : edit_cache
 
 # Special rule for the target edit_cache
@@ -57,7 +60,7 @@ edit_cache/fast: edit_cache
 # Special rule for the target rebuild_cache
 rebuild_cache:
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running CMake to regenerate build system..."
-	/usr/bin/cmake -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
+	"/Applications/CMake 2.8-6.app/Contents/bin/cmake" -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR)
 .PHONY : rebuild_cache
 
 # Special rule for the target rebuild_cache
@@ -66,14 +69,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/roy/src/nano/build/Debug && $(CMAKE_COMMAND) -E cmake_progress_start /home/roy/src/nano/build/Debug/CMakeFiles /home/roy/src/nano/build/Debug/cpp/CMakeFiles/progress.marks
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f CMakeFiles/Makefile2 cpp/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/roy/src/nano/build/Debug/CMakeFiles 0
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(CMAKE_COMMAND) -E cmake_progress_start /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp/CMakeFiles/progress.marks
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f CMakeFiles/Makefile2 cpp/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f CMakeFiles/Makefile2 cpp/clean
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f CMakeFiles/Makefile2 cpp/clean
 .PHONY : clean
 
 # The main clean target
@@ -82,22 +85,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f CMakeFiles/Makefile2 cpp/preinstall
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f CMakeFiles/Makefile2 cpp/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f CMakeFiles/Makefile2 cpp/preinstall
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f CMakeFiles/Makefile2 cpp/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/roy/src/nano/build/Debug && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 cpp/CMakeFiles/nanomunchers_serialize.dir/rule:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f CMakeFiles/Makefile2 cpp/CMakeFiles/nanomunchers_serialize.dir/rule
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f CMakeFiles/Makefile2 cpp/CMakeFiles/nanomunchers_serialize.dir/rule
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize.dir/rule
 
 # Convenience name for target.
@@ -106,12 +109,12 @@ nanomunchers_serialize: cpp/CMakeFiles/nanomunchers_serialize.dir/rule
 
 # fast build rule for target.
 nanomunchers_serialize/fast:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/build
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/build
 .PHONY : nanomunchers_serialize/fast
 
 # Convenience name for target.
 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/rule:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f CMakeFiles/Makefile2 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/rule
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f CMakeFiles/Makefile2 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/rule
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/rule
 
 # Convenience name for target.
@@ -120,7 +123,7 @@ nanomunchers_serialize_gtest: cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/ru
 
 # fast build rule for target.
 nanomunchers_serialize_gtest/fast:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build.make cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build.make cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build
 .PHONY : nanomunchers_serialize_gtest/fast
 
 my_muncher.o: my_muncher.cpp.o
@@ -128,7 +131,7 @@ my_muncher.o: my_muncher.cpp.o
 
 # target to build an object file
 my_muncher.cpp.o:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.o
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.o
 .PHONY : my_muncher.cpp.o
 
 my_muncher.i: my_muncher.cpp.i
@@ -136,7 +139,7 @@ my_muncher.i: my_muncher.cpp.i
 
 # target to preprocess a source file
 my_muncher.cpp.i:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.i
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.i
 .PHONY : my_muncher.cpp.i
 
 my_muncher.s: my_muncher.cpp.s
@@ -144,7 +147,7 @@ my_muncher.s: my_muncher.cpp.s
 
 # target to generate assembly for a file
 my_muncher.cpp.s:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.s
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.s
 .PHONY : my_muncher.cpp.s
 
 nanomunchers_data.o: nanomunchers_data.cpp.o
@@ -152,7 +155,7 @@ nanomunchers_data.o: nanomunchers_data.cpp.o
 
 # target to build an object file
 nanomunchers_data.cpp.o:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o
 .PHONY : nanomunchers_data.cpp.o
 
 nanomunchers_data.i: nanomunchers_data.cpp.i
@@ -160,7 +163,7 @@ nanomunchers_data.i: nanomunchers_data.cpp.i
 
 # target to preprocess a source file
 nanomunchers_data.cpp.i:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.i
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.i
 .PHONY : nanomunchers_data.cpp.i
 
 nanomunchers_data.s: nanomunchers_data.cpp.s
@@ -168,7 +171,7 @@ nanomunchers_data.s: nanomunchers_data.cpp.s
 
 # target to generate assembly for a file
 nanomunchers_data.cpp.s:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.s
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.s
 .PHONY : nanomunchers_data.cpp.s
 
 nanomunchers_serialize.o: nanomunchers_serialize.cpp.o
@@ -176,7 +179,7 @@ nanomunchers_serialize.o: nanomunchers_serialize.cpp.o
 
 # target to build an object file
 nanomunchers_serialize.cpp.o:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o
 .PHONY : nanomunchers_serialize.cpp.o
 
 nanomunchers_serialize.i: nanomunchers_serialize.cpp.i
@@ -184,7 +187,7 @@ nanomunchers_serialize.i: nanomunchers_serialize.cpp.i
 
 # target to preprocess a source file
 nanomunchers_serialize.cpp.i:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.i
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.i
 .PHONY : nanomunchers_serialize.cpp.i
 
 nanomunchers_serialize.s: nanomunchers_serialize.cpp.s
@@ -192,7 +195,7 @@ nanomunchers_serialize.s: nanomunchers_serialize.cpp.s
 
 # target to generate assembly for a file
 nanomunchers_serialize.cpp.s:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.s
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize.dir/build.make cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.s
 .PHONY : nanomunchers_serialize.cpp.s
 
 nanomunchers_serialize_gtest.o: nanomunchers_serialize_gtest.cpp.o
@@ -200,7 +203,7 @@ nanomunchers_serialize_gtest.o: nanomunchers_serialize_gtest.cpp.o
 
 # target to build an object file
 nanomunchers_serialize_gtest.cpp.o:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build.make cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.o
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build.make cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.o
 .PHONY : nanomunchers_serialize_gtest.cpp.o
 
 nanomunchers_serialize_gtest.i: nanomunchers_serialize_gtest.cpp.i
@@ -208,7 +211,7 @@ nanomunchers_serialize_gtest.i: nanomunchers_serialize_gtest.cpp.i
 
 # target to preprocess a source file
 nanomunchers_serialize_gtest.cpp.i:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build.make cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.i
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build.make cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.i
 .PHONY : nanomunchers_serialize_gtest.cpp.i
 
 nanomunchers_serialize_gtest.s: nanomunchers_serialize_gtest.cpp.s
@@ -216,7 +219,7 @@ nanomunchers_serialize_gtest.s: nanomunchers_serialize_gtest.cpp.s
 
 # target to generate assembly for a file
 nanomunchers_serialize_gtest.cpp.s:
-	cd /home/roy/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build.make cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.s
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(MAKE) -f cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build.make cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.s
 .PHONY : nanomunchers_serialize_gtest.cpp.s
 
 # Help Target
@@ -252,6 +255,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/roy/src/nano/build/Debug && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

@@ -26,16 +26,19 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = /usr/bin/cmake
+CMAKE_COMMAND = "/Applications/CMake 2.8-6.app/Contents/bin/cmake"
 
 # The command to remove a file.
-RM = /usr/bin/cmake -E remove -f
+RM = "/Applications/CMake 2.8-6.app/Contents/bin/cmake" -E remove -f
+
+# The program to use to edit the cache.
+CMAKE_EDIT_COMMAND = "/Applications/CMake 2.8-6.app/Contents/bin/ccmake"
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/roy/src/nano/src
+CMAKE_SOURCE_DIR = /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/roy/src/nano/build/Debug
+CMAKE_BINARY_DIR = /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug
 
 # Include any dependencies generated for this target.
 include cpp/CMakeFiles/nanomunchers_serialize.dir/depend.make
@@ -47,18 +50,18 @@ include cpp/CMakeFiles/nanomunchers_serialize.dir/progress.make
 include cpp/CMakeFiles/nanomunchers_serialize.dir/flags.make
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o: cpp/CMakeFiles/nanomunchers_serialize.dir/flags.make
-cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o: /home/roy/src/nano/src/cpp/nanomunchers_data.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/roy/src/nano/build/Debug/CMakeFiles $(CMAKE_PROGRESS_1)
+cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o: /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/nanomunchers_data.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o"
-	cd /home/roy/src/nano/build/Debug/cpp && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o -c /home/roy/src/nano/src/cpp/nanomunchers_data.cpp
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && /opt/local/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o -c /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/nanomunchers_data.cpp
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.i"
-	cd /home/roy/src/nano/build/Debug/cpp && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/roy/src/nano/src/cpp/nanomunchers_data.cpp > CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.i
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && /opt/local/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/nanomunchers_data.cpp > CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.i
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.s"
-	cd /home/roy/src/nano/build/Debug/cpp && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/roy/src/nano/src/cpp/nanomunchers_data.cpp -o CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.s
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && /opt/local/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/nanomunchers_data.cpp -o CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.s
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o.requires:
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o.requires
@@ -70,18 +73,18 @@ cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o.provides: cpp/
 cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o.provides.build: cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_data.cpp.o
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o: cpp/CMakeFiles/nanomunchers_serialize.dir/flags.make
-cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o: /home/roy/src/nano/src/cpp/nanomunchers_serialize.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/roy/src/nano/build/Debug/CMakeFiles $(CMAKE_PROGRESS_2)
+cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o: /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/nanomunchers_serialize.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o"
-	cd /home/roy/src/nano/build/Debug/cpp && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o -c /home/roy/src/nano/src/cpp/nanomunchers_serialize.cpp
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && /opt/local/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o -c /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/nanomunchers_serialize.cpp
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.i"
-	cd /home/roy/src/nano/build/Debug/cpp && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/roy/src/nano/src/cpp/nanomunchers_serialize.cpp > CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.i
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && /opt/local/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/nanomunchers_serialize.cpp > CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.i
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.s"
-	cd /home/roy/src/nano/build/Debug/cpp && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/roy/src/nano/src/cpp/nanomunchers_serialize.cpp -o CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.s
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && /opt/local/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/nanomunchers_serialize.cpp -o CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.s
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o.requires:
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o.requires
@@ -93,18 +96,18 @@ cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o.provides:
 cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o.provides.build: cpp/CMakeFiles/nanomunchers_serialize.dir/nanomunchers_serialize.cpp.o
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.o: cpp/CMakeFiles/nanomunchers_serialize.dir/flags.make
-cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.o: /home/roy/src/nano/src/cpp/my_muncher.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /home/roy/src/nano/build/Debug/CMakeFiles $(CMAKE_PROGRESS_3)
+cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.o: /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/my_muncher.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles $(CMAKE_PROGRESS_3)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.o"
-	cd /home/roy/src/nano/build/Debug/cpp && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.o -c /home/roy/src/nano/src/cpp/my_muncher.cpp
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && /opt/local/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.o -c /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/my_muncher.cpp
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.i"
-	cd /home/roy/src/nano/build/Debug/cpp && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/roy/src/nano/src/cpp/my_muncher.cpp > CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.i
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && /opt/local/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/my_muncher.cpp > CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.i
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.s"
-	cd /home/roy/src/nano/build/Debug/cpp && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/roy/src/nano/src/cpp/my_muncher.cpp -o CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.s
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && /opt/local/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/my_muncher.cpp -o CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.s
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.o.requires:
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize.dir/my_muncher.cpp.o.requires
@@ -130,8 +133,8 @@ cpp/libnanomunchers_serialize.a: cpp/CMakeFiles/nanomunchers_serialize.dir/my_mu
 cpp/libnanomunchers_serialize.a: cpp/CMakeFiles/nanomunchers_serialize.dir/build.make
 cpp/libnanomunchers_serialize.a: cpp/CMakeFiles/nanomunchers_serialize.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX static library libnanomunchers_serialize.a"
-	cd /home/roy/src/nano/build/Debug/cpp && $(CMAKE_COMMAND) -P CMakeFiles/nanomunchers_serialize.dir/cmake_clean_target.cmake
-	cd /home/roy/src/nano/build/Debug/cpp && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/nanomunchers_serialize.dir/link.txt --verbose=$(VERBOSE)
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && $(CMAKE_COMMAND) -P CMakeFiles/nanomunchers_serialize.dir/cmake_clean_target.cmake
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/nanomunchers_serialize.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 cpp/CMakeFiles/nanomunchers_serialize.dir/build: cpp/libnanomunchers_serialize.a
@@ -143,10 +146,10 @@ cpp/CMakeFiles/nanomunchers_serialize.dir/requires: cpp/CMakeFiles/nanomunchers_
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize.dir/requires
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/clean:
-	cd /home/roy/src/nano/build/Debug/cpp && $(CMAKE_COMMAND) -P CMakeFiles/nanomunchers_serialize.dir/cmake_clean.cmake
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && $(CMAKE_COMMAND) -P CMakeFiles/nanomunchers_serialize.dir/cmake_clean.cmake
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize.dir/clean
 
 cpp/CMakeFiles/nanomunchers_serialize.dir/depend:
-	cd /home/roy/src/nano/build/Debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/roy/src/nano/src /home/roy/src/nano/src/cpp /home/roy/src/nano/build/Debug /home/roy/src/nano/build/Debug/cpp /home/roy/src/nano/build/Debug/cpp/CMakeFiles/nanomunchers_serialize.dir/DependInfo.cmake --color=$(COLOR)
+	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp/CMakeFiles/nanomunchers_serialize.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize.dir/depend
 

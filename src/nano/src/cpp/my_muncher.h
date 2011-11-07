@@ -58,8 +58,6 @@ namespace my_muncher{
       muncher.startNodeIndex = 47;
       std::cout<<"score is "<<getScore(muncher)<<std::endl;
 
-
-
     }
 
     void MYMULTTEST(){
@@ -201,6 +199,54 @@ namespace my_muncher{
 	std::cerr<<"error"<<std::endl;
 
       }
+    }
+
+    /// get all comminations of program
+    std::vector< std::vector<Muncher::Instruction> > getAllCombinations(){
+      std::set<Muncher::Instruction> insSet;
+      insSet.insert(Muncher::Right);
+      insSet.insert(Muncher::Up);
+      insSet.insert(Muncher::Left);
+      insSet.insert(Muncher::Down);
+      std::vector<Muncher::Instruction> program(4);
+      std::vector< std::vector<Muncher::Instruction> >programList;
+      for(std::set<Muncher::Instruction>::iterator it=insSet.begin(); 
+	  it != insSet.end(); it++ ){
+	program[0]= *it;
+	for(std::set<Muncher::Instruction>::iterator it1=insSet.begin(); 
+	    it1 != insSet.end(); it1++){
+	  if(*it1 != program[0]){
+	    program[1] = *it1;	  
+	    for(std::set<Muncher::Instruction>::iterator it2=insSet.begin(); 
+		it2 != insSet.end(); it2++){
+	      if(*it2 != program[0] && *it2 != program[1] ){
+		program[2] = *it2; 
+		for(std::set<Muncher::Instruction>::iterator it3=insSet.begin(); 
+		    it3 != insSet.end(); it3++){
+		  if(*it3!=program[0] && 
+		     *it3!=program[1] &&
+		     *it3!=program[2] ){
+		    program[3] = *it3;
+		    /*
+		    std::cout << program[0]<< program[1]
+			      << program[2]<< program[3]
+			      << "-------------------"<< std::endl;
+		    */
+		    programList.push_back(program);
+		    
+		  }		
+		}
+
+	      }
+	    }
+
+	  }
+	}
+
+      }
+      return programList;
+      
+    
     }
 
     

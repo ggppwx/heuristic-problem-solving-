@@ -1,4 +1,4 @@
-# Install script for directory: /home/roy/src/nano/src
+# Install script for directory: /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -27,15 +27,10 @@ IF(NOT CMAKE_INSTALL_COMPONENT)
   ENDIF(COMPONENT)
 ENDIF(NOT CMAKE_INSTALL_COMPONENT)
 
-# Install shared libraries without execute permission?
-IF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
-  SET(CMAKE_INSTALL_SO_NO_EXE "1")
-ENDIF(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
-
 IF(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  INCLUDE("/home/roy/src/nano/build/Debug/cpp/cmake_install.cmake")
-  INCLUDE("/home/roy/src/nano/build/Debug/gtest-1.6.0/cmake_install.cmake")
+  INCLUDE("/Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp/cmake_install.cmake")
+  INCLUDE("/Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/gtest-1.6.0/cmake_install.cmake")
 
 ENDIF(NOT CMAKE_INSTALL_LOCAL_ONLY)
 
@@ -45,7 +40,7 @@ ELSE(CMAKE_INSTALL_COMPONENT)
   SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 ENDIF(CMAKE_INSTALL_COMPONENT)
 
-FILE(WRITE "/home/roy/src/nano/build/Debug/${CMAKE_INSTALL_MANIFEST}" "")
+FILE(WRITE "/Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/${CMAKE_INSTALL_MANIFEST}" "")
 FOREACH(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  FILE(APPEND "/home/roy/src/nano/build/Debug/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  FILE(APPEND "/Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 ENDFOREACH(file)
