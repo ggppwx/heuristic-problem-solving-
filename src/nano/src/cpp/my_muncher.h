@@ -55,7 +55,7 @@ namespace my_muncher{
       muncher.program[2] = Muncher::Left;
       muncher.program[3] = Muncher::Up;
 
-      muncher.startNodeIndex = 126;
+      muncher.startNodeIndex = 44;
       std::cout<<getScore(muncher)<<std::endl;
 
 
@@ -79,10 +79,10 @@ namespace my_muncher{
       m2.program[2] = Muncher::Left;
       m2.program[3] = Muncher::Up;
       m1.startNodeIndex = 0;
-      m2.startNodeIndex = 126;
+      m2.startNodeIndex = 44;
       
       std::vector<MyMuncher> ml;
-      ml.push_back(m1);
+      // ml.push_back(m1);
       ml.push_back(m2);
       getMultScore(ml);
       
@@ -146,14 +146,7 @@ namespace my_muncher{
 
       }
 
-      /*
-      for(int i = 0; i<my_graph.nodes.size(); ++i){
-	muncher.startNodeIndex = i;
-	node_map.clear();
-	std::cout<<getScore(muncher)<<std::endl;
-      }
 
-      */
     }
 
   private:
