@@ -13,6 +13,7 @@
 #else
 #include <sys/time.h>
 #endif
+using namespace _hps_nanomunchers_data_file_gtest_h_;
 
 int main(int argc, char** argv)
 {
@@ -28,7 +29,8 @@ int main(int argc, char** argv)
   m.loadData("data_0");
   // m.analyze();
   // FOR TEST: OK
-  // _hps_nanomunchers_data_file_gtest_h_::PrintNodeInfo(m.getGraph(), 79);
-
-
+  // PrintNodeInfo(m.getGraph(), 0);
+  // FOR TEST:
+  m.MYSINGLETEST();
+  // m.MYTEST();
 }

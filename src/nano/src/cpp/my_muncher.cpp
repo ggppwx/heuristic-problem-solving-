@@ -26,7 +26,7 @@ namespace my_muncher
   void My_munchers::analyze(){
     std::cout << "analyzing the data ...." << std::endl;
     // TODO 
-
+    
     
     return;
   }
@@ -40,97 +40,133 @@ namespace my_muncher
   }
 
   bool My_munchers::checkPos(Position currentPos, Position nextPos, Muncher::Instruction ins){
-     switch(ins){
-      case Muncher::Up:
-	if(nextPos.x - currentPos.x == 0 && nextPos.y - currentPos.y > 0){
-	  return true;
-	}
-	return false;
-      case Muncher::Down:
-	if(nextPos.x - currentPos.x == 0 && nextPos.y - currentPos.y < 0){
-	  return true;
-	}
-	return false;
-      case Muncher::Right:
-	if(nextPos.x - currentPos.x > 0 && nextPos.y - currentPos.y == 0){
-	  return true;
-	}
-	return false;
-      case Muncher::Left:
-	if(nextPos.x - currentPos.x < 0 && nextPos.y - currentPos.y == 0){
-	  return true;
-	}
-	return false;
-      default:
-	std::cerr <<"error, adj node is the same node"<< std::endl;
-	return false;
+    /// for TEST
+    // std::cout << "current pos "<<currentPos.x<<"-"<<currentPos.y<<std::endl;
+    // std::cout << "next pos "<<nextPos.x<<"_"<<nextPos.y<<std::endl;
+    // std::cout << ins <<std::endl;
+    switch(ins){
+    case Muncher::Up:
+      if(nextPos.x - currentPos.x == 0 && nextPos.y - currentPos.y > 0){
+	return true;
       }
-
-  }
-
-
-  int My_munchers::getScore(const MyMuncher& m){
-    // TODO   get the maximum score of a muncher. 
-    int startNodeIndex  = m.startNodeIndex;
-    Position startPos = my_graph.nodes[startNodeIndex].data;
-    int startTime = m.startTime;
-    int currentNodeIndex = startPos;
-    while(true){
-      // first step
-      // get the current node 
-      Graph::Node currentNode =  my_graph.nodes[currentNodeIndex];
-      Position currentPos = currentNode.data;
-      
-      for(int i = 0; i< 4; ++i ){
-
-	for(int i = 0; i< currentNode.adjacencyList.size(); ++i ){
-	    Graph::Node* adjNodePtr = currentNode.adjacencyList[i];
-	    if (checkPos(currentPos, adjNodePtr->data, m.program[i]) ){
-	      int nextNodeIndex = GetNodeId(my_graph, adjNodePtr);
-	      if(checkNodeId(nextNodeIndex)){
-		// move
-		currentNodeIndex = nextNodeIndex;
-		node_map[currentNodeIndex] = 1; 
-	      }
-	    }
-	}
-	/*
-	switch( m.program[i]){
-	case Muncher::Up:
-	  // if upper node is available. move up
-	  for(int i = 0; i< currentNode.adjacencyList.size(); ++i ){
-	    Graph::Node* adjNodePtr = currentNode.adjacencyList[i];
-	    //	    Position adjPos  = currentNode.adjacencyList[i]->data;
-	    if (checkPos(currentPos, adjNodePtr->data, Muncher::Up) ){
-	      int upNodeIndex = GetNodeId(my_graph, adjNodePtr);
-	      if(checkNodeId(upNodeIndex)){
-		// move up 
-		currentNodeIndex = upNodeIndex;
-		node_map[currentNodeIndex] = 1; 
-	      }
-	    }
-	  }
-	  break;
-	case Muncher::Down:
-	  break;
-	case Muncher::Left:
-	  break;
-	case Muncher::Right:
-	  break;
-	}
+      return false;
+    case Muncher::Down:
+      if(nextPos.x - currentPos.x == 0 && nextPos.y - currentPos.y < 0){
+	return true;
       }
-     */
-
+      return false;
+    case Muncher::Right:
+      if(nextPos.x - currentPos.x > 0 && nextPos.y - currentPos.y == 0){
+	return true;
+      }
+      return false;
+    case Muncher::Left:
+      if(nextPos.x - currentPos.x < 0 && nextPos.y - currentPos.y == 0){
+	return true;
+      }
+      return false;
+    default:
+      std::cerr <<"error, adj node is the same node"<< std::endl;
+      return false;
     }
 
   }
+  
+
+  int My_munchers::getScore(const MyMuncher& m){
+    // TODO   get the maximum score of a muncher. 
+    int score = 0;
+    int startTime = m.startTime;
+    int currentNodeIndex = m.startNodeIndex;
+    node_map[currentNodeIndex] = 1;
+    std::deque<Muncher::Instruction> program(m.program,m.program+sizeof(m.program)/sizeof(Muncher::Instruction)); 
+
+    while(true){
+      // one step
+      // get the current node 
+      // std::cout << "current node "<<currentNodeIndex<<std::endl;  // TEST
+      
+      Graph<Position>::Node currentNode =  my_graph.nodes[currentNodeIndex];
+      Position currentPos = currentNode.data;
+      // std::cout << currentPos.x<< "-"<<currentPos.y<<std::endl;
+      bool move_flag = false;
+      
+      /// for test
+      std::cout << "try------- " << program.front() << std::endl;
+      
+      for(int i = 0; i< 4; ++i ){
+	std::cout << "trying "<<program.front()<<std::endl;
+	for(int j = 0; j< currentNode.adjacencyList.size(); ++j ){
+	  Graph<Position>::Node* adjNodePtr = currentNode.adjacencyList[j];
+	  if (checkPos(currentPos, adjNodePtr->data, program.front()) ){
+	    int nextNodeIndex = GetNodeId(my_graph, adjNodePtr);
+	    
+	    // std::cout<<"next node id "<<nextNodeIndex<<std::endl;
+	    
+	    if(checkNodeId(nextNodeIndex)){
+	      // move
+	      //std::cout << "moving to "<< nextNodeIndex << std::endl;
+	      
+	      score ++; 
+	      currentNodeIndex = nextNodeIndex;
+	      node_map[currentNodeIndex] = 1; 
+	      move_flag = true;
+	    }
+	    break;
+	  }
+	}
+	program.push_back(program.front());
+	program.pop_front();
+	if(move_flag){
+	  break;
+	}
+
+      }
+      if(!move_flag){ // cannot move anymore
+	break;
+      }
+       
+    }
+    return score; 
+  } // end of the function
+
+
+  void My_munchers::getMultScore(const MyMuncherList& ml){
+    int globleTime = 0;
+    std::map<int, int> currentNodeIndex;
+    while(true){ // one step
+      for(int muncherId = 0; muncherId < ml.size(); ++muncherId){
+	if(ml[muncherId].startTime == globleTime){ // drop this 
+	  std::cout << "drop muncher "<<muncherId<<std::endl;
+	  currentNodeIndex[muncherId] = ml[muncherId].startNodeIndex;
+	  
+	}
+      }
+
+      
+      for(std::map<int,int>::iterator it = currentNodeIndex.begin();
+	  it!= currentNodeIndex.end();it++){
+	int cNode = it->second; // current node for muncher it->first. 
+	
 
 
 
 
 
+      }
+
+      // move one step. 
 
 
-  } // end of the class 
 
+
+
+      globleTime++;
+    }
+
+  }
+  
+
+
+}  // end of namespace.  
 
