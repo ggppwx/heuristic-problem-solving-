@@ -200,6 +200,12 @@ namespace my_muncher{
 
       }
     }
+    
+
+    /// divide the nodes into different groups 
+    /// each group is independent with ohter groups
+    /// return several groups of nodeindex list 
+    std::vector< std::vector<int> > getGroup();
 
     /// get all comminations of program
     std::vector< std::vector<Muncher::Instruction> > getAllCombinations(){
@@ -210,6 +216,15 @@ namespace my_muncher{
       insSet.insert(Muncher::Down);
       std::vector<Muncher::Instruction> program(4);
       std::vector< std::vector<Muncher::Instruction> >programList;
+
+      // only 8 directions. 
+      Muncher::Instruction p1 = {Muncher::Right};
+      
+
+      programList.push_back();
+      
+
+
       for(std::set<Muncher::Instruction>::iterator it=insSet.begin(); 
 	  it != insSet.end(); it++ ){
 	program[0]= *it;

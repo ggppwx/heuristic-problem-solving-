@@ -25,9 +25,25 @@ namespace my_muncher
   void My_munchers::analyze(){
     std::cout << "analyzing the data ...." << std::endl;
     // TODO 
-    //
     std::vector< std::vector<Muncher::Instruction> > programList = getAllCombinations();
     
+    // big while {
+    // first group the graph. 
+
+    // in each group drop a muncher.
+    // drop a muncher eat the most.  
+    //{
+    // during the move of a muncher.  check if it divides the this group to new groups  
+    // add  new muncher to the group where THERE is no muncher !!!! 
+    
+    // DO NOT clear the node_map.
+    
+    //}
+    // running to the end 
+    //}
+
+
+ 
 
     MyMuncher muncher;
     for(int i = 0; i< my_graph.nodes.size(); ++i){
@@ -39,11 +55,11 @@ namespace my_muncher
       for(int j =0; j< programList.size(); ++j){
 	std::vector<Muncher::Instruction> program = programList[j];
 
-
 	muncher.program[0] = program[0];
 	muncher.program[1] = program[1];
 	muncher.program[2] = program[2];
 	muncher.program[3] = program[3];
+	
 	std::cout <<"muncher prog " <<muncher.program[0]<<muncher.program[1]
 			      <<muncher.program[2]<<muncher.program[3]
 			      << std::endl;
@@ -205,6 +221,10 @@ namespace my_muncher
       std::cout <<"score is "<<score[i] <<std::endl;
     }
   }
+
+
+
+
 
 
   bool My_munchers::moveOneStep(int& currentNodeIndex, 
