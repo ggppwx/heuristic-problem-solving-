@@ -14,7 +14,7 @@ namespace my_muncher
     }
   };
 
-  void My_munchers::writeData(){
+  void My_munchers::writeData(const std::string &out){
     std::cout << "writing the data ...." << std::endl;
     std::vector<Muncher> muncherList;
     for(int i =0; i< my_muncher_list.size(); ++i){
@@ -29,7 +29,8 @@ namespace my_muncher
       m.program[3] = my_muncher_list[i].program[3];
       muncherList.push_back(m);
     }
-    std::ofstream output("out1.txt");
+    std::string outName = out + "-output.txt";
+    std::ofstream output(outName.c_str());
     WriteMuncherList(muncherList, &output);
     output.close();
 
@@ -45,14 +46,29 @@ namespace my_muncher
   void My_munchers::analyze(){
     std::cout << "analyzing the data ...." << std::endl;
     // TODO 
-    std::vector< std::vector<Muncher::Instruction> > programList = getAllCombinations();
+    // std::vector< std::vector<Muncher::Instruction> > programList = getAllCombinations();
     std::vector<int> nodeIndexList;
     for(int i = 0; i< my_graph.nodes.size();++i){
       nodeIndexList.push_back(i);
     }
     // std::cout <<nodeIndexList.size()<<std::endl; 
     Divide(nodeIndexList, 0 );
-    
+    std::deque<int> left;
+    //newDivide(nodeIndexList,0,left);
+    return;
+  }
+
+  void My_munchers::newAnalyze(){
+    std::cout << "analyzing the data ...." << std::endl;
+    // TODO 
+    // std::vector< std::vector<Muncher::Instruction> > programList = getAllCombinations();
+    std::vector<int> nodeIndexList;
+    for(int i = 0; i< my_graph.nodes.size();++i){
+      nodeIndexList.push_back(i);
+    }
+    // std::cout <<nodeIndexList.size()<<std::endl; 
+    std::deque<int> left;
+    newDivide(nodeIndexList,0,left);
     return;
   }
   
@@ -72,7 +88,7 @@ namespace my_muncher
 	  int nodeIndex = group[j];
 	  m.startNodeIndex = nodeIndex;
 	  m.startTime = -1;
-	  for(int i = 1; i< 8 ;++i){ // for each node try 8 combinations
+	  for(int i = 0; i< 8 ;++i){ // for each node try 8 combinations
 	    m.program[0] = comb[i][0]; // Muncher::Up;
 	    m.program[1] = comb[i][1]; //Muncher::Right;
 	    m.program[2] = comb[i][2]; //Muncher::Down;
@@ -144,7 +160,7 @@ namespace my_muncher
     for(int i =0; i< nodeIndexList.size(); ++i){
       if(current_node_map.find(nodeIndexList[i]) == current_node_map.end()
 	 && visit_nodes.find(nodeIndexList[i]) == visit_nodes.end()){
-	std::cout<<"test:process node "<<i<<std::endl;
+	// std::cout<<"test:process node "<<i<<std::endl;
 	std::vector<int> newgroup = BFS(nodeIndexList[i], visit_nodes);
 	groups.push_back(newgroup);
       }
@@ -153,6 +169,104 @@ namespace my_muncher
     return groups;
     
   }
+
+  std::deque<int> My_munchers::getTrace(const MyMuncher& m){
+    // TODO   get the trace of a muncher. 
+    std::deque<int> nodeTrace;
+    int score = 0;
+    int startTime = m.startTime;
+    int currentNodeIndex = m.startNodeIndex;
+    node_map[currentNodeIndex] = 1;
+    std::deque<Muncher::Instruction> program(m.program,m.program+sizeof(m.program)/sizeof(Muncher::Instruction)); 
+    
+    while(true){
+      // one step
+      // get the current node 
+      std::cout << "current node "<<currentNodeIndex<<std::endl;  // TEST
+      nodeTrace.push_back(currentNodeIndex);
+      bool move_flag = moveOneStep(currentNodeIndex, program, score);
+      if(!move_flag){ // cannot move anymore
+	break;
+      }
+      node_map[currentNodeIndex] = 1; 
+       
+    }
+    return nodeTrace; 
+  }
+
+
+  int My_munchers::updateCurrentNode(const std::deque<int> &traceUpdated){
+    for(int i=0;i<traceUpdated.size();++i){
+      assert(current_node_map.count(traceUpdated[i]) == 0);
+      current_node_map[traceUpdated[i]] = 1;
+    }
+    return traceUpdated.size();
+  }
+
+
+  void My_munchers::newDivide(const std::vector<int> l,int startTime,std::deque<int> left){
+    // get group is due to current_node_map
+    std::cout << l.size()<<std::endl;
+    std::vector< std::vector<int> > groups =  getGroup(l);
+    if(groups.empty()){
+      return;
+    }
+    for(int i = 0; i< groups.size(); ++i){
+      // do something in group i 
+      std::cout<<"for group "<<i<<"---------------"<< left.size()<<std::endl;
+      if(left.size() !=0 && groups[i].end() != std::find(groups[i].begin(),groups[i].end(),left.front()) ){ 
+	// there's a muncher in group
+	// finish the trace.
+	std::deque<int> traceUpdated = left;
+	std::deque<int> traceLeft;  // nothing in it 
+	traceLeft.clear();
+	int scoreForGroup = updateCurrentNode(traceUpdated);
+	std::cout<<"group left!!  ";
+	for(int j=0;j<groups[i].size();++j){
+	  std::cout<<groups[i][j]<<" "; 
+	}
+	std::cout<<std::endl;
+	std::cout<<"resumes from "<<left[0]
+		 <<" max score "<<scoreForGroup<<std::endl;
+       
+	newDivide(groups[i],startTime + scoreForGroup,traceLeft );
+	
+      }else{ // no muncher in group i or muncher has died 
+	MyMuncher mForGroup = process(groups[i]); // drop a new muncher.
+	mForGroup.startTime = startTime;
+	my_muncher_list.push_back(mForGroup);
+	
+	node_map = current_node_map;  //load current node_map
+	std::deque<int> traceForGroup = getTrace(mForGroup);
+	std::deque<int> traceUpdated ; // first half
+	std::deque<int> traceLeft; // left
+
+	for(int k = 0; k<traceForGroup.size(); k++){
+	  if(k<=traceForGroup.size()/2){
+	    traceUpdated.push_back(traceForGroup[k]);
+	  }else{
+	    traceLeft.push_back(traceForGroup[k]);
+	  }
+	}
+
+
+	int scoreForGroup = updateCurrentNode(traceUpdated);
+	// traceLeft for group
+	std::cout<<"group ";
+	for(int j=0;j<groups[i].size();++j){
+	  std::cout<<groups[i][j]<<" "; 
+	}
+	std::cout<<std::endl;
+	std::cout<<"starts from "<<mForGroup.startNodeIndex
+		 <<" max score "<<scoreForGroup<<std::endl;
+	
+	
+	newDivide(groups[i],startTime + scoreForGroup,traceLeft);
+      }
+
+    }
+  }
+
 
   void My_munchers::Divide(const std::vector<int> l,int startTime){
     // get group is due to current_node_map

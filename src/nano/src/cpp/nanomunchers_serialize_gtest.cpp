@@ -17,16 +17,18 @@ using namespace _hps_nanomunchers_data_file_gtest_h_;
 
 int main(int argc, char** argv)
 {
-  const unsigned int randSeed = static_cast<unsigned int>(time(NULL));
-  std::cout << "Random seed: " << randSeed << "." << std::endl;
-  srand(randSeed);
+  
   /*
   testing::InitGoogleTest(&argc, argv);
   return RUN_ALL_TESTS();
   */
+  if(argc != 2){
+    std::cerr<<"arguments not correct"<<std::endl;
+    return 1;
+  }
 
   my_muncher::My_munchers m;
-  m.loadData("data_1");
+  m.loadData(argv[1]);
   // m.analyze();
   // FOR TEST: OK
   // PrintNodeInfo(m.getGraph(), 0);
@@ -37,7 +39,8 @@ int main(int argc, char** argv)
   //m.MYMULTTEST();
   // m.TEST_getGroups();
   m.analyze();
+  // m.newAnalyze();
   m.TEST_my_muncher_list();
-  m.writeData();
-  
+  m.writeData(argv[1]);
+  return 0;
 }

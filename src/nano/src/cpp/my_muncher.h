@@ -49,8 +49,11 @@ namespace my_muncher{
     void loadData(std::string path);
     /// main logic: solve the nanomuncher puzzle
     void analyze();
+    /// new analyze is not good enough.
+    void newAnalyze();
+
     /// write the muncher to validator. 
-    void writeData();
+    void writeData(const std::string &out);
 
 
 
@@ -267,8 +270,22 @@ namespace my_muncher{
     /// bfs 
     std::vector<int> BFS(int nodeindex, std::map<int,int> &visit_nodes);
     
+    
+    /// update current_node_map
+    int updateCurrentNode(const std::deque<int> &traceUpdated);
+    
+    /// get trace 
+    /// which is similar to getscore
+    std::deque<int> getTrace(const MyMuncher& m);
+
+
+    /// new divide, an improved divide. 
+    void newDivide(const std::vector<int> l,int startTime,std::deque<int> left);
+
 
     /// get all comminations of program
+    std::vector< std::vector<Muncher::Instruction> > getAllCombinations(){}
+    /*  
     std::vector< std::vector<Muncher::Instruction> > getAllCombinations(){
       std::set<Muncher::Instruction> insSet;
       insSet.insert(Muncher::Right);
@@ -282,8 +299,6 @@ namespace my_muncher{
       // Muncher::Instruction p1 = {Muncher::Right};
 
       // programList.push_back();
-      
-
 
       for(std::set<Muncher::Instruction>::iterator it=insSet.begin(); 
 	  it != insSet.end(); it++ ){
@@ -302,11 +317,11 @@ namespace my_muncher{
 		     *it3!=program[1] &&
 		     *it3!=program[2] ){
 		    program[3] = *it3;
-		    /*
+		    
 		    std::cout << program[0]<< program[1]
 			      << program[2]<< program[3]
 			      << "-------------------"<< std::endl;
-		    */
+		    
 		    programList.push_back(program);
 		    
 		  }		
@@ -323,7 +338,7 @@ namespace my_muncher{
       
     
     }
-
+    */
     
 
   };
