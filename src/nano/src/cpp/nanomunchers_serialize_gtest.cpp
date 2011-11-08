@@ -26,7 +26,7 @@ int main(int argc, char** argv)
   */
 
   my_muncher::My_munchers m;
-  m.loadData("data_0");
+  m.loadData("data_1");
   // m.analyze();
   // FOR TEST: OK
   // PrintNodeInfo(m.getGraph(), 0);
@@ -35,7 +35,9 @@ int main(int argc, char** argv)
   // m.MYTEST();
   //m.MYSINGLETEST();
   //m.MYMULTTEST();
-  
+  // m.TEST_getGroups();
   m.analyze();
-
+  m.TEST_my_muncher_list();
+  m.writeData();
+  
 }

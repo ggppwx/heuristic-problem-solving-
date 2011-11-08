@@ -26,19 +26,16 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = "/Applications/CMake 2.8-6.app/Contents/bin/cmake"
+CMAKE_COMMAND = /usr/bin/cmake
 
 # The command to remove a file.
-RM = "/Applications/CMake 2.8-6.app/Contents/bin/cmake" -E remove -f
-
-# The program to use to edit the cache.
-CMAKE_EDIT_COMMAND = "/Applications/CMake 2.8-6.app/Contents/bin/ccmake"
+RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src
+CMAKE_SOURCE_DIR = /home/roy/src/nano/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug
+CMAKE_BINARY_DIR = /home/roy/src/nano/build/Debug
 
 # Include any dependencies generated for this target.
 include gtest-1.6.0/CMakeFiles/gtest_main.dir/depend.make
@@ -50,18 +47,18 @@ include gtest-1.6.0/CMakeFiles/gtest_main.dir/progress.make
 include gtest-1.6.0/CMakeFiles/gtest_main.dir/flags.make
 
 gtest-1.6.0/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o: gtest-1.6.0/CMakeFiles/gtest_main.dir/flags.make
-gtest-1.6.0/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o: /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/gtest-1.6.0/src/gtest_main.cc
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles $(CMAKE_PROGRESS_1)
+gtest-1.6.0/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o: /home/roy/src/nano/src/gtest-1.6.0/src/gtest_main.cc
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/roy/src/nano/build/Debug/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object gtest-1.6.0/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o"
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/gtest-1.6.0 && /opt/local/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS)  -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/gtest-1.6.0/src/gtest_main.cc
+	cd /home/roy/src/nano/build/Debug/gtest-1.6.0 && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS)  -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.o -c /home/roy/src/nano/src/gtest-1.6.0/src/gtest_main.cc
 
 gtest-1.6.0/CMakeFiles/gtest_main.dir/src/gtest_main.cc.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/gtest_main.dir/src/gtest_main.cc.i"
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/gtest-1.6.0 && /opt/local/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS)  -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -E /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/gtest-1.6.0/src/gtest_main.cc > CMakeFiles/gtest_main.dir/src/gtest_main.cc.i
+	cd /home/roy/src/nano/build/Debug/gtest-1.6.0 && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS)  -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -E /home/roy/src/nano/src/gtest-1.6.0/src/gtest_main.cc > CMakeFiles/gtest_main.dir/src/gtest_main.cc.i
 
 gtest-1.6.0/CMakeFiles/gtest_main.dir/src/gtest_main.cc.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/gtest_main.dir/src/gtest_main.cc.s"
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/gtest-1.6.0 && /opt/local/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS)  -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -S /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/gtest-1.6.0/src/gtest_main.cc -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.s
+	cd /home/roy/src/nano/build/Debug/gtest-1.6.0 && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS)  -Wall -Wshadow -DGTEST_HAS_PTHREAD=1 -fexceptions -Wextra -S /home/roy/src/nano/src/gtest-1.6.0/src/gtest_main.cc -o CMakeFiles/gtest_main.dir/src/gtest_main.cc.s
 
 gtest-1.6.0/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o.requires:
 .PHONY : gtest-1.6.0/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o.requires
@@ -83,8 +80,8 @@ gtest-1.6.0/libgtest_main.a: gtest-1.6.0/CMakeFiles/gtest_main.dir/src/gtest_mai
 gtest-1.6.0/libgtest_main.a: gtest-1.6.0/CMakeFiles/gtest_main.dir/build.make
 gtest-1.6.0/libgtest_main.a: gtest-1.6.0/CMakeFiles/gtest_main.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX static library libgtest_main.a"
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/gtest-1.6.0 && $(CMAKE_COMMAND) -P CMakeFiles/gtest_main.dir/cmake_clean_target.cmake
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/gtest-1.6.0 && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gtest_main.dir/link.txt --verbose=$(VERBOSE)
+	cd /home/roy/src/nano/build/Debug/gtest-1.6.0 && $(CMAKE_COMMAND) -P CMakeFiles/gtest_main.dir/cmake_clean_target.cmake
+	cd /home/roy/src/nano/build/Debug/gtest-1.6.0 && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/gtest_main.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 gtest-1.6.0/CMakeFiles/gtest_main.dir/build: gtest-1.6.0/libgtest_main.a
@@ -94,10 +91,10 @@ gtest-1.6.0/CMakeFiles/gtest_main.dir/requires: gtest-1.6.0/CMakeFiles/gtest_mai
 .PHONY : gtest-1.6.0/CMakeFiles/gtest_main.dir/requires
 
 gtest-1.6.0/CMakeFiles/gtest_main.dir/clean:
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/gtest-1.6.0 && $(CMAKE_COMMAND) -P CMakeFiles/gtest_main.dir/cmake_clean.cmake
+	cd /home/roy/src/nano/build/Debug/gtest-1.6.0 && $(CMAKE_COMMAND) -P CMakeFiles/gtest_main.dir/cmake_clean.cmake
 .PHONY : gtest-1.6.0/CMakeFiles/gtest_main.dir/clean
 
 gtest-1.6.0/CMakeFiles/gtest_main.dir/depend:
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/gtest-1.6.0 /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/gtest-1.6.0 /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/gtest-1.6.0/CMakeFiles/gtest_main.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/roy/src/nano/build/Debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/roy/src/nano/src /home/roy/src/nano/src/gtest-1.6.0 /home/roy/src/nano/build/Debug /home/roy/src/nano/build/Debug/gtest-1.6.0 /home/roy/src/nano/build/Debug/gtest-1.6.0/CMakeFiles/gtest_main.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : gtest-1.6.0/CMakeFiles/gtest_main.dir/depend
 

@@ -23,6 +23,21 @@ namespace my_muncher{
   
   typedef std::vector<MyMuncher> MyMuncherList;
 
+  static const MyMuncher::Instruction comb[8][4] = {
+    {MyMuncher::Up, MyMuncher::Right,MyMuncher::Down,MyMuncher::Left},
+    {MyMuncher::Up, MyMuncher::Left,MyMuncher::Down,MyMuncher::Right},
+    
+    {MyMuncher::Down, MyMuncher::Right,MyMuncher::Left,MyMuncher::Up},
+    {MyMuncher::Down, MyMuncher::Left,MyMuncher::Right,MyMuncher::Up},
+    
+    {MyMuncher::Left, MyMuncher::Up,MyMuncher::Right,MyMuncher::Down},
+    {MyMuncher::Left, MyMuncher::Down,MyMuncher::Right,MyMuncher::Up},
+    
+    {MyMuncher::Right, MyMuncher::Up,MyMuncher::Left,MyMuncher::Down},
+    {MyMuncher::Right, MyMuncher::Down,MyMuncher::Left,MyMuncher::Up}
+    
+  };
+   
   class My_munchers{
   public:
     My_munchers(){
@@ -40,6 +55,39 @@ namespace my_muncher{
 
 
     /// For TEST ONLY ---------------------
+    void TEST_my_muncher_list(){
+      std::cout << "muncher # "<<my_muncher_list.size()<<std::endl;
+      for(int i =0; i< my_muncher_list.size(); ++i){
+	std::cout <<"muncher starts " <<my_muncher_list[i].startNodeIndex
+		  << " time "<<my_muncher_list[i].startTime
+		  << " prog "<<my_muncher_list[i].program[0]
+		  << my_muncher_list[i].program[1]
+		  << my_muncher_list[i].program[2]
+		  << my_muncher_list[i].program[3]<< std::endl;
+	
+      }
+      
+    }
+
+    void TEST_getGroups(){ // OK
+      // current_node_map[119] = 1;
+      current_node_map[47] = 1;
+      std::vector<int> nodeIndexList;
+      for(int i = 0; i< my_graph.nodes.size();++i){
+	nodeIndexList.push_back(i);
+      }
+      std::vector< std::vector<int> > g = getGroup(nodeIndexList);
+      for(int i=0; i<g.size(); ++i){
+	std::cout<< "group "<<i<<"----------"<<std::endl;
+	for(int j=0;j<g[i].size();++j){
+	  std::cout<<g[i][j]<<" ";
+	}
+	std::cout<< std::endl;
+      }
+    }
+
+
+
     const NodeGraph& getGraph(){ 
       return my_graph;
     }
@@ -129,9 +177,7 @@ namespace my_muncher{
 		      muncher.startNodeIndex = i;
 		      node_map.clear();
 		      std::cout<<getScore(muncher)<<std::endl;
-		    }
-		    
-
+		    }		    
 
 		  }		
 		}
@@ -147,10 +193,13 @@ namespace my_muncher{
 
     }
 
+
   private:
     NodeGraph my_graph;
-    MuncherList my_muncher_list;
-    std::map<int, int> node_map; 
+    std::vector<MyMuncher> my_muncher_list;
+    std::map<int, int> node_map;
+    std::map<int, int> current_node_map;
+ 
     /// get score for a muncher. 
     int getScore(const MyMuncher &m);
     /// get score of multiple muncher
@@ -201,11 +250,23 @@ namespace my_muncher{
       }
     }
     
+    /// divide and conquer method
+    void Divide(std::vector<int> nodeIndexList,int startTime);
+
 
     /// divide the nodes into different groups 
     /// each group is independent with ohter groups
     /// return several groups of nodeindex list 
-    std::vector< std::vector<int> > getGroup();
+    std::vector< std::vector<int> > getGroup(const std::vector<int> nodeIndexList);
+
+
+    ///process one group
+    MyMuncher process(const std::vector<int> group);
+
+    
+    /// bfs 
+    std::vector<int> BFS(int nodeindex, std::map<int,int> &visit_nodes);
+    
 
     /// get all comminations of program
     std::vector< std::vector<Muncher::Instruction> > getAllCombinations(){
@@ -218,10 +279,9 @@ namespace my_muncher{
       std::vector< std::vector<Muncher::Instruction> >programList;
 
       // only 8 directions. 
-      Muncher::Instruction p1 = {Muncher::Right};
-      
+      // Muncher::Instruction p1 = {Muncher::Right};
 
-      programList.push_back();
+      // programList.push_back();
       
 
 

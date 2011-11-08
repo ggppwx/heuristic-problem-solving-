@@ -1,5 +1,5 @@
 #include "my_muncher.h"
-
+#include <fstream>
 
 
 
@@ -14,7 +14,27 @@ namespace my_muncher
     }
   };
 
+  void My_munchers::writeData(){
+    std::cout << "writing the data ...." << std::endl;
+    std::vector<Muncher> muncherList;
+    for(int i =0; i< my_muncher_list.size(); ++i){
+      Muncher m;
+      m.startTime = my_muncher_list[i].startTime;
+      int nodeId = my_muncher_list[i].startNodeIndex;
+      m.startPos.x = my_graph.nodes[nodeId].data.x; // position
+      m.startPos.y = my_graph.nodes[nodeId].data.y;
+      m.program[0] = my_muncher_list[i].program[0];
+      m.program[1] = my_muncher_list[i].program[1];
+      m.program[2] = my_muncher_list[i].program[2];
+      m.program[3] = my_muncher_list[i].program[3];
+      muncherList.push_back(m);
+    }
+    std::ofstream output("out1.txt");
+    WriteMuncherList(muncherList, &output);
+    output.close();
 
+    return;
+  }
   
   void My_munchers::loadData(std::string path){
     std::cout << "loading data......"<< std::endl;
@@ -26,59 +46,149 @@ namespace my_muncher
     std::cout << "analyzing the data ...." << std::endl;
     // TODO 
     std::vector< std::vector<Muncher::Instruction> > programList = getAllCombinations();
+    std::vector<int> nodeIndexList;
+    for(int i = 0; i< my_graph.nodes.size();++i){
+      nodeIndexList.push_back(i);
+    }
+    // std::cout <<nodeIndexList.size()<<std::endl; 
+    Divide(nodeIndexList, 0 );
     
-    // big while {
-    // first group the graph. 
-
-    // in each group drop a muncher.
-    // drop a muncher eat the most.  
-    //{
-    // during the move of a muncher.  check if it divides the this group to new groups  
-    // add  new muncher to the group where THERE is no muncher !!!! 
-    
-    // DO NOT clear the node_map.
-    
-    //}
-    // running to the end 
-    //}
-
-
- 
-
-    MyMuncher muncher;
-    for(int i = 0; i< my_graph.nodes.size(); ++i){
-      // try each node in the graph
-      // each node. try every combinations
-      muncher.startNodeIndex = i;
-      std::cout << "----------------------------------------------"<<std::endl;
-      std::cout <<"muncher starts "<<muncher.startNodeIndex<<std::endl;
-      for(int j =0; j< programList.size(); ++j){
-	std::vector<Muncher::Instruction> program = programList[j];
-
-	muncher.program[0] = program[0];
-	muncher.program[1] = program[1];
-	muncher.program[2] = program[2];
-	muncher.program[3] = program[3];
+    return;
+  }
+  
+  MyMuncher My_munchers::process(const std::vector<int> group){
+   	// in each group drop a muncher.
+	// drop a muncher eat the most.   
+	// probe all the nodes in this group.
 	
-	std::cout <<"muncher prog " <<muncher.program[0]<<muncher.program[1]
-			      <<muncher.program[2]<<muncher.program[3]
+	// before drop a muncher. save drop time. 
+    std::cout << "------------process-----------------"<<std::endl;
+	std::cout <<std::endl;
+	MyMuncher m;
+	int maxScore = -1;
+	int bestNode = -1;
+	Muncher::Instruction bestProgram[4];
+	for(int j = 0; j<group.size(); ++j){
+	  int nodeIndex = group[j];
+	  m.startNodeIndex = nodeIndex;
+	  m.startTime = -1;
+	  for(int i = 1; i< 8 ;++i){ // for each node try 8 combinations
+	    m.program[0] = comb[i][0]; // Muncher::Up;
+	    m.program[1] = comb[i][1]; //Muncher::Right;
+	    m.program[2] = comb[i][2]; //Muncher::Down;
+	    m.program[3] = comb[i][3]; //Muncher::Left;
+	    std::cout <<"muncher prog " <<m.program[0]<<m.program[1]
+			      <<m.program[2]<<m.program[3]
 			      << std::endl;
-	node_map.clear();
-	std::cout <<getScore(muncher)<<std::endl;
+	    node_map = current_node_map; // load current node_map
+	    int tempScore = getScore(m);
+	    std::cout <<"temp score " <<tempScore<<std::endl;
+	    if(tempScore > maxScore){
+	      maxScore = tempScore;
+	      // save program 
+	      bestNode = nodeIndex;
+	      bestProgram[0] = m.program[0];
+	      bestProgram[1] = m.program[1];
+	      bestProgram[2] = m.program[2];
+	      bestProgram[3] = m.program[3];		
+	    }
+
+	  }	  
+	}
+	// get the best node 
+	assert(bestNode != -1);
+	MyMuncher bestMuncher; 
+	bestMuncher.startNodeIndex = bestNode;
+	// bestMuncher.startTime = 0;
+	bestMuncher.program[0] = bestProgram[0];
+	bestMuncher.program[1] = bestProgram[1];
+	bestMuncher.program[2] = bestProgram[2];
+	bestMuncher.program[3] = bestProgram[3];
+	
+	
+	return bestMuncher;
+
+  }
+
+  std::vector<int> My_munchers::BFS(int nodeindex, std::map<int,int> &visit_nodes)
+  {
+    std::vector<int> queue;
+    std::vector<int> group;
+    NodeGraph::Node node = my_graph.nodes[nodeindex];
+    queue.push_back(nodeindex);
+    group.push_back(nodeindex);
+    visit_nodes[nodeindex] = 1;
+    while(queue.size() > 0){
+      int orgindex = queue.back();
+      queue.pop_back();
+      NodeGraph::Node tmpnode = my_graph.nodes[orgindex];
+      for(int i=0;i<tmpnode.adjacencyList.size();i++){
+	int childindex = GetNodeId(my_graph,tmpnode.adjacencyList[i]);
+	if(current_node_map.find(childindex) == current_node_map.end() 
+	   && visit_nodes.find(childindex) == visit_nodes.end()){
+	  std::cout<<"child "<<childindex<<std::endl;
+	  queue.push_back(childindex);
+	  group.push_back(childindex);
+	  visit_nodes[childindex] = 1;
+	}
 	
       }
     }
+    return group;
+  }
+  
+  
+  std::vector< std::vector<int> > My_munchers::getGroup(const std::vector<int> nodeIndexList){
+    std::vector< std::vector<int> > groups;
+    std::map<int, int> visit_nodes;
+    for(int i =0; i< nodeIndexList.size(); ++i){
+      if(current_node_map.find(nodeIndexList[i]) == current_node_map.end()
+	 && visit_nodes.find(nodeIndexList[i]) == visit_nodes.end()){
+	std::cout<<"test:process node "<<i<<std::endl;
+	std::vector<int> newgroup = BFS(nodeIndexList[i], visit_nodes);
+	groups.push_back(newgroup);
+      }
+    }
 
-
-    return;
+    return groups;
+    
   }
 
-  void My_munchers::writeData(){
-    std::cout << "writing the data ...." << std::endl;
-    // TODO 
- 
-    return;
+  void My_munchers::Divide(const std::vector<int> l,int startTime){
+    // get group is due to current_node_map
+    std::cout << l.size()<<std::endl;
+    std::vector< std::vector<int> > groups =  getGroup(l);
+    if(groups.empty()){
+      return;
+    }
+    for(int i = 0; i< groups.size(); ++i){
+      // do something 
+      std::cout<<"for group "<<i<<"---------------"<<std::endl;
+      MyMuncher mForGroup = process(groups[i]);
+      // get a muncher for this group.
+      // save the muncher, startTime.
+      mForGroup.startTime = startTime;
+      my_muncher_list.push_back(mForGroup);
+
+      node_map = current_node_map;  //load current node_map
+      int scoreForGroup = getScore(mForGroup); // update node_map.
+      current_node_map = node_map;  // after running this muncher the current_node_map
+      std::cout<<"group ";
+      for(int j=0;j<groups[i].size();++j){
+	std::cout<<groups[i][j]<<" "; 
+      }
+      std::cout<<std::endl;
+      std::cout<<"starts from "<<mForGroup.startNodeIndex
+	       <<" max score "<<scoreForGroup<<std::endl;
+      
+      // get the startTime for groups split from this group  
+      // int nextTime = startTime + scoreForGroup;
+      Divide(groups[i],startTime + scoreForGroup);
+
+
+    }
   }
+
 
 
   bool My_munchers::checkPos(Position currentPos, Position nextPos, Muncher::Instruction ins){

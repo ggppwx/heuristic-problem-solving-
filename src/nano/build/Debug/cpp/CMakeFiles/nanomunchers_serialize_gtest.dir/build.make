@@ -26,19 +26,16 @@ cmake_force:
 SHELL = /bin/sh
 
 # The CMake executable.
-CMAKE_COMMAND = "/Applications/CMake 2.8-6.app/Contents/bin/cmake"
+CMAKE_COMMAND = /usr/bin/cmake
 
 # The command to remove a file.
-RM = "/Applications/CMake 2.8-6.app/Contents/bin/cmake" -E remove -f
-
-# The program to use to edit the cache.
-CMAKE_EDIT_COMMAND = "/Applications/CMake 2.8-6.app/Contents/bin/ccmake"
+RM = /usr/bin/cmake -E remove -f
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src
+CMAKE_SOURCE_DIR = /home/roy/src/nano/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug
+CMAKE_BINARY_DIR = /home/roy/src/nano/build/Debug
 
 # Include any dependencies generated for this target.
 include cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/depend.make
@@ -50,18 +47,18 @@ include cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/progress.make
 include cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/flags.make
 
 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.o: cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/flags.make
-cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.o: /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/nanomunchers_serialize_gtest.cpp
-	$(CMAKE_COMMAND) -E cmake_progress_report /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/CMakeFiles $(CMAKE_PROGRESS_1)
+cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.o: /home/roy/src/nano/src/cpp/nanomunchers_serialize_gtest.cpp
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/roy/src/nano/build/Debug/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.o"
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && /opt/local/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.o -c /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/nanomunchers_serialize_gtest.cpp
+	cd /home/roy/src/nano/build/Debug/cpp && /usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -o CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.o -c /home/roy/src/nano/src/cpp/nanomunchers_serialize_gtest.cpp
 
 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.i"
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && /opt/local/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/nanomunchers_serialize_gtest.cpp > CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.i
+	cd /home/roy/src/nano/build/Debug/cpp && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -E /home/roy/src/nano/src/cpp/nanomunchers_serialize_gtest.cpp > CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.i
 
 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.s"
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && /opt/local/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp/nanomunchers_serialize_gtest.cpp -o CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.s
+	cd /home/roy/src/nano/build/Debug/cpp && /usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -S /home/roy/src/nano/src/cpp/nanomunchers_serialize_gtest.cpp -o CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.s
 
 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.o.requires:
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/nanomunchers_serialize_gtest.cpp.o.requires
@@ -85,7 +82,7 @@ cpp/nanomunchers_serialize_gtest: gtest-1.6.0/libgtest.a
 cpp/nanomunchers_serialize_gtest: cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build.make
 cpp/nanomunchers_serialize_gtest: cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX executable nanomunchers_serialize_gtest"
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/nanomunchers_serialize_gtest.dir/link.txt --verbose=$(VERBOSE)
+	cd /home/roy/src/nano/build/Debug/cpp && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/nanomunchers_serialize_gtest.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/build: cpp/nanomunchers_serialize_gtest
@@ -95,10 +92,10 @@ cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/requires: cpp/CMakeFiles/nanomun
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/requires
 
 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/clean:
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp && $(CMAKE_COMMAND) -P CMakeFiles/nanomunchers_serialize_gtest.dir/cmake_clean.cmake
+	cd /home/roy/src/nano/build/Debug/cpp && $(CMAKE_COMMAND) -P CMakeFiles/nanomunchers_serialize_gtest.dir/cmake_clean.cmake
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/clean
 
 cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/depend:
-	cd /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/src/cpp /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp /Users/jingweigu/Desktop/work/hps/heuristic-problem-solving-/src/nano/build/Debug/cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/DependInfo.cmake --color=$(COLOR)
+	cd /home/roy/src/nano/build/Debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /home/roy/src/nano/src /home/roy/src/nano/src/cpp /home/roy/src/nano/build/Debug /home/roy/src/nano/build/Debug/cpp /home/roy/src/nano/build/Debug/cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : cpp/CMakeFiles/nanomunchers_serialize_gtest.dir/depend
 
