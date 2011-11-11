@@ -35,12 +35,12 @@ public class Datingclient {
 	// [v1, v2, v3, …..  , vN]:[s2]
 	// .. 
 	// give candidate1:
-	a.readCandidates();
+	a.readCandidates("dummy");
 	
         }
         
         for(int l=0;l<20;l++){
-        String temp;xo
+        String temp;
         temp = generateRandomCandidates(noOfArrtributes).getValues().toString();
 	// TODO: generate a candidate here. 
 	temp = a.generateCandidate();
@@ -51,7 +51,7 @@ public class Datingclient {
         System.out.println(oS.socketRead());
 	// TODO: read the socre given by server. 
 	// format: [v1, v2, v3, …..., vn]:[s1]
-	a.readCandidates();
+	a.readCandidates("dummy");
 	       
         String te = oS.socketRead();
          System.out.println(te);
