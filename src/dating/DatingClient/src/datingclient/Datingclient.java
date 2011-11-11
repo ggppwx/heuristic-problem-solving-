@@ -25,7 +25,7 @@ public class Datingclient {
          
         socketConnection oS = new socketConnection(machineName, Integer.valueOf(port));
 	
-	Algorithm a = new Algorithm(); //init the algorithm
+	Algorithm a = new Algorithm(noOfArrtributes); //init the algorithm
 
         for(int i=0;i<22;i++){
         System.out.println(oS.socketRead());
