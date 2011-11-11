@@ -24,20 +24,38 @@ public class Datingclient {
          noOfArrtributes = Integer.parseInt(args[2]);
          
         socketConnection oS = new socketConnection(machineName, Integer.valueOf(port));
-        
+	
+	Algorithm a = new Algorithm(); //init the algorithm
+
         for(int i=0;i<22;i++){
         System.out.println(oS.socketRead());
+	// TODO: read random candidates from server, read line by line format is:
+	// candidates:
+	// [v1, v2, v3, …..  , vN]:[s1]
+	// [v1, v2, v3, …..  , vN]:[s2]
+	// .. 
+	// give candidate1:
+	a.readCandidates();
+	
         }
         
         for(int l=0;l<20;l++){
-        String temp;
+        String temp;xo
         temp = generateRandomCandidates(noOfArrtributes).getValues().toString();
-        
+	// TODO: generate a candidate here. 
+	temp = a.generateCandidate();
+
         oS.socketWrite(temp);
         System.out.println(temp);
+	// temp is something u input. 
         System.out.println(oS.socketRead());
+	// TODO: read the socre given by server. 
+	// format: [v1, v2, v3, …..., vn]:[s1]
+	a.readCandidates();
+	       
         String te = oS.socketRead();
          System.out.println(te);
+	 // format: give candidate2:
         if(te.contains("Bye")){
             break;
         }
