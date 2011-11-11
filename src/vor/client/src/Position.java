@@ -3,17 +3,17 @@ public class Position {
 	private int x;
 	private int y;
 	
-	public Position(int xPos, int yPos) {
+	public Position(int xPos, int yPos) {   
 		// TODO Auto-generated constructor stub
 		this.setX(xPos);
 		this.setY(yPos);
 	}
 
-	public int getX() {
+        public int getX() {  
 		return x;
 	}
 
-	public void setX(int x) {
+	public void setX(int x) {  
 		this.x = x;
 	}
 
