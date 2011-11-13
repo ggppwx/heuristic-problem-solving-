@@ -1,7 +1,11 @@
 package datingclient;
 
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.regex.Pattern;
+
+import Jama.Matrix;
 
 public class Algorithm{
     // TODO: add some data structure to store history
@@ -35,17 +39,49 @@ public class Algorithm{
     	double score = Double.parseDouble(tokens[tokens.length-1]);
     	values.add(value);
     	scores.add(score);
-  
+	
     }
     
 
     public String generateCandidate(){
     	// TODO: main logic is here. 
-    	
-    		
+    	Matrix a;
+	
     	
     	return "";
     }
+    
+    /*
+     * pre-process. proceed first 20 records. 
+     * */
+    private void preProcess(){
+    	// TODO: put first 20 records into a matrix. 
+    	// calculate a weight vector. 
+    	// w* = (XT X)-1XT Y, where Y is score vector, X is value matrix 
 
+    	Double[][] vs = values.toArray(new Double[20][noOfAttributes]);
+    	// Iterator<Double[]> vIt = values.iterator();
+    	double[][] firstValueM = new double[20][noOfAttributes]; 
+    	for(int i=0; i< 20;++i){
+    		// Double[] row = vIt.next();
+    		for(int j=0;j< noOfAttributes;++j){
+    			firstValueM[i][j] = (double)vs[i][j];	
+    		}
+    	}
+    	Matrix x = new Matrix(firstValueM); //value is m *n 
+    	
+    	Double[] ss = scores.toArray(new Double[20]);
+    	double[][] firstScoreM = new double[20][1];
+    	for(int i=0;i<20;++i){
+    		firstScoreM[i][0] = (Double)ss[i];
+    	}
+    	Matrix y = new Matrix(firstScoreM); //value is m*1
+    	
+    	Matrix w = ((x.transpose().times(x)).inverse().times(x.transpose())).times(y);
+    	double[][] weight = w.getArray();  // weight is n*1
+    	return;
+    }
+    
+    
 
 }
