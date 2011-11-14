@@ -55,6 +55,7 @@ public class AlgorithmTest {
 	
 	@Test
 	public void testGradientDes(){
+		System.out.println("test gradient descent");
 		for(String input:  testInput){
 			a.readCandidates(input);
 		}
@@ -63,6 +64,7 @@ public class AlgorithmTest {
 	
 	@Test
 	public void testpreProcess(){
+		System.out.println("test preprocess");
 		for(String input:  testInput){
 			a.readCandidates(input);
 		}
@@ -87,6 +89,11 @@ public class AlgorithmTest {
 	
 	
 	private boolean validate(double[] weight){
+		System.out.println("-----------weight--------------------");
+		for(int i=0; i<weight.length; ++i){
+			System.out.println(weight[i]);
+		}
+		System.out.println("-------------------------------------");
 		double sum1 = 0;
 		double sum2 = 0;
 		for(int i = 0; i<weight.length; ++i){
