@@ -41,6 +41,7 @@ public class AlgorithmTest {
 	
 	@Test
 	public void testReadCandidates() {
+		// OK
 		System.out.println("testign read");	
 		String testInput = "[0.9626, 0.5476, 0.6633, 0.2155, 0.5082, 0.47, 0.9267, 0.155, 0.279, 0.9403]:[-0.0554]";
 		a.readCandidates(testInput);	
