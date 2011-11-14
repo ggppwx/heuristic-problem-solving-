@@ -30,29 +30,20 @@ public class Datingclient {
         for(int i=0;i<22;i++){
         	String input = oS.socketRead();
         	System.out.println(input);
-        	// TODO: read random candidates from server, read line by line format is:
-        	// candidates:
-        	// [v1, v2, v3, …..  , vN]:[s1]
-        	// [v1, v2, v3, …..  , vN]:[s2]
-        	// .. 
-        	// give candidate1:
         	a.readCandidates(input);
 	
         }
         
         for(int l=0;l<20;l++){
         String temp;
-        temp = generateRandomCandidates(noOfArrtributes).getValues().toString();
+        // temp = generateRandomCandidates(noOfArrtributes).getValues().toString();
         // TODO: generate a candidate here. 
-        temp = a.generateCandidate();
-
+        temp = a.generateCandidate().getValues().toString();
         oS.socketWrite(temp);
         System.out.println(temp);
-        // temp is something u input. 
+        
         String input = oS.socketRead();
         System.out.println(input);
-        // TODO: read the socre given by server. 
-        // format: [v1, v2, v3, …..., vn]:[s1]
         a.readCandidates(input);
 	       
         String te = oS.socketRead();

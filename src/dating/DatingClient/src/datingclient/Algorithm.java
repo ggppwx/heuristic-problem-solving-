@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.regex.Pattern;
 
@@ -12,7 +13,6 @@ import org.junit.Test;
 import Jama.Matrix;
 
 public class Algorithm{
-    // TODO: add some data structure to store history
 	private int noOfAttributes;
 	private ArrayList<Double> scores;  // score for each candidate
 	private ArrayList<Double[]> values; // value for each candidate
@@ -53,25 +53,35 @@ public class Algorithm{
     }
     
 
-    public String generateCandidate(){
-    	// TODO: main logic is here. 
-	
+    public Candidate generateCandidate(){
+    	Candidate cand = new Candidate();
+    	// TODO: get a good candidate. which is list<Double>
     	
-    	return "";
+    	double[] res = matrixProcess();
+    	Double[] temp = guessCandidate(res);
+    	
+    	
+    	List<Double> canVal = new ArrayList<Double>();
+    	for(int i = 0; i< temp.length; ++i){
+    		canVal.add(temp[i]);
+    	}
+    	cand.setValues(canVal);
+    	return cand;
     }
     
     /*
-     * pre-process. proceed first 20 records. 
+     * matrix process. proceed  records. 
      * use matrix to calculate a possible weight.
      * */
-    private double[] preProcess(){
-    	// TODO: put first 20 records into a matrix. 
+    private double[] matrixProcess(){
+    	// TODO: put all records into a matrix. 
     	// calculate a weight vector. 
     	// w* = (XT X)-1XT Y, where Y is score vector, X is value matrix 
-    	Double[][] vs = values.toArray(new Double[20][noOfAttributes]);
-    	// Iterator<Double[]> vIt = values.iterator();
-    	double[][] firstValueM = new double[20][noOfAttributes]; 
-    	for(int i=0; i< 20;++i){
+    	assert(values.size() == scores.size());
+    	int numVal = values.size();
+    	Double[][] vs = values.toArray(new Double[numVal][noOfAttributes]);
+    	double[][] firstValueM = new double[numVal][noOfAttributes]; 
+    	for(int i=0; i< numVal;++i){
     		// Double[] row = vIt.next();
     		for(int j=0;j< noOfAttributes;++j){
     			firstValueM[i][j] = (double)vs[i][j];	
@@ -79,9 +89,9 @@ public class Algorithm{
     	}
     	Matrix x = new Matrix(firstValueM); //value is m *n 
     	
-    	Double[] ss = scores.toArray(new Double[20]);
-    	double[][] firstScoreM = new double[20][1];
-    	for(int i=0;i<20;++i){
+    	Double[] ss = scores.toArray(new Double[numVal]);
+    	double[][] firstScoreM = new double[numVal][1];
+    	for(int i=0;i<numVal;++i){
     		firstScoreM[i][0] = (Double)ss[i];
     	}
     	Matrix y = new Matrix(firstScoreM); //value is m*1
@@ -146,6 +156,24 @@ public class Algorithm{
     	
     }
     
+    /*
+     * guess candidates according to weights. 
+     * */
+    private Double[] guessCandidate(double[] weights){
+    	assert(weights.length == noOfAttributes);
+    	Double[] res = new Double[noOfAttributes];
+    	// TODO: guess a candidate.
+    	// the output should be Double[], with 2 decimal places 
+    	
+    	
+    	return res;
+    }
+    
+    
+    /*
+     * Helper functions 
+     * 
+     * */
     private double[] convertFromDouble(Double[] D){
     	double[] dou = new double[D.length];
     	for(int i = 0 ; i<D.length; ++i){
@@ -176,8 +204,8 @@ public class Algorithm{
     	return dotProduct(x,y);
     }
     
-    public double[] preProcessTest(){
-    	return preProcess();
+    public double[] matrixProcessTest(){
+    	return matrixProcess();
     }
     
     public double[] gradientDesTest(){
