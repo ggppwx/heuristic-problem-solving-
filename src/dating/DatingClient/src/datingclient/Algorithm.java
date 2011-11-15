@@ -1,6 +1,6 @@
 package datingclient;
 
-import static org.junit.Assert.*;
+
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -9,9 +9,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.regex.Pattern;
 
-import org.junit.Test;
 
-import Jama.Matrix;
+
 
 public class Algorithm{
 	private int noOfAttributes;
@@ -74,10 +73,12 @@ public class Algorithm{
     	return cand;
     }
     
+    
     /*
      * matrix process. proceed  records. 
      * use matrix to calculate a possible weight.
      * */
+    /*
     private double[] matrixProcess(){
     	// TODO: put all records into a matrix. 
     	// calculate a weight vector. 
@@ -109,7 +110,7 @@ public class Algorithm{
     	}
     	return retWeight;
     }
-    
+    */
     /*
      * use gradient descent algorithm to calculate a possible weight.
      * it seems now the weight cannot pass validator(sum of positive equals 1...)
@@ -128,15 +129,10 @@ public class Algorithm{
 		//	     wt+1,i = wt,i - η*Gt,i
     	
     	assert(values.size() == scores.size());
-    	double eta = 0.0001; // eta is learning rate.
+    	double eta = 0.001; // eta is learning rate.
     	
     	double[] weight = genRandWeight();
     	
-    	/*
-    	for(int i = 0 ; i<noOfAttributes; ++i){
-    		weight[i] = 1.0/(double)noOfAttributes;
-    	}
-    	*/
     	scores.add(0d);  // score for each candidate
     	Double[] tempV = new Double[noOfAttributes];
     	for(int k =0; k<tempV.length; ++k){
@@ -171,13 +167,18 @@ public class Algorithm{
     		//System.out.println(g[0]);
     		
     		iter ++;
-    		if(iter == 1000000){
-    			break;
+    		if(iter == 20000){
+    			//eta = 0.0001;
     		}
     		
     		difference = Math.sqrt(difference); 
-    		//System.out.println("--------");
+    		//System.out.println("??????");
     		//System.out.println(difference);
+    		if(difference < 0.00001){
+    			//System.out.println("-----");
+    			//System.out.println(iter);
+    			// eta = 0.0005;
+    		}
     		if(difference < 0.0000001){
     			System.out.println(">>>>>>>>");
     			System.out.println(iter);
@@ -229,7 +230,9 @@ public class Algorithm{
     
     
     
-    /*
+    
+    
+    /* ------------------------------------------------------------------------------------------------
      * Helper functions 
      * 
      * */
@@ -260,7 +263,10 @@ public class Algorithm{
     }
     
     
-    /*
+    
+    
+    
+    /* ---------------------------------------------------------------------------------------------------
      * FOR TEST ONLY:  
      * test private method
      * */
@@ -273,7 +279,8 @@ public class Algorithm{
     }
     
     public double[] matrixProcessTest(){
-    	return matrixProcess();
+    	double[] a = new double[1];
+    	return a;
     }
     
     public double[] gradientDesTest(){
