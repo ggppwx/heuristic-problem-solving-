@@ -2,6 +2,7 @@ package datingclient;
 
 import static org.junit.Assert.*;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,6 +17,7 @@ public class Algorithm{
 	private int noOfAttributes;
 	private ArrayList<Double> scores;  // score for each candidate
 	private ArrayList<Double[]> values; // value for each candidate
+	private ArrayList<Double[]> preWeights; // previous weight.
 	
 	public Algorithm(){
 		
@@ -25,6 +27,7 @@ public class Algorithm{
     	this.scores = new ArrayList<Double>(); 
     	this.values = new ArrayList<Double[]>();
     	this.noOfAttributes = noOfAttributes;
+    	this.preWeights = new ArrayList<Double[]>();
     }
     
 
@@ -52,15 +55,17 @@ public class Algorithm{
 	
     }
     
-
+    
     public Candidate generateCandidate(){
     	Candidate cand = new Candidate();
     	// TODO: get a good candidate. which is list<Double>
     	
-    	double[] res = matrixProcess();
+    	// double[] res = matrixProcess();
+    	double[] res = gradientDes();
+    	preWeights.add(convertToDouble(res));
+    	
+    	
     	Double[] temp = guessCandidate(res);
-    	
-    	
     	List<Double> canVal = new ArrayList<Double>();
     	for(int i = 0; i< temp.length; ++i){
     		canVal.add(temp[i]);
@@ -121,37 +126,70 @@ public class Algorithm{
 		//		   Gt,i =  Gt,i + diff * xc,i
 		//    foreach weight index i
 		//	     wt+1,i = wt,i - η*Gt,i
+    	
     	assert(values.size() == scores.size());
     	double eta = 0.0001; // eta is learning rate.
-    	double[] g = new double[noOfAttributes];
-    	double[] weight = new double[noOfAttributes];
+    	
+    	double[] weight = genRandWeight();
+    	
+    	/*
     	for(int i = 0 ; i<noOfAttributes; ++i){
     		weight[i] = 1.0/(double)noOfAttributes;
     	}
+    	*/
+    	scores.add(0d);  // score for each candidate
+    	Double[] tempV = new Double[noOfAttributes];
+    	for(int k =0; k<tempV.length; ++k){
+    		tempV[k] = 1d;
+    	}
+    	values.add(tempV); // value for each candidate
+    	
     	int iter = 0;
+    	double difference;
     	while(true){ // some stopping condition.
+    		double[] g = new double[noOfAttributes];
     		Iterator<Double[]> vIt = values.iterator();
     		Iterator<Double> sIt = scores.iterator();
+    		difference = 0.0;
     		while(vIt.hasNext() && sIt.hasNext()){ // for each candidates
     			Double[] x = vIt.next();
     			Double y = sIt.next();
     			double dotPro = dotProduct(convertFromDouble(x),weight);
     			double diff = dotPro - y;
     			for(int i = 0; i< noOfAttributes; ++i){ // for each gradient index
-    				g[i] = g[i] + diff * (double)x[i];
+    				g[i] = g[i] + diff * x[i];
     			}
     			
+    			
     		}
+    		
     		for(int i = 0; i<noOfAttributes; ++i){ // for each weight index. 
+    			// System.out.print(g[i]);
     			weight[i] = weight[i] - eta*g[i];
+    			difference += Math.pow(eta*g[i], 2);
     		}
+    		//System.out.println(g[0]);
+    		
     		iter ++;
     		if(iter == 1000000){
     			break;
     		}
     		
+    		difference = Math.sqrt(difference); 
+    		//System.out.println("--------");
+    		//System.out.println(difference);
+    		if(difference < 0.0000001){
+    			System.out.println(">>>>>>>>");
+    			System.out.println(iter);
+    			break;
+    		}
+    		
     		
     	}
+    	scores.remove(scores.size() - 1);
+    	values.remove(values.size() - 1);
+    	
+    	
     	return weight;
     	
     }
@@ -163,11 +201,32 @@ public class Algorithm{
     	assert(weights.length == noOfAttributes);
     	Double[] res = new Double[noOfAttributes];
     	// TODO: guess a candidate.
-    	// the output should be Double[], with 2 decimal places 
-    	
+    	// the output should be Double[], with 4 decimal places 
+    	// TODO: try a naive method
+    	DecimalFormat twoDecimalFormat = new DecimalFormat("#.####");
+    	for(int i = 0; i<weights.length; ++i){
+    		if(weights[i] > 0){
+    			double item = 1.0;
+    			res[i] = Double.valueOf(twoDecimalFormat.format(item));
+    		}else{
+    			double item = 0.0;
+    			res[i] = Double.valueOf(twoDecimalFormat.format(item));
+    		}
+    		
+    	}
     	
     	return res;
     }
+    
+    /*
+     * generate a random weight
+     * */
+    private double[] genRandWeight(){
+    	Player player = new Player(noOfAttributes);
+		player.genWeights();
+    	return player.getWeight();
+    }
+    
     
     
     /*
@@ -181,6 +240,15 @@ public class Algorithm{
     	}
     	return dou;
     }
+    
+    private Double[] convertToDouble(double[] d){
+    	Double[] Dou = new Double[d.length];
+    	for(int i=0; i<d.length; ++i){
+    		Dou[i] = d[i];
+    	}
+    	return Dou;
+    }
+    
     
     private double dotProduct(double[] x, double[] y){
     	assert(x.length == y.length);

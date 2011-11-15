@@ -2,6 +2,12 @@ package datingclient;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import org.junit.Test;
 import org.junit.Before;
 
@@ -29,13 +35,29 @@ public class AlgorithmTest {
            "[0.4923, 0.7387, 2.0E-4, 0.2691, 0.6386, 0.8315, 0.5527, 0.8755, 0.4995, 0.4118]:[-0.2664]"
 	};
 	
-	
+	public String[] testInput1;
 	
 	Algorithm a;
 	
 	@Before 
 	public void beforeTest(){
-		 a = new Algorithm(10);
+		testInput1 = new String[20];
+		try{
+			FileReader in = new FileReader("inputText");
+			BufferedReader reader = new BufferedReader(in);
+			String line;
+			int index = 0;
+			while((line = reader.readLine()) != null){
+				testInput1[index] = line;
+				index++;
+				
+			}
+		}catch(IOException e){
+			System.err.println("error");
+		}
+		
+		a = new Algorithm(50);
+		 
 	}
 	
 	
@@ -43,9 +65,10 @@ public class AlgorithmTest {
 	public void testReadCandidates() {
 		// OK
 		System.out.println("testign read");	
+		/*
 		String testInput = "[0.9626, 0.5476, 0.6633, 0.2155, 0.5082, 0.47, 0.9267, 0.155, 0.279, 0.9403]:[-0.0554]";
 		a.readCandidates(testInput);	
-		
+		*/
 	}
 
 	@Test
@@ -55,8 +78,9 @@ public class AlgorithmTest {
 	
 	@Test
 	public void testGradientDes(){
+		System.out.println();
 		System.out.println("test gradient descent");
-		for(String input:  testInput){
+		for(String input:  testInput1){
 			a.readCandidates(input);
 		}
 		assertTrue(validate(a.gradientDesTest()));
@@ -64,11 +88,12 @@ public class AlgorithmTest {
 	
 	@Test
 	public void testpreProcess(){
-		System.out.println("test preprocess");
-		for(String input:  testInput){
+		System.out.println();
+		System.out.println("test matrixprocess");
+		for(String input:  testInput1){
 			a.readCandidates(input);
 		}
-		assertTrue(validate(a.preProcessTest()));
+		assertTrue(validate(a.matrixProcessTest()));
 	}
 	
 	@Test
@@ -105,7 +130,7 @@ public class AlgorithmTest {
 		}
 		System.out.println(sum1);
 		System.out.println(sum2);
-		if(1-sum1 <0.000000001 && 1+sum2 < 0.000000001){
+		if(sum1<1 && sum2>-1 && 1-sum1 <0.000000001 && 1+sum2 < 0.000000001){
 			return true;
 		}
 		return false;
