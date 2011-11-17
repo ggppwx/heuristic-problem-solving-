@@ -1,0 +1,439 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+public class Dealer {
+
+	public static String HOST = "localhost";
+	public static int PORT = 8888;
+	public static int playerCount = 1;
+	public static int ROUND = 5;
+	public static String filePath = "gambles";
+	public static int gambleNum = 10;
+	public static HashMap<Integer, Integer> classProp = new HashMap<Integer, Integer>();
+	public static int MODE = 1;
+
+	// public static int classNum = 16;
+
+	//public static int classNum = 16;
+
+	private ServerSocket server;
+	private List<Player> playerList = new ArrayList<Player>();
+	private List<Gamble> gambleList = new ArrayList<Gamble>();
+	private List<Integer> gambleOrder = new ArrayList<Integer>();
+	private int linkedMatrix[][] = new int[gambleNum + 1][gambleNum + 1];
+	private List<Double> result = new ArrayList<Double>();
+	private List<String> outputToClient = new ArrayList<String>();
+	private String tables;
+
+	private List<Double> oneRoundResult = new ArrayList<Double>();
+	
+	public void readGamblesFromFile(String path)
+	{
+	  FileReader fr = null;
+	  BufferedReader br = null;
+	  int category = 0;
+	  try {
+		fr = new FileReader(path);
+		String line;
+		br = new BufferedReader(fr);
+		while ((line = br.readLine()) != null) {
+			line = line.trim();
+			if (line.length() == 0) {
+				continue;
+			}
+			if (line.equalsIgnoreCase("gamble")) {
+				category = 0;
+			}
+			if (line.equalsIgnoreCase("gambleatts")) {
+				category = 1;
+			}
+			if (line.equalsIgnoreCase("link")) {
+				category = 2;
+			}
+			String[] parts = line.split(",");
+			switch (category) {
+			case 0:
+				Gamble gamble = new Gamble(Integer.parseInt(parts[0]), Integer.parseInt(parts[1]),
+						                   Double.parseDouble(parts[2]), Double.parseDouble(parts[3]),
+						                   Double.parseDouble(parts[4]), Double.parseDouble(parts[5]),
+						                   Double.parseDouble(parts[6]), Double.parseDouble(parts[7]));
+				gambleList.add(gamble);
+				break;
+			case 1:
+				break;
+			case 2:
+				int row = Integer.parseInt(parts[0]);
+				int col = Integer.parseInt(parts[1]);
+				linkedMatrix[row][col] = 1;
+				linkedMatrix[col][row] = 1;
+				break;
+			}
+		}
+	  } catch (Exception e) {
+		// TODO: handle exception
+	  } finally {
+		  if (br != null) {
+			try {
+				br.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		  }
+		  if (fr != null) {
+			try {
+				fr.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	  }
+//>>>>>>> .r14
+	}
+
+	public void genreateGambleOrder() {
+		List<Integer> inOrder = new ArrayList<Integer>();
+		gambleOrder.clear();
+		for (int i = 0; i < gambleNum; i++) {
+			inOrder.add(i);
+		}
+		for (int i = 0; i < gambleNum; i++) {
+			int pos = (int) (Math.random() * inOrder.size());
+			gambleOrder.add(inOrder.get(pos));
+			inOrder.remove(pos);
+		}
+	}
+
+	public List<Double> getListFromString(String allocation) {
+		String[] parts = allocation.split(",");
+		List<Double> newList = new ArrayList<Double>();
+		for (String part : parts) {
+			Double value = Double.parseDouble(part);
+			newList.add(value);
+		}
+		return newList;
+	}
+
+	public String convertListToString(List<Double> list) {
+		StringBuffer sb = new StringBuffer();
+
+		for (int i = 0; i < list.size() - 1; i++)
+			sb.append(list.get(i) + ",");
+
+		sb.append(list.get(list.size() - 1));
+		return sb.toString();
+
+	}
+
+	public boolean verifyAllocation(List<Double> allocation, double max) {
+		double sum = 0.0;
+		for (Double value : allocation) {
+			sum += value;
+		}
+		if (sum > max)
+			return false;
+		else
+			return true;
+	}
+
+	public void playARound() {
+
+		genreateGambleOrder();
+
+		for (int i = 0; i < gambleOrder.size(); i++) {
+
+			/*
+			 * Update probabilities based on its class
+			 */
+
+			Gamble current = gambleList.get(gambleOrder.get(i));
+
+			double highProb = current.highProb;
+			double medProb = current.medProb;
+			double lowProb = current.lowProb;
+
+			if (classProp.get(current.classId) == 1) {
+				highProb = current.highProb + current.lowProb / 2;
+				medProb = current.medProb;
+				lowProb = current.lowProb / 2;
+
+			} else if (classProp.get(current.classId) == -1) {
+				highProb = current.highProb / 2;
+				medProb = current.medProb;
+				lowProb = current.highProb / 2 + current.lowProb;
+			}
+
+			int Hi = 0;
+			int Mi = 0;
+			int Li = 0;
+
+			for (int j = 0; j < i; j++) {
+				Gamble previous = gambleList.get(gambleOrder.get(j));
+				if (linkedMatrix[current.id][previous.id] == 1) {
+					if (previous.getLastResult() == previous.high_return) {
+						Hi++;
+					} else if (previous.getLastResult() == previous.medium_return) {
+						Mi++;
+					} else {
+						Li++;
+					}
+				}
+			}
+
+			/*
+			 * If Hi > Mi + Li, then halve gilowprob (from the value that it
+			 * might have already been assigned based on its class) the value
+			 * that and add that probability to gihiprob. If Li > Hi + Mi, then
+			 * halve gihiprob and add that probability to gilowprob
+			 */
+
+			if (Hi > Mi + Li) {
+				highProb = highProb + lowProb / 2;
+				lowProb = lowProb / 2;
+
+			} else if (Li > Hi + Mi) {
+				lowProb = lowProb + highProb / 2;
+				highProb = highProb / 2;
+			}
+
+			current.playWithNewProb(highProb, medProb, lowProb);
+
+		}
+
+	}
+
+	public ArrayList<Double> computeOutcome(List<Double> alloc) {
+		ArrayList<Double> outcome = new ArrayList<Double>();
+		for (int i = 0; i < gambleList.size(); i++) {
+			Double amount = alloc.get(i);
+			Double returnValue = gambleList.get(i).getLastResult();
+			Double newValue = amount * returnValue;
+			outcome.add(newValue);
+		}
+		return outcome;
+	}
+
+	public String readTablesFromFile() throws IOException {
+		
+		StringBuilder sb = new StringBuilder();
+		BufferedReader reader = new BufferedReader(new FileReader(filePath));
+		char[] buf = new char[1024];
+		int numRead = 0;
+		while ((numRead = reader.read(buf)) != -1) {
+			String readData = String.valueOf(buf, 0, numRead);
+			sb.append(readData);
+			buf = new char[1024];
+		}
+
+		reader.close();
+		return sb.toString();
+
+	}
+
+	public double sum(List<Double> outcome) {
+		
+		double total = 0.0;
+
+		for (Double value : outcome) {
+			total += value;
+		}
+
+		return total;
+	}
+
+	public void playGameOne() {
+
+		try {
+			
+			server = new ServerSocket(PORT);
+
+			for (int i = 0; i < playerCount; i++) {
+				Socket socket = server.accept();
+				Player gambler = new Player(socket);
+				String name = gambler.readFromClient();
+				gambler.setName(name);
+				playerList.add(gambler);
+			}
+
+			tables = readTablesFromFile();
+
+			// Send three tables
+			for (int i = 0; i < playerCount; i++) {
+
+				Player player = playerList.get(i);
+
+				player.writeToClient(tables);
+			}
+
+			for (int i = 0; i < ROUND; i++) {
+				
+				outputToClient.clear();
+				
+				playARound();
+				for (int j = 0; j < playerCount; j++) {
+
+					Player player = playerList.get(j);
+					String allocation = player.readFromClient();
+
+					List<Double> allocList = getListFromString(allocation);
+					// boolean valid = verifyAllocation(allocList,
+					// player.getWealth());
+					double outcome = 0;
+
+					result = computeOutcome(allocList);
+
+					outcome = sum(result);
+
+					if (outcome >= 2) {
+						player.increaseScoreByOne();
+					}
+
+					String toClient = convertListToString(result);
+					outputToClient.add(toClient);
+					//player.writeToClient(toClient);
+				}
+				
+				for(int j =0;j< playerCount;j++)
+				{
+					Player player = playerList.get(j);
+					player.writeToClient(outputToClient.get(j));
+				}
+				
+
+			}
+
+			System.out.println("Game End");
+			// List<String> winners = new ArrayList<String>();
+			// double maxProfit = 0;
+
+			for (int j = 0; j < playerCount; j++) {
+
+				Player player = playerList.get(j);
+				System.out.println("Player " + player.getName() + " : "
+						+ player.getScore());
+				player.writeToClient("END YOUR SCORE IS " + player.getScore());
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void playGame() {
+
+		try {
+			server = new ServerSocket(PORT);
+
+			for (int i = 0; i < playerCount; i++) {
+				Socket socket = server.accept();
+				Player gambler = new Player(socket);
+				String name = gambler.readFromClient();
+				gambler.setName(name);
+				playerList.add(gambler);
+			}
+
+			tables = readTablesFromFile();
+
+			// Send three tables
+			for (int i = 0; i < playerCount; i++) {
+
+				Player player = playerList.get(i);
+
+				player.writeToClient(tables);
+			}
+
+			for (int i = 0; i < ROUND; i++) {
+				
+				outputToClient.clear();
+				
+				playARound();
+
+				for (int j = 0; j < playerCount; j++) {
+
+					Player player = playerList.get(j);
+					String allocation = player.readFromClient();
+
+					List<Double> allocList = getListFromString(allocation);
+					
+					double cost = sum(allocList);
+					player.setWealth(player.getWealth()-cost);
+					
+					// boolean valid = verifyAllocation(allocList,
+					// player.getWealth());
+					double outcome = 0;
+
+					result = computeOutcome(allocList);
+
+					outcome = sum(result);
+
+					player.setWealth(player.getWealth()+outcome);
+
+					String toClient = convertListToString(result);
+					outputToClient.add(toClient);
+					
+					//player.writeToClient(toClient);
+				}
+				
+				for(int j =0;j< playerCount;j++)
+				{
+					Player player = playerList.get(j);
+					player.writeToClient(outputToClient.get(j));
+				}
+				
+
+			}
+
+			System.out.println("Game End");
+			// List<String> winners = new ArrayList<String>();
+			// double maxProfit = 0;
+
+			for (int j = 0; j < playerCount; j++) {
+
+				Player player = playerList.get(j);
+				System.out.println("Player " + player.getName() + " : "
+						+ player.getWealth());
+				player.writeToClient("END YOUR SCORE IS " + player.getScore());
+
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String args[]) {
+
+		if (args.length != 5) {
+			
+			System.out.println("Usage: port mode playerCount rounds filepath");
+			System.exit(1);
+		}
+		
+		Dealer.PORT = Integer.parseInt(args[0]);
+		Dealer.MODE = Integer.parseInt(args[1]);
+		Dealer.playerCount = Integer.parseInt(args[2]);
+		Dealer.ROUND = Integer.parseInt(args[3]);
+		Dealer.filePath = args[4];
+		
+		Dealer dealer = new Dealer();
+		
+		if(Dealer.MODE == 1)
+		{
+			dealer.playGameOne();
+		}else{
+			dealer.playGame();
+		}
+		
+		// dealer.playGame();
+	}
+
+}
