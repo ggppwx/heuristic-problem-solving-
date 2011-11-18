@@ -18,7 +18,7 @@ public class Algorithm {
 	}
 	
 	public void readState(String stateStr){
-		// TODO read one state, actually only read the first line 
+		// read one state, actually only read the first line 
 		if(stateStr.startsWith("gamble")){
 			/*
 			 * gamble
@@ -94,7 +94,7 @@ public class Algorithm {
 			results = playGameTwo();
 		}
 		assert(results.length == gambleNum);
-		// TODO return format: amount_on_gamble1,amount_on_gamble2,......................,amount_on_gambleN
+		// return format: amount_on_gamble1,amount_on_gamble2,......................,amount_on_gambleN
 		String resStr = new String();
 		for(int i = 0; i<results.length-1; ++i){
 			resStr += results[i]+",";
