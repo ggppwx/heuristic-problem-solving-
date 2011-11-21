@@ -34,28 +34,17 @@ public class Client {
 		
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 		
+		
         String command;
         StringBuffer state = new StringBuffer();
-        
-        Algorithm alg = new Algorithm(mode, gambelNum, classNum);
-        
         try {
             while ((command = reader.readLine())!= null) {
           
                 if (command.equals("Give allocation:")) {
                 	state.append(command);
                 	System.out.println(state);
-        			//String output = in.readLine();
-                	
-                	//read the state to alg class 
-                	alg.readState(state.toString());
-                	
-                	//TODO: change this line
-                	String output = alg.makeAllocation(); 
-                	output = simpleGuess(gambelNum);  // should be deprecated  !! 
-                	
-                	
-                	
+        			String output = in.readLine();
+                	//String output = simpleGuess(gambelNum);
                 	System.out.println("Allocation: "+output);
         			writer.println(output);
                     state.delete(0, state.length());

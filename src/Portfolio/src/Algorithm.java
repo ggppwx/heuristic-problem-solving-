@@ -78,6 +78,8 @@ public class Algorithm {
 				state[i] = Double.parseDouble(ret[i]);
 			}
 			retStates.add(state);
+			// TODO actual outcome for each gamble  
+			
 		}
 		
 	}
@@ -108,6 +110,9 @@ public class Algorithm {
 	 * */
 	double[] playGameOne(){
 		// TODO play first game
+		
+		
+		
 		return new double[gambleNum];  //dummy
 	}
 	
@@ -120,6 +125,40 @@ public class Algorithm {
 	}
 	
 	
+	/*
+	 * group the gamble by its class
+	 * */
+	void groupByClass(){
+		
+	}
+	
+	/*
+	 * main logic calculation. 
+	 * */
+	void cal(){
+		for(){ // for each class
+			for(){ // guess favored or unfavored
+				for(){ // for each gamble in this class
+					// calculate the predicted val. 
+					predRet[i] = ;
+					// actual return
+					processRetHis();
+					// get the diff.
+					
+				}	
+			}
+		}
+		
+	}
+	
+	/*
+	 * process return history
+	 * get the expectation of all previous returns. 
+	 * */
+	void processRetHis(){
+		
+		
+	}
 	
 	/*
 	 * private member 

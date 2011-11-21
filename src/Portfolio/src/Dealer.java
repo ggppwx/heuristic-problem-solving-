@@ -1,10 +1,9 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.text.NumberFormat;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,7 +28,10 @@ public class Dealer {
 	private int linkedMatrix[][] ;
 	private List<Double> result = new ArrayList<Double>();
 	private List<String> outputToClient = new ArrayList<String>();
+	private HashMap<String,String> clientResult = new HashMap<String,String>();
 	private String tables;
+	private List<Player> winners = new ArrayList<Player>();
+
 
 	private List<Integer> roundToChangeType = new ArrayList<Integer>();
 	
@@ -136,8 +138,7 @@ public class Dealer {
 	public String convertListToString(List<Double> list) {
 		StringBuilder sb = new StringBuilder();
 		
-		NumberFormat nf = NumberFormat.getInstance();
-        nf.setMaximumFractionDigits(4);
+		DecimalFormat nf = new DecimalFormat("####.######");
 		for (int i = 0; i < list.size() - 1; i++)
 		{
 			sb.append(nf.format(list.get(i))+ ",");
@@ -148,8 +149,11 @@ public class Dealer {
 	}
 
 	public boolean verifyAllocation(List<Double> allocation, double max) {
+		
 		double sum = 0.0;
 		for (Double value : allocation) {
+			if(value<0)
+				return false;
 			sum += value;
 		}
 		if (sum > max)
@@ -317,14 +321,13 @@ public class Dealer {
 	public String getEveryoneWealth()
 	{
 		StringBuilder positions = new StringBuilder();
-		NumberFormat nf = NumberFormat.getInstance();
-        nf.setMaximumFractionDigits(4);
+		DecimalFormat formatter = new DecimalFormat("#####.######"); 
 		for(int j =0;j< playerCount-1;j++)
 		{
 			Player  player = playerList.get(j);
-			positions.append(player.getName()+":"+nf.format(player.getWealth())+",");
+			positions.append(player.getName()+":"+formatter.format(player.getWealth())+",");
 		}
-		positions.append(playerList.get(playerList.size()-1).getName()+":"+nf.format(playerList.get(playerList.size()-1).getWealth()));
+		positions.append(playerList.get(playerList.size()-1).getName()+":"+formatter.format(playerList.get(playerList.size()-1).getWealth()));
 		return positions.toString();
 		
 	}
@@ -362,20 +365,35 @@ public class Dealer {
 				playARound();
 				
 				System.out.print("Round "+i+" :");
-				for(int k=0;k<gambleList.size();k++)
+		        String ticker = "";
+				for(int k=0;k<gambleList.size()-1;k++)
 				{
-					System.out.print(gambleList.get(k).getLastResult()+" ");
+					ticker += gambleList.get(k).getLastResult()+",";
 				}
-				System.out.println();
+				ticker += gambleList.get(gambleList.size()-1).getLastResult();
+				
+				System.out.println(ticker);
 				
 				for (int j = 0; j < playerCount; j++) {
 
 					Player player = playerList.get(j);
+					
+					if(player.isCheated() == true)
+						continue;
+					
 					String allocation = player.readFromClient();
 
 					List<Double> allocList = getListFromString(allocation);
-					// boolean valid = verifyAllocation(allocList,
-					// player.getWealth());
+					boolean valid = verifyAllocation(allocList, 1.0);
+					player.setCheated(!valid);
+					
+					if(player.isCheated() == true)
+					{
+						System.out.println(player.getName()+" cheat: sum of your input is "+sum(allocList));
+						player.writeToClient("END Cheat!");
+						continue;
+					}
+					
 					double outcome = 0;
 
 					result = computeOutcome(allocList);
@@ -387,15 +405,19 @@ public class Dealer {
 					}
 
 					String toClient = convertListToString(result);
-					outputToClient.add(toClient);
+					clientResult.put(player.getName(), toClient);
+					//outputToClient.add(toClient);
 					//player.writeToClient(toClient);
 				}
 				
 				for(int j =0;j< playerCount;j++)
 				{
 					Player player = playerList.get(j);
-					player.writeToClient(outputToClient.get(j));
+					if(player.isCheated() == true)
+						continue;
 					
+					player.writeToClient(ticker);
+					player.writeToClient(clientResult.get(player.getName()));
 					if(i != ROUND-1)
 					player.writeToClient("Give allocation:");
 				}
@@ -404,16 +426,36 @@ public class Dealer {
 
 			
 			System.out.println("Game End");
-			// List<String> winners = new ArrayList<String>();
-			// double maxProfit = 0;
+			double maxScore = 0;
 
 			for (int j = 0; j < playerCount; j++) {
 
 				Player player = playerList.get(j);
-				System.out.println("Player " + player.getName() + " : "
+				if(player.isCheated() == false)
+				{
+					if(player.getScore() > maxScore)
+					{
+						maxScore = player.getScore();
+						winners.clear();
+						winners.add(player);
+					}else if(player.getScore() == maxScore)
+					{
+						winners.add(player);
+					}
+					System.out.println("Player " + player.getName() + " : "
 						+ player.getScore());
-				player.writeToClient("END YOUR SCORE IS " + player.getScore());
+					player.writeToClient("END YOUR SCORE IS " + player.getScore());
+				}else
+				{
+					System.out.println("Player " + player.getName() + " : Cheated");
+				}
 
+			}
+			
+			System.out.println("Winner:");
+			for(Player p:winners)
+			{
+				System.out.println(p.getName()+" : "+p.getScore());
 			}
 
 		} catch (Exception e) {
@@ -460,17 +502,34 @@ public class Dealer {
 				
 				System.out.print("Round "+i+" :");
 				
-				for(int k=0;k<gambleList.size();k++)
+				
+		        String ticker = "";
+				for(int k=0;k<gambleList.size()-1;k++)
 				{
-					System.out.print(gambleList.get(k).getLastResult()+" ");
+					ticker += gambleList.get(k).getLastResult()+",";
 				}
-				System.out.println();
+				ticker += gambleList.get(gambleList.size()-1).getLastResult();
+				
+				System.out.println(ticker);
 
 				for (int j = 0; j < playerCount; j++) {
 					Player player = playerList.get(j);
+					
+					if(player.isCheated() == true)
+						continue;
+					
 					String allocation = player.readFromClient();
 
 					List<Double> allocList = getListFromString(allocation);
+					boolean valid = verifyAllocation(allocList, player.getWealth());
+					player.setCheated(!valid);
+					
+					if(player.isCheated() == true)
+					{
+						System.out.println(player.getName()+" cheat: current wealth is "+player.getWealth()+" Invest "+sum(allocList));
+						player.writeToClient("END Cheat! Your current wealth is "+player.getWealth()+" but you invest "+ sum(allocList));
+						continue;
+					}
 					
 					double cost = sum(allocList);
 					player.setWealth(player.getWealth()-cost);
@@ -480,13 +539,16 @@ public class Dealer {
 					double outcome = 0;
 
 					result = computeOutcome(allocList);
-
 					outcome = sum(result);
+					
+					double gamblesReturn = outcome - cost;
 
 					player.setWealth(player.getWealth()+outcome);
+					player.getReturns().add(gamblesReturn);
 
 					String toClient = convertListToString(result);
-					outputToClient.add(toClient);
+					clientResult.put(player.getName(), toClient);
+					//outputToClient.add(toClient);
 					
 					//player.writeToClient(toClient);
 				}
@@ -497,7 +559,11 @@ public class Dealer {
 				{
 					
 					Player player = playerList.get(j);
-					player.writeToClient(outputToClient.get(j));
+					if(player.isCheated() == true)
+						continue;
+					
+					player.writeToClient(ticker);
+					player.writeToClient(clientResult.get(player.getName()));
 					player.writeToClient(position);
 					if(i != ROUND-1)
 						player.writeToClient("Give allocation:");
@@ -507,17 +573,41 @@ public class Dealer {
 			}
 
 			System.out.println("Game End");
-			// List<String> winners = new ArrayList<String>();
-			// double maxProfit = 0;
-
+			double maxRatio = Double.MIN_VALUE;
+			
 			for (int j = 0; j < playerCount; j++) {
 
 				Player player = playerList.get(j);
-				System.out.println("Player " + player.getName() + " : "
-						+ player.getWealth());
-				player.writeToClient("END YOUR WEALTH IS " + player.getWealth());
+				player.caculateSharpeRatio();
+				
+				if(player.isCheated() == false)
+				{
+					if(player.getSharpeRatio() > maxRatio)
+					{
+						maxRatio = player.getSharpeRatio();
+						winners.clear();
+						winners.add(player);
+					}
+					else if(player.getSharpeRatio() == maxRatio)
+					{
+						winners.add(player);
+					}
+					System.out.println("Player " + player.getName() + " : "
+						+ player.getWealth()+" : "+ player.getSharpeRatio());
+					player.writeToClient("END YOUR WEALTH IS " + player.getWealth()+ "SHARPERATION : " + player.getSharpeRatio());
+				}else
+				{
+					System.out.println("Player " + player.getName() + " : Cheated");
+				}
 
 			}
+			
+			System.out.println("Winner:");
+			for(Player p:winners)
+			{
+				System.out.println(p.getName()+" : "+p.getWealth()+" : "+p.getSharpeRatio());
+			}
+			
 
 		} catch (Exception e) {
 			e.printStackTrace();

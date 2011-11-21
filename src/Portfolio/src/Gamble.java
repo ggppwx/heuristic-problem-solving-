@@ -1,3 +1,4 @@
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,16 @@ public class Gamble {
 		return "Gamble [id=" + id + " classId=" + classId + " highProb=" + highProb
 		       + " medProb=" + medProb + " lowProb=" + lowProb 
 				+ " high_return=" + high_return + " medium_return=" + medium_return + " low_return=" + low_return  + "]\n";
+	}
+
+	public String outputToFile() {
+		NumberFormat nf = NumberFormat.getInstance();
+        nf.setMaximumFractionDigits(2);
+
+		return id + "," + classId +","
+		+ nf.format(high_return) + "," + highProb + ","
+		+ nf.format(medium_return) + "," + medProb + ","
+		+ nf.format(low_return) + "," + lowProb;
 	}
 
 	public Gamble(int id, int classId,
