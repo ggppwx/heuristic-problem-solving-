@@ -33,7 +33,7 @@ public class Client {
 		writer.println(name);
 		
 		BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
-		
+		Algorithm a  = new Algorithm(mode, gambelNum, classNum);
 		
         String command;
         StringBuffer state = new StringBuffer();
@@ -43,8 +43,11 @@ public class Client {
                 if (command.equals("Give allocation:")) {
                 	state.append(command);
                 	System.out.println(state);
-        			String output = in.readLine();
-                	//String output = simpleGuess(gambelNum);
+                	// TODO add read here
+        			a.readState(state.toString());
+        			
+        			//String output = in.readLine();
+                	String output = simpleGuess(gambelNum);
                 	System.out.println("Allocation: "+output);
         			writer.println(output);
                     state.delete(0, state.length());

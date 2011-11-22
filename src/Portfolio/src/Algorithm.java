@@ -15,6 +15,7 @@ public class Algorithm {
 		this.mode = mode;
 		this.classNum = classNum;
 		retStates = new ArrayList<double[]>();
+		outcomes = new ArrayList<double[]>();
 		gambleStates = new gamble[gambleNum];
 		links = new int[classNum+1][classNum+1];
 		classes = (List<Integer>[])new ArrayList[classNum];
@@ -82,7 +83,13 @@ public class Algorithm {
 			}
 			retStates.add(state);
 			// TODO actual outcome for each gamble  
-			
+			String[] outcome = lines[1].split(",");
+			assert(outcome.length == gambleNum);
+			double[] state1 = new double[gambleNum];
+			for(int i=0; i<gambleNum; ++i){
+				state1[i] = Double.parseDouble(outcome[i]);
+			}
+			outcomes.add(state1);
 		}
 		
 	}
@@ -124,8 +131,11 @@ public class Algorithm {
 	 * */
 	double[] playGameTwo(){
 		// TODO play second game
-		
-		return new double[gambleNum]; //dummy
+		groupByClass();
+		int[] favorStat = calFavor();
+		// the accumulated money. 
+		double totalMoney = getCurrentTotalMoney();
+		return distributeVal(totalMoney,favorStat); //dummy
 	}
 	
 	
@@ -136,6 +146,10 @@ public class Algorithm {
 	void groupByClass(){
 		// TODO: put class1 to classes[0]
 	}
+	
+	
+	
+	
 	
 	/*
 	 * main logic calculation. 
@@ -268,6 +282,11 @@ public class Algorithm {
 	}
 	
 	
+	double getCurrentTotalMoney(){
+		// TODO: 
+		return 1.0;
+	}
+	
 	/*
 	 * private member variable
 	 * */
@@ -275,6 +294,7 @@ public class Algorithm {
 	private int gambleNum;
 	private int classNum;
 	private ArrayList<double[]> retStates; // return state of each round. 
+	private ArrayList<double[]> outcomes; // outcome of each round
 	private gamble[] gambleStates;  //is given before allocation
 	private int[][] links;  // a matrix indicates the link condition.
 	private List<Integer>[]  classes;
