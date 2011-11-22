@@ -255,9 +255,8 @@ public class Algorithm {
 			case 0:	
 				while(it.hasNext()){
 					int gId = it.next(); // starts from 1; each gamble id in this class
-					// TODO: use link as a parameter. of allocVal. 
+					// TODO: use link as a parameter. of allocVal ??
 					allocVal[gId - 1] = getExpRet(gambleStates[gId - 1], 0);
-					
 				}
 				break;
 			case -1:
@@ -290,6 +289,16 @@ public class Algorithm {
 		
 	}
 	
+	/*
+	 * TODO: another way to allocate money??
+	 * */
+	
+	
+	
+	
+	
+	
+
 	/*
 	 * guo's method
 	 * */
