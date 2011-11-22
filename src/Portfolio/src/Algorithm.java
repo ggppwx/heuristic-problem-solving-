@@ -17,6 +17,7 @@ public class Algorithm {
 		retStates = new ArrayList<double[]>();
 		gambleStates = new gamble[gambleNum];
 		links = new int[classNum+1][classNum+1];
+		classes = (List<Integer>[])new ArrayList[classNum];
 	}
 	
 	public void readState(String stateStr){
@@ -113,10 +114,9 @@ public class Algorithm {
 	 * */
 	double[] playGameOne(){
 		// TODO play first game
-		
-		
-		
-		return new double[gambleNum];  //dummy
+		groupByClass();
+		int[] favorStat = calFavor();
+		return distributeVal(1.0, favorStat);
 	}
 	
 	/*
@@ -134,30 +134,37 @@ public class Algorithm {
 	 * save it to classes. 
 	 * */
 	void groupByClass(){
-		// TODO: 
+		// TODO: put class1 to classes[0]
 	}
 	
 	/*
 	 * main logic calculation. 
 	 * */
-	void cal(){
+	int[] calFavor(){
+		int[] favorTable = new int[classNum];
 		double[] hisRetAvg = processRetHis();
-		for(;;){ // for each class
-			for(;;){ // guess favored or unfavored
-				for(;;){ // for each gamble in this class
+		for(int k = 0; k<classNum; ++k){ // for each class
+			List<Integer> ls = classes[k]; 
+			double[] diff = new double[3];
+			for(int favor = -1; favor <=1; favor++){ // guess favored or unfavored
+				Iterator<Integer> item = ls.iterator();
+				while(item.hasNext()){ // for each gamble in this class
 					// i is gamble index, starts from 0, calculate the predicted val. 
-					double predRet = getExpRet(gambleStates[i],0);
-					
-					
+					int i = item.next() - 1;
+					double predRet = getExpRet(gambleStates[i], favor);
 					// actual history return
 					double hisAvgRet = hisRetAvg[i];
-					// get the diff.
-					double diff = predRet - hisAvgRet;
-				}	
-				
+					// get the diff for gamble i in the class 
+					diff[favor+1] += predRet - hisAvgRet;
+				}					
 				
 			}
+			// select the favor for class k  
+			favorTable[k] =  getMaxIndex(diff) -1 ;
+			
 		}
+		return favorTable; 
+		
 	}
 	
 	
@@ -210,9 +217,46 @@ public class Algorithm {
 	
 	/*
 	 * distribute amount money to each gamble
+	 * the first version. 
 	 * */
-	double[] distributeVal(double amount){
+	double[] distributeVal(double amount, int[] favorTable){
+		double[] allocVal = new double[gambleNum];
+		for(int i = 0; i<classNum; ++i){
+			Iterator<Integer> it = classes[i].iterator();
+			switch(favorTable[i]){
+			case 0:	
+				while(it.hasNext()){
+					int gId = it.next(); // starts from 1; each gamble id in this class
+					allocVal[gId - 1] = getExpRet(gambleStates[gId - 1], 0);
+				}
+				break;
+			case -1:
+				while(it.hasNext()){
+					int gId = it.next(); // starts from 1; each gamble id in this class
+					allocVal[gId - 1] = getExpRet(gambleStates[gId - 1], -1);
+				}
+				break;
+			case 1:
+				while(it.hasNext()){
+					int gId = it.next(); // starts from 1; each gamble id in this class
+					allocVal[gId - 1] = getExpRet(gambleStates[gId - 1], 1);
+				}
+				break;
+			default:
+				break;
+			}
+
+		}
+		double sum = 0;
+		for(int i = 0; i<allocVal.length; ++i){
+			assert(allocVal[i] != 0);
+			sum +=allocVal[i];
+		}
+		for(int i = 0; i<allocVal.length; ++i){
+			allocVal[i] = allocVal[i]/sum;
+		}
 		
+		return allocVal;
 		
 	}
 	
@@ -220,7 +264,7 @@ public class Algorithm {
 	 * guo's method
 	 * */
 	double[] distributeVal(double amount, List l){
-		
+		return new double[1]; // dummy.
 	}
 	
 	
@@ -233,7 +277,7 @@ public class Algorithm {
 	private ArrayList<double[]> retStates; // return state of each round. 
 	private gamble[] gambleStates;  //is given before allocation
 	private int[][] links;  // a matrix indicates the link condition.
-	private List<List<Integer> > classes;
+	private List<Integer>[]  classes;
 	
 	@SuppressWarnings("unused")
 	private class gamble{
@@ -259,6 +303,21 @@ public class Algorithm {
 			this.low_return = low_return;
 			this.lowProb = lowProb;
 		}
+	}
+	
+	/*
+	 * get the index of maximum value in array 
+	 * */
+	public static int getMaxIndex(double[] array){
+		double max = -1;
+		int index = -1;
+		for(int i = 0; i<array.length; ++i){
+			if(array[i] > max){
+				max = array[i];
+				index = i;
+			}
+		}
+		return index;
 	}
 	
 }
