@@ -1,3 +1,5 @@
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -135,7 +137,7 @@ public class Algorithm {
 	double[] playGameTwo(){
 		//  play second game
 		groupByClass();
-		int[] favorStat = calFavor();
+		int[] favorStat = calFavor(); // fa
 		// the accumulated money. 
 		double totalMoney = getCurrentTotalMoney();
 		return distributeVal(totalMoney,favorStat); //dummy
@@ -160,6 +162,7 @@ public class Algorithm {
 	
 	/*
 	 * main logic calculation. 
+	 * favor table starts from 0 
 	 * */
 	int[] calFavor(){
 		int[] favorTable = new int[classNum];
@@ -244,10 +247,53 @@ public class Algorithm {
 	
 	
 	/*
+	 * analyze the links of a gamble.
+	 * the more favored gambles a gamble links to, the bigger chance the prob of it will be changed  
+	 * return a correction factor 
+	 * */
+	double analyzeLinks(gamble g, int[] favorTable){
+		int faCount = 0;
+		int unfCount = 0;
+		int neuCount = 0;
+		for(int i = 1; i<=gambleNum; ++i){
+			if(1 == links[g.id][i]){
+				// gamble i links to gamble g. 
+				switch(favorTable[gambleStates[i-1].classId]){
+				case 0:
+					// the linked gamble is neatural.
+					neuCount ++;
+					break;
+				case -1:
+					unfCount ++;
+					break;
+				case 1:
+					// the linked gamble is favored. 
+					//ret = (gambleStates[i-1].highProb+gambleStates[i-1].lowProb/2)*gambleStates[i-1].high_return
+					//	+gambleStates[i-1].medProb*gambleStates[i-1].medium_return+(gambleStates[i-1].lowProb/2)*gambleStates[i-1].low_return;
+					faCount ++;
+					break;
+				default:
+					//error 
+					break;
+				
+				}
+				
+			}
+		}
+		if(neuCount + unfCount + faCount == 0){
+			// clean gamble. 
+			return 2;
+		}
+		return (double)faCount/(double)(neuCount+unfCount+faCount)+2;
+	}
+	
+	
+	/*
 	 * distribute amount money to each gamble
 	 * the first version. 
 	 * */
 	double[] distributeVal(double amount, int[] favorTable){
+		amount = amount ;//*0.999;
 		double[] allocVal = new double[gambleNum];
 		for(int i = 0; i<classNum; ++i){
 			Iterator<Integer> it = classes[i].iterator();
@@ -256,19 +302,19 @@ public class Algorithm {
 				while(it.hasNext()){
 					int gId = it.next(); // starts from 1; each gamble id in this class
 					// TODO: use link as a parameter. of allocVal ??
-					allocVal[gId - 1] = getExpRet(gambleStates[gId - 1], 0);
+					allocVal[gId - 1] = getExpRet(gambleStates[gId - 1], 0) * analyzeLinks(gambleStates[gId-1],favorTable);
 				}
 				break;
 			case -1:
 				while(it.hasNext()){
 					int gId = it.next(); // starts from 1; each gamble id in this class
-					allocVal[gId - 1] = getExpRet(gambleStates[gId - 1], -1);
+					allocVal[gId - 1] = getExpRet(gambleStates[gId - 1], -1)* analyzeLinks(gambleStates[gId-1],favorTable);
 				}
 				break;
 			case 1:
 				while(it.hasNext()){
 					int gId = it.next(); // starts from 1; each gamble id in this class
-					allocVal[gId - 1] = getExpRet(gambleStates[gId - 1], 1);
+					allocVal[gId - 1] = getExpRet(gambleStates[gId - 1], 1) * analyzeLinks(gambleStates[gId-1],favorTable);
 				}
 				break;
 			default:
@@ -276,14 +322,31 @@ public class Algorithm {
 			}
 
 		}
-		double sum = 0;
+		double sum = 0.0;
 		for(int i = 0; i<allocVal.length; ++i){
 			assert(allocVal[i] != 0);
-			sum +=allocVal[i];
+			
+			// System.out.println(i);
+			// System.out.println(allocVal[i]);
+			//sum += df.format(allocVal[i]);
+			sum = sum+ allocVal[i];
 		}
+		double sum1 = 0;
 		for(int i = 0; i<allocVal.length; ++i){
-			allocVal[i] = amount*allocVal[i]/sum;
+			BigDecimal al = new BigDecimal(allocVal[i]);
+			BigDecimal s = new BigDecimal(sum);
+			BigDecimal ra = al.divide(s,5,BigDecimal.ROUND_DOWN);
+			
+			//double rate = allocVal[i]/sum;
+			//DecimalFormat df = new DecimalFormat("#.####");
+			//BigDecimal r = new BigDecimal(df.format(rate));
+			BigDecimal a = new BigDecimal(amount);
+			
+			allocVal[i] = a.multiply(ra).doubleValue();
+			sum1 += ra.doubleValue();
 		}
+		System.out.println(amount);
+		System.out.println(sum1);
 		
 		return allocVal;
 		
@@ -310,8 +373,11 @@ public class Algorithm {
 	 * get current total money
 	 * */
 	double getCurrentTotalMoney(){
+		if(outcomes.isEmpty()){ // first round
+			return 1.0;
+		}
 		double[] curOutcome = outcomes.get(outcomes.size() - 1);
-		double sum = 0;
+		double sum = 0.0;
 		assert(curOutcome.length == gambleNum);
 		for(int i = 0; i<curOutcome.length; ++i){
 			sum += curOutcome[i];
