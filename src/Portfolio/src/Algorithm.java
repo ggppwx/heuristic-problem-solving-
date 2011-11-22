@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class Algorithm {
@@ -107,6 +109,7 @@ public class Algorithm {
 	
 	/*
 	 * play the first game.
+	 * give the coresponding allocations 
 	 * */
 	double[] playGameOne(){
 		// TODO play first game
@@ -121,47 +124,108 @@ public class Algorithm {
 	 * */
 	double[] playGameTwo(){
 		// TODO play second game
+		
 		return new double[gambleNum]; //dummy
 	}
 	
 	
 	/*
 	 * group the gamble by its class
+	 * save it to classes. 
 	 * */
 	void groupByClass(){
-		
+		// TODO: 
 	}
 	
 	/*
 	 * main logic calculation. 
 	 * */
 	void cal(){
-		for(){ // for each class
-			for(){ // guess favored or unfavored
-				for(){ // for each gamble in this class
-					// calculate the predicted val. 
-					predRet[i] = ;
-					// actual return
-					processRetHis();
-					// get the diff.
+		double[] hisRetAvg = processRetHis();
+		for(;;){ // for each class
+			for(;;){ // guess favored or unfavored
+				for(;;){ // for each gamble in this class
+					// i is gamble index, starts from 0, calculate the predicted val. 
+					double predRet = getExpRet(gambleStates[i],0);
 					
+					
+					// actual history return
+					double hisAvgRet = hisRetAvg[i];
+					// get the diff.
+					double diff = predRet - hisAvgRet;
 				}	
+				
+				
 			}
 		}
-		
 	}
+	
+	
+	
 	
 	/*
 	 * process return history
-	 * get the expectation of all previous returns. 
+	 * get the expectation of all previous returns.
+	 * the returns are in return states.  
 	 * */
-	void processRetHis(){
+	double[] processRetHis(){
+		double[] avgGambs = new double[gambleNum];
+		Iterator<double[]> it = retStates.iterator();
+		while(it.hasNext()){
+			double[] gambs = it.next();
+			for(int i = 0; i< gambs.length; ++i){
+				avgGambs[i] += gambs[i];
+			}			
+		}
+		for(int i = 0; i< avgGambs.length; ++i){
+			avgGambs[i] = avgGambs[i]/retStates.size();
+		}
+		return avgGambs;
+	}
+	
+	/*
+	 * get expect return value. 
+	 * favor:  0: neutral, 1: favored, -1:unfavored
+	 * */
+	double getExpRet(gamble g, int favor){
+		double ret = -1;
+		switch(favor){
+		case 0:
+			//neutral:
+			ret = g.highProb*g.high_return+g.medProb*g.medium_return+g.lowProb*g.low_return;
+			break;
+		case 1:
+			ret = (g.highProb+g.lowProb/2)*g.high_return+g.medProb*g.medium_return+(g.lowProb/2)*g.low_return;
+			break;
+		case -1:
+			ret = (g.highProb/2)*g.high_return+g.medProb*g.medium_return+(g.lowProb+g.highProb/2)*g.low_return;
+			break;
+		default:
+			//error;
+			break;
+		}
+		return ret;
+	}
+	
+	
+	/*
+	 * distribute amount money to each gamble
+	 * */
+	double[] distributeVal(double amount){
 		
 		
 	}
 	
 	/*
-	 * private member 
+	 * guo's method
+	 * */
+	double[] distributeVal(double amount, List l){
+		
+	}
+	
+	
+	/*
+	 * private member variable
 	 * */
 	private int mode;
 	private int gambleNum;
@@ -169,7 +233,7 @@ public class Algorithm {
 	private ArrayList<double[]> retStates; // return state of each round. 
 	private gamble[] gambleStates;  //is given before allocation
 	private int[][] links;  // a matrix indicates the link condition.
-	
+	private List<List<Integer> > classes;
 	
 	@SuppressWarnings("unused")
 	private class gamble{
