@@ -6,19 +6,22 @@ import java.util.List;
 public class Algorithm {
 	
 	public Algorithm() {
-		// TODO Auto-generated constructor stub
+	
 	}
 	
 	public Algorithm(int mode, int gambleNum, int classNum){
-		// TODO initialize the alg
+		//  initialize the alg
 		this.gambleNum = gambleNum;
 		this.mode = mode;
 		this.classNum = classNum;
 		retStates = new ArrayList<double[]>();
 		outcomes = new ArrayList<double[]>();
 		gambleStates = new gamble[gambleNum];
-		links = new int[classNum+1][classNum+1];
+		links = new int[gambleNum+1][gambleNum+1];
 		classes = (List<Integer>[])new ArrayList[classNum];
+		for(int i = 0; i<classes.length; ++i){
+			classes[i] = new ArrayList<Integer>();
+		}
 	}
 	
 	public void readState(String stateStr){
@@ -82,7 +85,7 @@ public class Algorithm {
 				state[i] = Double.parseDouble(ret[i]);
 			}
 			retStates.add(state);
-			// TODO actual outcome for each gamble  
+			// actual outcome for each gamble  
 			String[] outcome = lines[1].split(",");
 			assert(outcome.length == gambleNum);
 			double[] state1 = new double[gambleNum];
@@ -95,7 +98,7 @@ public class Algorithm {
 	}
 	
 	public String makeAllocation(){
-		// TODO main logic of the algorithm. make a guess of allocations in each gamble.
+		// main logic of the algorithm. make a guess of allocations in each gamble.
 		double[] results;
 		if(mode == 1){
 			// play game 1
@@ -120,7 +123,7 @@ public class Algorithm {
 	 * give the coresponding allocations 
 	 * */
 	double[] playGameOne(){
-		// TODO play first game
+		//  play first game
 		groupByClass();
 		int[] favorStat = calFavor();
 		return distributeVal(1.0, favorStat);
@@ -130,7 +133,7 @@ public class Algorithm {
 	 * play the second game 
 	 * */
 	double[] playGameTwo(){
-		// TODO play second game
+		//  play second game
 		groupByClass();
 		int[] favorStat = calFavor();
 		// the accumulated money. 
@@ -144,7 +147,11 @@ public class Algorithm {
 	 * save it to classes. 
 	 * */
 	void groupByClass(){
-		// TODO: put class1 to classes[0]
+		//  put class1 to classes[0]
+		for(int i = 0; i<gambleStates.length;++i){
+			classes[gambleStates[i].classId].add(gambleStates[i].id);
+		}
+		
 	}
 	
 	
@@ -169,12 +176,12 @@ public class Algorithm {
 					// actual history return
 					double hisAvgRet = hisRetAvg[i];
 					// get the diff for gamble i in the class 
-					diff[favor+1] += predRet - hisAvgRet;
+					diff[favor+1] += Math.pow(predRet - hisAvgRet,2);
 				}					
 				
 			}
 			// select the favor for class k  
-			favorTable[k] =  getMaxIndex(diff) -1 ;
+			favorTable[k] =  getMinIndex(diff) -1 ;
 			
 		}
 		return favorTable; 
@@ -191,6 +198,13 @@ public class Algorithm {
 	 * */
 	double[] processRetHis(){
 		double[] avgGambs = new double[gambleNum];
+		if(retStates.isEmpty()){
+			for(int i = 0; i< gambleStates.length; ++i){
+				avgGambs[i] = gambleStates[i].highProb*gambleStates[i].high_return + gambleStates[i].medProb*gambleStates[i].medium_return+gambleStates[i].lowProb*gambleStates[i].low_return;
+			}	
+			return avgGambs;
+		}
+		
 		Iterator<double[]> it = retStates.iterator();
 		while(it.hasNext()){
 			double[] gambs = it.next();
@@ -241,7 +255,9 @@ public class Algorithm {
 			case 0:	
 				while(it.hasNext()){
 					int gId = it.next(); // starts from 1; each gamble id in this class
+					// TODO: use link as a parameter. of allocVal. 
 					allocVal[gId - 1] = getExpRet(gambleStates[gId - 1], 0);
+					
 				}
 				break;
 			case -1:
@@ -267,7 +283,7 @@ public class Algorithm {
 			sum +=allocVal[i];
 		}
 		for(int i = 0; i<allocVal.length; ++i){
-			allocVal[i] = allocVal[i]/sum;
+			allocVal[i] = amount*allocVal[i]/sum;
 		}
 		
 		return allocVal;
@@ -281,10 +297,18 @@ public class Algorithm {
 		return new double[1]; // dummy.
 	}
 	
-	
+	/*
+	 * get current total money
+	 * */
 	double getCurrentTotalMoney(){
-		// TODO: 
-		return 1.0;
+		double[] curOutcome = outcomes.get(outcomes.size() - 1);
+		double sum = 0;
+		assert(curOutcome.length == gambleNum);
+		for(int i = 0; i<curOutcome.length; ++i){
+			sum += curOutcome[i];
+			
+		}
+		return sum;
 	}
 	
 	/*
@@ -297,7 +321,7 @@ public class Algorithm {
 	private ArrayList<double[]> outcomes; // outcome of each round
 	private gamble[] gambleStates;  //is given before allocation
 	private int[][] links;  // a matrix indicates the link condition.
-	private List<Integer>[]  classes;
+	private List<Integer>[]  classes;  // class id starts from 0
 	
 	@SuppressWarnings("unused")
 	private class gamble{
@@ -326,14 +350,14 @@ public class Algorithm {
 	}
 	
 	/*
-	 * get the index of maximum value in array 
+	 * get the index of minimum value in array 
 	 * */
-	public static int getMaxIndex(double[] array){
-		double max = -1;
+	public static int getMinIndex(double[] array){
+		double min = 1000000000;
 		int index = -1;
 		for(int i = 0; i<array.length; ++i){
-			if(array[i] > max){
-				max = array[i];
+			if(array[i] < min){
+				min = array[i];
 				index = i;
 			}
 		}

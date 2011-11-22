@@ -47,7 +47,10 @@ public class Client {
         			a.readState(state.toString());
         			
         			//String output = in.readLine();
-                	String output = simpleGuess(gambelNum);
+                	//String output = simpleGuess(gambelNum);
+                	//TODO add output here
+                	String output = a.makeAllocation();
+                	
                 	System.out.println("Allocation: "+output);
         			writer.println(output);
                     state.delete(0, state.length());
