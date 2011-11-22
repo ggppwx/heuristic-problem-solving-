@@ -128,7 +128,10 @@ public class Algorithm {
 		//  play first game
 		groupByClass();
 		int[] favorStat = calFavor();
-		return distributeVal(1.0, favorStat);
+		
+		return distributeVal(1.0, favorStat); // gu's method
+		//System.out.println("guo");
+		//return distributeVal(1.0, favorStat,0); // guo's method
 	}
 	
 	/*
@@ -140,7 +143,11 @@ public class Algorithm {
 		int[] favorStat = calFavor(); // fa
 		// the accumulated money. 
 		double totalMoney = getCurrentTotalMoney();
-		return distributeVal(totalMoney,favorStat); //dummy
+		return distributeVal(totalMoney,favorStat); 
+		
+		//System.out.println("guo");
+		//double totalMoney = getCurrentTotalMoney();
+		//return distributeVal(totalMoney,favorStat); 
 	}
 	
 	
@@ -357,17 +364,89 @@ public class Algorithm {
 	 * */
 	
 	
-	
-	
-	
-	
-
 	/*
 	 * guo's method
 	 * */
-	double[] distributeVal(double amount, List l){
-		return new double[1]; // dummy.
+	double[] distributeVal(double amount, int[] favorTable,int tmp){
+		double[] gambleVals = new double[gambleNum];
+		double[] gambleexpt = new double[gambleNum];
+		double[] classvariance = calvariance();
+		double[] classexpsum = new double[classNum];
+		double[] classsum = new double[classNum];
+		double total = 0.0;
+
+		for(int i=0;i<gambleNum;i++)
+		{
+			int classindex = gambleStates[i].classId;
+			double expectation = getExpRet(gambleStates[i],favorTable[classindex]);
+			classexpsum[classindex] = classexpsum[classindex] + expectation;
+			gambleexpt[i] = expectation;
+		}
+		for(int i=0;i<classNum;i++)
+		{
+			classsum[i] = classexpsum[i]/classvariance[i];
+			total = total + classexpsum[i];
+		}
+		for(int i=0;i<classNum;i++)
+		{
+			classsum[i] = amount*classexpsum[i]/total;
+		}
+		for(int i=0;i<gambleNum;i++)
+		{
+			int classid = gambleStates[i].classId;
+			gambleVals[i] = classsum[classid]*gambleexpt[i]/classexpsum[classid];
+		}
+		
+		return gambleVals; // dummy.
 	}
+	
+		double[] calvariance()
+	{
+		double[] variance = new double[classNum];
+		double[] mean = new double[classNum];
+		double[] laststate = new double[gambleNum];
+		if(retStates.size()>0)
+		{
+			laststate = retStates.get(retStates.size()-1);
+		}else{
+			for(int i=0;i<classNum;i++)
+			{
+				variance[i] = 1.1;
+				//laststate[i] = (gambleStates[i].high_return + gambleStates[i].medium_return + gambleStates[i].low_return)/3;
+			}
+			return variance;
+		}
+
+		for(int i=0;i<classes.length;i++)
+		{
+			for(int j=0;j<classes[i].size();j++)
+			{
+				int gambleid = classes[i].get(j);				
+				mean[i] = mean[i] + laststate[gambleid-1];
+			}
+		}
+		for(int i=0;i<mean.length;i++)
+		{
+			mean[i] = mean[i]/classes[i].size();
+		}
+		
+		for(int i=0;i<variance.length;i++)
+		{
+			for(int j=0;j<classes[i].size();j++)
+			{
+				int gambleid = classes[i].get(j);
+				variance[i] = variance[i] + Math.pow((laststate[gambleid-1]-mean[i]), 2);
+			}
+		}
+		for(int i=0;i<variance.length;i++)
+		{
+			variance[i] = variance[i]/classes[i].size();
+		}
+		return variance;
+	}
+	
+	
+	
 	
 	/*
 	 * get current total money
