@@ -1,0 +1,36 @@
+When connecting to the server as the client, send these to the socket:
+
+SUDOKILL_PLAYER
+print_your_name_here
+
+When the game starts, the server will send the player to move a history of all moves with this format (where x,y of 0,0 corresponds to the upper left cell):
+
+MOVE START
+<x> <y> <num>
+MOVE END
+
+Example:
+
+MOVE START
+0 0 5
+0 3 4
+-1 -1 -1
+4 3 8
+MOVE END
+
+A special move (-1, -1, -1) is a marker the separates moves that are part of the filled cells of the initial board and actual player moves. In other words, if (-1, -1, -1) was the last move, that means the current player was the first player.
+
+The player should respond with a move with the same format without the start and end. Ex:
+
+4 7 9
+
+A sample client implementation player.rb is also available for reference. To run the script, type:
+
+ruby player.rb <port> <name to use>
+
+Note: the script assumes the server is located at localhost.
+
+To run the server, go to the bin directory and type:
+
+java nyu.hps.SudoKill <port> <# of cells to be filled on initial board>
+
