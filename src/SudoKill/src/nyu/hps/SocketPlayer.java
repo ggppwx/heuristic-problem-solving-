@@ -1,6 +1,7 @@
 package nyu.hps;
 
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.io.*;
 
 /**
@@ -41,10 +42,13 @@ public class SocketPlayer extends AbstractPlayer {
    * Creates a new player.
    * 
    * @param socket The socket associated with the player.
+   * @param timeLimit The time limit alloted for this player in milliseconds.
    * 
    * @throws IOException, IllegalArgumentException
    */
-  public SocketPlayer(Socket socket) throws IOException, IllegalArgumentException {
+  public SocketPlayer(Socket socket, long timeLimit)
+      throws IOException, IllegalArgumentException {
+    super(timeLimit);
     this.socket = socket;
 
     out = new PrintWriter(socket.getOutputStream(), true);
@@ -95,12 +99,26 @@ public class SocketPlayer extends AbstractPlayer {
     out.println(moveStr);
     String reply = "";
     
-    try {
-      reply = in.readLine();
-    }
-    catch (IOException ex) {
-      System.err.println("Player " + name + ": " + ex.getMessage());
-      ex.printStackTrace(System.err);
+    long startTime = System.currentTimeMillis();
+    boolean keepRetrying = true;
+    
+    while (keepRetrying) {
+      try {
+        reply = in.readLine();
+        keepRetrying = false;
+      } catch (SocketTimeoutException ex) {
+        long nowTime = System.currentTimeMillis();
+        addTime(nowTime - startTime);
+        startTime = nowTime;
+
+        if (isOverTime()) {
+          return null;
+        }
+      } catch (IOException ex) {
+        System.err.println("Player " + name + ": " + ex.getMessage());
+        ex.printStackTrace(System.err);
+        keepRetrying = false;
+      }
     }
     
     return new Move(reply);

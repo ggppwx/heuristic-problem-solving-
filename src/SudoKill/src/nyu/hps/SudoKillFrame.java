@@ -121,8 +121,9 @@ public class SudoKillFrame extends JFrame {
       String playerName = lastTurn.player.getName();
       
       if (lastTurn.isGameOver) {
-        if (lastTurn.player.getTime() > Constants.TIME_LIMIT) {
+        if (lastTurn.player.isOverTime()) {
           JOptionPane.showMessageDialog(null, playerName + " timed out!");
+          gameState.kickPlayer(lastTurn.player);
         }
         else {
           JOptionPane.showMessageDialog(null, playerName
@@ -239,7 +240,7 @@ public class SudoKillFrame extends JFrame {
     });
     contentPane.add(btnNewGame, BorderLayout.SOUTH);
     
-    gameState = new SudoKillGame(playerList, Constants.TIME_LIMIT, filledCells);
+    gameState = new SudoKillGame(playerList, filledCells);
     
     boardPanel = new BoardPanel(gameState, 630);
     contentPane.add(boardPanel);
@@ -267,8 +268,7 @@ public class SudoKillFrame extends JFrame {
     
     final List<Player> externalPlayers = new ArrayList<Player>(); 
     
-    for (PlayerStats stat: playerStats) {
-      Player player = stat.player;
+    for (Player player: gameState.getPlayers()) {
       player.resetTime();
       
       if (!player.getName().equals(Constants.AI_PLAYER_NAME)) {

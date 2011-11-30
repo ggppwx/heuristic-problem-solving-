@@ -8,7 +8,6 @@ import java.util.*;
 public class SudoKillGame {
   private final List<Player> players;
   private final Board board;
-  private final long timeLimit;
   
   private boolean isGameOver = false;
   private int nextPlayerIdx = 0;
@@ -17,12 +16,10 @@ public class SudoKillGame {
    * Creates a new game instance.
    * 
    * @param players The players for this game instance.
-   * @param timeLimit The maximum time a player is allowed to play in milliseconds.
    * @param filledCells The number of cells to fill in the initial board.
    */
-  public SudoKillGame(List<Player> players, long timeLimit, int filledCells) {
+  public SudoKillGame(List<Player> players, int filledCells) {
     this.players = players;
-    this.timeLimit = timeLimit;
     
     board = BoardFactory.create(filledCells);
     board.set(Move.Marker);
@@ -38,6 +35,22 @@ public class SudoKillGame {
     nextPlayerIdx %= players.size(); 
     
     return next;
+  }
+  
+  /**
+   * Kicks a player away from this game.
+   * 
+   * @param player The player to remove.
+   * @return true if player was in this game.
+   */
+  public boolean kickPlayer(Player player) {
+    boolean success = players.remove(player);
+    
+    if (success) {
+      player.kick();
+    }
+    
+    return success;
   }
   
   /**
@@ -68,11 +81,9 @@ public class SudoKillGame {
       Move move = null;
       
       try {
-        final long startTime = System.currentTimeMillis();
         move = next.play(history);
-        next.addTime(System.currentTimeMillis() - startTime);
         
-        if (next.getTime() >= timeLimit || !board.isValid(move)){
+        if (next.isOverTime() || !board.isValid(move)){
           isGameOver = true;
         }
         else {
@@ -93,5 +104,12 @@ public class SudoKillGame {
     else {
       return new TurnState(null, null, true);
     }
+  }
+  
+  /**
+   * @return the players in this game.
+   */
+  public Iterable<Player> getPlayers() {
+    return players;
   }
 }

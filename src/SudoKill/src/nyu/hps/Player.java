@@ -7,13 +7,6 @@ public interface Player {
   public String getName();
   
   /**
-   * Adds a time to this player.
-   * 
-   * @param time The amount of time to add.
-   */
-  public void addTime(long time);
-  
-  /**
    * @return the accumulated time for this player.
    */
   public long getTime();
@@ -38,4 +31,9 @@ public interface Player {
    * @return the move this player will take.
    */
   public Move play(ReadOnlyHistory moveHistory);
+  
+  /**
+   * @return true if the player is already over the time limit.
+   */
+  public boolean isOverTime();
 }

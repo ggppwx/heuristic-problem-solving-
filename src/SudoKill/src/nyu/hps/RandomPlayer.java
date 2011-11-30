@@ -8,7 +8,11 @@ import java.util.Set;
  * set as much as possible.
  */
 public class RandomPlayer extends AbstractPlayer {
-  public RandomPlayer() {
+  /**
+   * @param timeLimit The time limit alloted for this player in milliseconds.
+   */
+  public RandomPlayer(long timeLimit) {
+    super(timeLimit);
     name = Constants.AI_PLAYER_NAME;
   }
   
@@ -23,6 +27,8 @@ public class RandomPlayer extends AbstractPlayer {
    * @inheritDoc
    */
   public Move play(ReadOnlyHistory moveHistory) {
+    long startTime = System.currentTimeMillis();
+    
     Board board = new Board(moveHistory);
     Random rand = new Random();
     
@@ -60,6 +66,7 @@ public class RandomPlayer extends AbstractPlayer {
       number = rand.nextInt(Board.MAX_VAL) + 1;
     }
     
+    addTime(System.currentTimeMillis() - startTime);
     return new Move(x, y, number);
   }
 }

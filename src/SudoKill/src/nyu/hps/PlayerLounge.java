@@ -90,6 +90,7 @@ public class PlayerLounge extends JFrame {
           Socket socket = serverSocket.accept();
           socket.setKeepAlive(false);
           socket.setTcpNoDelay(true);
+          socket.setSoTimeout(Constants.SOCKET_PLAYER_TIMEOUT);
           publish(socket);
         } catch (SocketTimeoutException ex) {
           // release the sem since no socket was actually acquired
@@ -107,7 +108,7 @@ public class PlayerLounge extends JFrame {
     public void process(List<Socket> newSockets) {
       for (Socket socket: newSockets) {
         try {
-          if (!addPlayer(new SocketPlayer(socket))) {
+          if (!addPlayer(new SocketPlayer(socket, Constants.TIME_LIMIT))) {
             System.err.println("Cannot add new player: no empty slot.");
           }
         }
@@ -205,7 +206,7 @@ public class PlayerLounge extends JFrame {
     final List<Player> playerList = new ArrayList<Player>();
     for (PlayerDisplayGUI disp: playerDisp) {
       if (disp.player == null) {
-        playerList.add(new RandomPlayer());
+        playerList.add(new RandomPlayer(Constants.TIME_LIMIT));
       }
       else {
         playerList.add(disp.player);
