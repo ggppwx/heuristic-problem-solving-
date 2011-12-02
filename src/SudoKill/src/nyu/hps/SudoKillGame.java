@@ -83,7 +83,7 @@ public class SudoKillGame {
       try {
         move = next.play(history);
         
-        if (next.isOverTime() || !board.isValid(move)){
+        if (next.isOverTime() || !board.isValid(move, true)){
           isGameOver = true;
         }
         else {
