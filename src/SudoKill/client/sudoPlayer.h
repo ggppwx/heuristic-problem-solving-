@@ -45,6 +45,31 @@ namespace sudokill{
     /// convert states string to some data structure. 
     void saveStates(std::string states);
 
+    /// find all possible moves according to current state and previous 
+    /// player's move, return a array of all possible moves 
+    std::vector<move> findPossibleMoves(move m);
+    
+    /// find initial possible moves
+    std::vector<move> findInitPossibleMoves();
+
+
+    /// minMax algorithm to analyze possible moves.  
+    /// return the scoreo
+    /// depth starts from 0
+    int minMax(move m, int depth);
+    
+    
+
+    ///////////////////////////////////////////////////////////////////
+    /// helper functions .
+    /// get possible values for an entry
+    std::vector<int> getValuesForEntry(int x, int y){
+      // TODO 
+    }
+
+    
+    
+    
     /////////////////////////////////////////////////////////////////
     /// TEST input.
     /// TEST: OK

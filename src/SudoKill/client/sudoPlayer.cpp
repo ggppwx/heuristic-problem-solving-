@@ -51,6 +51,10 @@ namespace sudokill{
     // TODO analyze. write code here. 
     testBoard();
     
+
+
+
+
     return "";
   }
   
@@ -87,7 +91,127 @@ namespace sudokill{
   }
 
   
+  ///////////////////////////////////////////////////////////////////
+  ///  main algorithm
+  int sudoPlayer::minMax(move m, int depth){
+    bool meFlag ;
+    if(0 == depth%2){ // i move, max node 
+      meFlag = true;  
+    }else{ // adversary move
+      meFlag = false;
+    }
+    
+    std::vector<move> pMoves;
+    if(-1 == depth){
+      meFlag = false;
+      pMoves = findInitPossibleMoves();
+    }else{
+      // TODO make a move m first 
+      board[m.x][m.y] = m.num;
+      pMoves = findPossibleMoves(m);  // get next possible moves 
 
+    }
+
+    
+    if(pMoves.empty()){ // m is leaf 
+      if(meFlag){ // m is max node, indicating after i move, no further possible moves
+	// i win
+	// TODO cancel move before return 
+	board[m.x][m.y] = 0;
+	return 10;
+      }else{
+	// TODO cancel move before return.
+	board[m.x][m.y] = 0;
+	return -10;
+      }
+
+    }
+    
+    if(){ // reach the depth bound
+      
+
+    }
+
+
+
+    if(meFlag){ // m is min node.
+      // if it is my turn. get all possible moves of adversary. 
+      // get and save min score. 
+      int minScore = 10000;
+      for(int i = 0; i<pMoves.size(); ++i){
+	int tempScore = minMax(pMoves[i],depth+1);
+
+	if(tempScore < minScore){
+	  minScore = tempScore;
+	  // save pMoves[i]
+	  
+	}
+      }
+      assert(minScore != 10000);
+      // TODO canncel move 
+      board[m.x][m.y] = 0;
+      return minScore;
+    }else{
+      int maxScore = -10000;
+      for(int i = 0; i<pMoves.size(); ++i){
+	int tempScore = minMax(pMoves[i],depth+1);
+	if(tempScore > maxScore){
+	  maxScore = tempScore;
+	  // save 
+	}
+      }
+      assert(maxScore != -10000);
+      // TODO canncel move
+      board[m.x][m.y] = 0;
+      return maxScore;
+    }
+
+  }
+
+  std::vector<move> findPossibleMoves(move m){
+    // TODO preX, preY indicates previous x, y 
+    std::vector<move> possibleMoves;
+    int preX = m.x; 
+    int preY = m.y;
+    for(int i=0; i<9; ++i){
+      if(board[preX][i] == 0){
+	std::vector<int> vals = getValuesForEntry(preX, i);
+	for(int j = 0; j<vals.size(); ++j){
+	  move pM;
+	  pM.x = prex;
+	  pM.y = i;
+	  pM.num = vals[j];
+	  possibleMoves.push_back(pM);
+	}
+      }
+
+    }
+    for(int i=0; i<9; ++i){
+      if(board[i][preY] == 0){
+	std::vector<int> vals = getValuesForEntry(preX, i);
+	for(int j = 0; j<vals.size(); ++j){
+	  move pM;
+	  pM.x = prex;
+	  pM.y = i;
+	  pM.num = vals[j];
+	  possibleMoves.push_back(pM);
+	}
+      }
+      
+    }
+  }
+  
+  std::vector<move> findInitPossibleMoves(){
+    if(palyerMoves.empty()){
+      // TODO init moves.
+      
+
+
+    }else{
+      return findPossibleMoves(playerMoves[palyerMoves.size() -1]);
+    }
+    
+  }
 
 
  
