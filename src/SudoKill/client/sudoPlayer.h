@@ -27,6 +27,7 @@ namespace sudokill{
       int x;
       int y;
       int num;
+      move(){}
       move(int x1, int y1, int num1){
 	x = x1;
 	y = y1;
