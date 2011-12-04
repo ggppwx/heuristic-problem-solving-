@@ -19,23 +19,25 @@ namespace sudokill{
     /// return the next move
     std::string analyze();
 
+
   private:
     /// data structure to store infomations
-
-    /// board information
-    int board[9][9];
-
     /// user-defined data structure for move
     struct move{
       int x;
       int y;
       int num;
+      move(){}
       move(int x1, int y1, int num1){
 	x = x1;
 	y = y1;
 	num = num1;
       }
     };
+
+    /// board information
+    int board[9][9];
+
 
     /// init state
     std::vector<move> initStates;
@@ -58,7 +60,9 @@ namespace sudokill{
     /// depth starts from 0
     int minMax(move m, int depth);
     
-    
+    /// get an approximite score. 
+    /// this score is calculated according to a heuristic method  
+    int getApproxScore();
 
     ///////////////////////////////////////////////////////////////////
     /// helper functions .

@@ -13,16 +13,10 @@ namespace{
   }
 
 
-  
-
-
 }
 
 namespace hps{
 namespace sudokill{
-  
-
-
 
   sudoPlayer::sudoPlayer(const char* host, int port, const char* name)
     :player(host,port)
@@ -93,7 +87,7 @@ namespace sudokill{
   
   ///////////////////////////////////////////////////////////////////
   ///  main algorithm
-  int sudoPlayer::minMax(move m, int depth){
+  int sudoPlayer::minMax(sudoPlayer::move m, int depth){
     bool meFlag ;
     if(0 == depth%2){ // i move, max node 
       meFlag = true;  
@@ -127,9 +121,9 @@ namespace sudokill{
 
     }
     
-    if(){ // reach the depth bound
-      
-
+    if(depth > 5){//reach the depth bound
+      board[m.x][m.y] = 0;
+      return getApproxScore();
     }
 
 
@@ -168,7 +162,8 @@ namespace sudokill{
 
   }
 
-  std::vector<move> findPossibleMoves(move m){
+  
+  std::vector<sudoPlayer::move> sudoPlayer::findPossibleMoves(sudoPlayer::move m){
     // TODO preX, preY indicates previous x, y 
     std::vector<move> possibleMoves;
     int preX = m.x; 
@@ -178,7 +173,7 @@ namespace sudokill{
 	std::vector<int> vals = getValuesForEntry(preX, i);
 	for(int j = 0; j<vals.size(); ++j){
 	  move pM;
-	  pM.x = prex;
+	  pM.x = preX;
 	  pM.y = i;
 	  pM.num = vals[j];
 	  possibleMoves.push_back(pM);
@@ -188,32 +183,49 @@ namespace sudokill{
     }
     for(int i=0; i<9; ++i){
       if(board[i][preY] == 0){
-	std::vector<int> vals = getValuesForEntry(preX, i);
+	std::vector<int> vals = getValuesForEntry(i, preY);
 	for(int j = 0; j<vals.size(); ++j){
 	  move pM;
-	  pM.x = prex;
-	  pM.y = i;
+	  pM.x = i;
+	  pM.y = preY;
 	  pM.num = vals[j];
 	  possibleMoves.push_back(pM);
 	}
       }
-      
     }
+    return possibleMoves;
+
   }
+
   
-  std::vector<move> findInitPossibleMoves(){
-    if(palyerMoves.empty()){
+  std::vector<sudoPlayer::move> sudoPlayer::findInitPossibleMoves(){
+    if(playerMoves.empty()){
       // TODO init moves.
-      
-
-
+      std::vector<move> initPossibleMoves;
+      for(int i = 0; i<9; ++i){
+	for(int j = 0; j<9; ++j){
+	  if(board[i][j] == 0){
+	    std::vector<int> vals = getValuesForEntry(i,j);
+	    for(int k = 0; k<vals.size(); k++){
+	      move pM;
+	      pM.x = i;
+	      pM.y = j;
+	      pM.num = vals[k];
+	      initPossibleMoves.push_back(pM);
+	    }
+	  }
+	}
+      }
+      return initPossibleMoves;
     }else{
-      return findPossibleMoves(playerMoves[palyerMoves.size() -1]);
+      return findPossibleMoves(playerMoves[playerMoves.size() -1]);
     }
     
   }
-
-
+  
+  int sudoPlayer::getApproxScore(){
+    // TODO 
+  }
  
 
 } 
