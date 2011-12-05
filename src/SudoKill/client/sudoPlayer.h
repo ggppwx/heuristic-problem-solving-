@@ -40,8 +40,10 @@ namespace sudokill{
 
 
     /// init state
+    /// should be cleared before call save states
     std::vector<move> initStates;
     /// player moves
+    /// should be cleared before call save sates
     std::vector<move> playerMoves;
 
     /// record guessing moves for each player. 
@@ -68,8 +70,8 @@ namespace sudokill{
     /// this score is calculated according to a heuristic method  
     int getApproxScore();
 
-
-
+    /// max depth
+    int MAX_DEPTH;
 
     ///////////////////////////////////////////////////////////////////
     /// helper functions .
@@ -79,6 +81,9 @@ namespace sudokill{
       std::vector<int> vals;
       // check the column
       int temp[10]; // from 1 to 9
+      for(int i=1; i<=9; ++i){
+	temp[i] = 0;
+      }
       for(int i = 0; i<9; ++i){
 	if(board[x][i] != 0){
 	  temp[board[x][i]] = 1;
@@ -91,15 +96,15 @@ namespace sudokill{
 	}
       }
       // check the square
-      for(int i = x/3*3; i<x/3+3; ++i){
-	for(int j = y/3*3; j<y/3+3; ++j){
+      for(int i = x/3*3; i<x/3*3+3; ++i){
+	for(int j = y/3*3; j<y/3*3+3; ++j){
 	  if(board[i][j] != 0){
 	    temp[board[i][j]] = 1;
 	  }
 	}
       }
       for(int i=1; i<=9; ++i){
-	if(temp[i] != 0){
+	if(temp[i] == 0){
 	  vals.push_back(i);
 	}
       }

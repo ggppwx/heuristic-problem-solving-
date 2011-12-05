@@ -36,6 +36,7 @@ namespace sudokill{
 	board[i][j] = 0;
       }
     }
+    srand(time(NULL));
   }
 
 
@@ -53,37 +54,47 @@ namespace sudokill{
 
   std::string sudoPlayer::analyze(){
     // TODO analyze. write code here. 
-    testBoard();
+    // testBoard();
     sudoPlayer::move dummyMove;
 
     // clear recMoves before calling minMax
     recMoves.clear();
     minMax(dummyMove, -1);
-    
+    if(recMoves.empty()){
+      std::cout<< "lose!!!"<<std::endl;
+      return "0 0 1";
+    }
     // the first move.
-    int x = recMoves[0].x;
-    int y = recMoves[0].y;
-    int num = recMoves[0].num;
+    int x = recMoves[recMoves.size() -1].x;
+    int y = recMoves[recMoves.size() -1].y;
+    int num = recMoves[recMoves.size() -1].num;
     std::string retStr = IntToString(x)+" "+IntToString(y)+" "+IntToString(num);
+    std::cout << "move to "<<retStr<<std::endl;
     return retStr;
   }
   
 
   void sudoPlayer::saveStates(std::string states){
     // TODO save sates
+    initStates.clear();
+    playerMoves.clear();
     std::istringstream is(states,std::istringstream::in);
     std::string temp;
     int stage = 0;
     while(getline(is, temp)){
       if(0 == temp.compare("MOVE START")){
 	stage = 1;
+	continue;
       }else if(0 == temp.compare("-1 -1 -1")){
 	stage = 2;
+	continue;
       }else if(0 == temp.compare("MOVE END")){
 	break;
       }else{
 	assert(stage != 0);
 	std::vector<int> li = stringToList(temp);
+	assert(li[2] != 0);
+
 	board[li[0]][li[1]] = li[2];
 	if(stage == 1){
 	  move s(li[0],li[1],li[2]);
@@ -104,6 +115,8 @@ namespace sudokill{
   ///////////////////////////////////////////////////////////////////
   ///  main algorithm
   int sudoPlayer::minMax(sudoPlayer::move m, int depth){
+    // std::cout<< "---minmax---depth"<<depth<<" ";
+    // std::cout << m.x <<"-"<< m.y <<"-"<<m.num <<std::endl;
     bool meFlag ;
     if(0 == depth%2){ // i move, max node 
       meFlag = true;  
@@ -115,6 +128,23 @@ namespace sudokill{
     if(-1 == depth){
       meFlag = false;
       pMoves = findInitPossibleMoves();
+      std::cout <<"------" <<pMoves.size()<<std::endl;
+      /*
+      std::cout << "================";
+      for(int k = 0; k<pMoves.size(); k++){
+	std::cout<< pMoves[k].x << pMoves[k].y<<pMoves[k].num << "-";
+      }
+      std::cout <<std::endl; 
+      */
+      // OK
+      
+      if(pMoves.size() > 100){
+	MAX_DEPTH = 1;
+      }else {
+	MAX_DEPTH = 2;
+      }
+     
+      
     }else{
       // TODO make a move m first 
       board[m.x][m.y] = m.num;
@@ -127,19 +157,28 @@ namespace sudokill{
       if(meFlag){ // m is max node, indicating after i move, no further possible moves
 	// i win
 	// TODO cancel move before return 
-	board[m.x][m.y] = 0;
+	if(depth != -1){
+	  board[m.x][m.y] = 0;
+	}
 	return 10;
       }else{
 	// TODO cancel move before return.
-	board[m.x][m.y] = 0;
+	if(depth != -1){
+	  board[m.x][m.y] = 0;
+	}
 	return -10;
       }
 
     }
     
-    if(depth > 5){//reach the depth bound
-      board[m.x][m.y] = 0;
-      return getApproxScore();
+
+    if(depth >= MAX_DEPTH){//reach the depth bound
+      
+      if(depth != -1){
+	board[m.x][m.y] = 0;
+      }
+      return 0;
+      
     }
 
 
@@ -151,7 +190,13 @@ namespace sudokill{
       int recX, recY, recNum;
       for(int i = 0; i<pMoves.size(); ++i){
 	int tempScore = minMax(pMoves[i],depth+1);
-
+	if(tempScore == -10){
+	  minScore = tempScore;
+	  recX = pMoves[i].x;
+	  recY = pMoves[i].y;
+	  recNum = pMoves[i].num;
+	  break;
+	}
 	if(tempScore < minScore){
 	  minScore = tempScore;
 	  // save pMoves[i]
@@ -165,15 +210,23 @@ namespace sudokill{
       sudoPlayer::move recMove(recX, recY, recNum);
       recMoves.push_back(recMove);
 
-
       // TODO canncel move 
-      board[m.x][m.y] = 0;
+      if(depth != -1){
+	board[m.x][m.y] = 0;
+      }
       return minScore;
     }else{
       int maxScore = -10000;
       int recX, recY, recNum;
       for(int i = 0; i<pMoves.size(); ++i){
 	int tempScore = minMax(pMoves[i],depth+1);
+	if(tempScore == 10){
+	  maxScore = tempScore;
+	  recX = pMoves[i].x;
+	  recY = pMoves[i].y;
+	  recNum = pMoves[i].num;
+	  break;
+	}
 	if(tempScore > maxScore){
 	  maxScore = tempScore;
 	  // save 
@@ -188,18 +241,21 @@ namespace sudokill{
       recMoves.push_back(recMove);
 
       // TODO canncel move
-      board[m.x][m.y] = 0;
+      if(depth != -1){
+	board[m.x][m.y] = 0;
+      }
       return maxScore;
     }
 
   }
 
-  
+  // OK
   std::vector<sudoPlayer::move> sudoPlayer::findPossibleMoves(sudoPlayer::move m){
     // TODO preX, preY indicates previous x, y 
     std::vector<move> possibleMoves;
     int preX = m.x; 
     int preY = m.y;
+    // std::cout << preX << " " << preY<<std::endl;
     for(int i=0; i<9; ++i){
       if(board[preX][i] == 0){
 	std::vector<int> vals = getValuesForEntry(preX, i);
@@ -229,7 +285,7 @@ namespace sudokill{
 
   }
 
-  
+  // OK
   std::vector<sudoPlayer::move> sudoPlayer::findInitPossibleMoves(){
     if(playerMoves.empty()){
       // TODO init moves.
@@ -250,6 +306,7 @@ namespace sudokill{
       }
       return initPossibleMoves;
     }else{
+      //std::cout << playerMoves[playerMoves.size() -1].x;
       return findPossibleMoves(playerMoves[playerMoves.size() -1]);
     }
     
@@ -258,8 +315,9 @@ namespace sudokill{
   int sudoPlayer::getApproxScore(){
     // TODO 
     // check current state, get a heuristic score. 
-    
-    
+    // TEST: let's assign a random number between -10 to 10
+    int randomScore = rand()%21 -10; 
+    return randomScore;
   }
  
 
