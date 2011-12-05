@@ -1,6 +1,8 @@
 #include "sudoPlayer.h"
 #include "assert.h"
 namespace{
+  //////////////////////////////////////////////////////////////
+  /// helper functions in unnamed space 
   std::vector<int> stringToList(std::string temp){
     std::vector<int> res;
     std::istringstream tempis(temp);
@@ -10,6 +12,13 @@ namespace{
     res.push_back(atoi(yStr.c_str()));
     res.push_back(atoi(numStr.c_str()));
     return res;
+  }
+
+
+  std::string IntToString(int i){
+    std::stringstream ss;
+    ss << i;
+    return ss.str();
   }
 
 
@@ -38,18 +47,25 @@ namespace sudokill{
   }
 
   void sudoPlayer::writeInfo(std::string input){
-    player::writeStates(input);
+    std::cout<< input <<std::endl;
+    player::writeStates(input+"\n");
   }
 
   std::string sudoPlayer::analyze(){
     // TODO analyze. write code here. 
     testBoard();
+    sudoPlayer::move dummyMove;
+
+    // clear recMoves before calling minMax
+    recMoves.clear();
+    minMax(dummyMove, -1);
     
-
-
-
-
-    return "";
+    // the first move.
+    int x = recMoves[0].x;
+    int y = recMoves[0].y;
+    int num = recMoves[0].num;
+    std::string retStr = IntToString(x)+" "+IntToString(y)+" "+IntToString(num);
+    return retStr;
   }
   
 
@@ -132,29 +148,45 @@ namespace sudokill{
       // if it is my turn. get all possible moves of adversary. 
       // get and save min score. 
       int minScore = 10000;
+      int recX, recY, recNum;
       for(int i = 0; i<pMoves.size(); ++i){
 	int tempScore = minMax(pMoves[i],depth+1);
 
 	if(tempScore < minScore){
 	  minScore = tempScore;
 	  // save pMoves[i]
+	  recX = pMoves[i].x;
+	  recY = pMoves[i].y;
+	  recNum = pMoves[i].num;
 	  
 	}
       }
       assert(minScore != 10000);
+      sudoPlayer::move recMove(recX, recY, recNum);
+      recMoves.push_back(recMove);
+
+
       // TODO canncel move 
       board[m.x][m.y] = 0;
       return minScore;
     }else{
       int maxScore = -10000;
+      int recX, recY, recNum;
       for(int i = 0; i<pMoves.size(); ++i){
 	int tempScore = minMax(pMoves[i],depth+1);
 	if(tempScore > maxScore){
 	  maxScore = tempScore;
 	  // save 
+	  recX = pMoves[i].x;
+	  recY = pMoves[i].y;
+	  recNum = pMoves[i].num;
+
 	}
       }
       assert(maxScore != -10000);
+      sudoPlayer::move recMove(recX, recY, recNum);
+      recMoves.push_back(recMove);
+
       // TODO canncel move
       board[m.x][m.y] = 0;
       return maxScore;
@@ -225,6 +257,9 @@ namespace sudokill{
   
   int sudoPlayer::getApproxScore(){
     // TODO 
+    // check current state, get a heuristic score. 
+    
+    
   }
  
 

@@ -44,6 +44,10 @@ namespace sudokill{
     /// player moves
     std::vector<move> playerMoves;
 
+    /// record guessing moves for each player. 
+    /// should be cleared before invoking minMax()
+    std::vector<move> recMoves;
+
     /// convert states string to some data structure. 
     void saveStates(std::string states);
 
@@ -64,11 +68,42 @@ namespace sudokill{
     /// this score is calculated according to a heuristic method  
     int getApproxScore();
 
+
+
+
     ///////////////////////////////////////////////////////////////////
     /// helper functions .
     /// get possible values for an entry
     std::vector<int> getValuesForEntry(int x, int y){
       // TODO 
+      std::vector<int> vals;
+      // check the column
+      int temp[10]; // from 1 to 9
+      for(int i = 0; i<9; ++i){
+	if(board[x][i] != 0){
+	  temp[board[x][i]] = 1;
+	}
+      }
+      // check the row 
+      for(int i=0; i<9; ++i){
+	if(board[i][y] !=0){
+	  temp[board[i][y]] = 1;
+	}
+      }
+      // check the square
+      for(int i = x/3*3; i<x/3+3; ++i){
+	for(int j = y/3*3; j<y/3+3; ++j){
+	  if(board[i][j] != 0){
+	    temp[board[i][j]] = 1;
+	  }
+	}
+      }
+      for(int i=1; i<=9; ++i){
+	if(temp[i] != 0){
+	  vals.push_back(i);
+	}
+      }
+      return vals;
     }
 
     
