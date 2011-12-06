@@ -76,19 +76,26 @@ namespace sudokill{
 
   void sudoPlayer::saveStates(std::string states){
     // save sates
+    
+    for(int i = 0; i<9; ++i){
+      for(int j=0; j<9; ++j){
+	board[i][j] = 0;
+      }
+    }
+    
     initStates.clear();
     playerMoves.clear();
     std::istringstream is(states,std::istringstream::in);
     std::string temp;
     int stage = 0;
     while(getline(is, temp)){
-      if(0 == temp.compare("MOVE START")){
+      if(0 == temp.substr(0,10).compare("MOVE START")){
 	stage = 1;
 	continue;
-      }else if(0 == temp.compare("-1 -1 -1")){
+      }else if(0 == temp.substr(0,8).compare("-1 -1 -1")){
 	stage = 2;
 	continue;
-      }else if(0 == temp.compare("MOVE END")){
+      }else if(0 == temp.substr(0,8).compare("MOVE END")){
 	break;
       }else{
 	assert(stage != 0);
@@ -136,15 +143,25 @@ namespace sudokill{
       }
       std::cout <<std::endl; 
       */
-      // OK
-      
+      // OK      
       if(pMoves.size() > 100){
 	MAX_DEPTH = 1;
       }else {
 	MAX_DEPTH = 2;
       }
-     
-      
+      if(initStates.size() + playerMoves.size() > 30){
+	MAX_DEPTH = 3;
+      }
+      if(initStates.size() + playerMoves.size() > 45){
+	MAX_DEPTH = 4;
+      }
+      if(initStates.size() + playerMoves.size() > 55){
+	MAX_DEPTH = 5;
+      }
+      if(initStates.size() + playerMoves.size() > 65){
+	MAX_DEPTH = 6;
+      }
+
     }else{
       // make a move m first 
       board[m.x][m.y] = m.num;
@@ -152,7 +169,6 @@ namespace sudokill{
 
     }
 
-    
     if(pMoves.empty()){ // m is leaf 
       if(meFlag){ // m is max node, indicating after i move, no further possible moves
 	// i win
@@ -171,7 +187,6 @@ namespace sudokill{
 
     }
     
-
     if(depth >= MAX_DEPTH){//reach the depth bound
       
       if(depth != -1){
@@ -180,8 +195,6 @@ namespace sudokill{
       return getApproxScore();
       
     }
-
-
 
     if(meFlag){ // m is min node.
       // if it is my turn. get all possible moves of adversary. 
@@ -315,9 +328,12 @@ namespace sudokill{
   int sudoPlayer::getApproxScore(){
     // TODO 
     // check current state, get a heuristic score. 
-    // TEST: let's assign a random number between -10 to 10
-    int randomScore = rand()%21 -10; 
+    // TEST: let's assign a random number between -9 to 9
+    int randomScore = rand()%19 -9; 
+    
     return randomScore;
+    
+
   }
  
 
