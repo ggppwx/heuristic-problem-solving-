@@ -42,7 +42,7 @@ namespace sudokill{
 
   bool sudoPlayer::readInfo(){
     std::string states = player::readStates();
-    // TODO put states into data structure 
+    // put states into data structure 
     std::cout<< states <<std::endl;
     saveStates(states);
   }
@@ -53,7 +53,7 @@ namespace sudokill{
   }
 
   std::string sudoPlayer::analyze(){
-    // TODO analyze. write code here. 
+    // analyze. write code here. 
     // testBoard();
     sudoPlayer::move dummyMove;
 
@@ -75,7 +75,7 @@ namespace sudokill{
   
 
   void sudoPlayer::saveStates(std::string states){
-    // TODO save sates
+    // save sates
     initStates.clear();
     playerMoves.clear();
     std::istringstream is(states,std::istringstream::in);
@@ -146,7 +146,7 @@ namespace sudokill{
      
       
     }else{
-      // TODO make a move m first 
+      // make a move m first 
       board[m.x][m.y] = m.num;
       pMoves = findPossibleMoves(m);  // get next possible moves 
 
@@ -156,13 +156,13 @@ namespace sudokill{
     if(pMoves.empty()){ // m is leaf 
       if(meFlag){ // m is max node, indicating after i move, no further possible moves
 	// i win
-	// TODO cancel move before return 
+	// cancel move before return 
 	if(depth != -1){
 	  board[m.x][m.y] = 0;
 	}
 	return 10;
       }else{
-	// TODO cancel move before return.
+	// cancel move before return.
 	if(depth != -1){
 	  board[m.x][m.y] = 0;
 	}
@@ -177,7 +177,7 @@ namespace sudokill{
       if(depth != -1){
 	board[m.x][m.y] = 0;
       }
-      return 0;
+      return getApproxScore();
       
     }
 
@@ -210,7 +210,7 @@ namespace sudokill{
       sudoPlayer::move recMove(recX, recY, recNum);
       recMoves.push_back(recMove);
 
-      // TODO canncel move 
+      // canncel move 
       if(depth != -1){
 	board[m.x][m.y] = 0;
       }
@@ -240,7 +240,7 @@ namespace sudokill{
       sudoPlayer::move recMove(recX, recY, recNum);
       recMoves.push_back(recMove);
 
-      // TODO canncel move
+      // canncel move
       if(depth != -1){
 	board[m.x][m.y] = 0;
       }
@@ -251,7 +251,7 @@ namespace sudokill{
 
   // OK
   std::vector<sudoPlayer::move> sudoPlayer::findPossibleMoves(sudoPlayer::move m){
-    // TODO preX, preY indicates previous x, y 
+    // preX, preY indicates previous x, y 
     std::vector<move> possibleMoves;
     int preX = m.x; 
     int preY = m.y;
@@ -288,7 +288,7 @@ namespace sudokill{
   // OK
   std::vector<sudoPlayer::move> sudoPlayer::findInitPossibleMoves(){
     if(playerMoves.empty()){
-      // TODO init moves.
+      //  init moves.
       std::vector<move> initPossibleMoves;
       for(int i = 0; i<9; ++i){
 	for(int j = 0; j<9; ++j){
