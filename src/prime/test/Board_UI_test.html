@@ -3,21 +3,33 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>bord_ui_test</title>
-<script src="../lib/closure-library/goog/base.js"></script>
-<script src="../src/Board.js"></script>
-<script src="../src/Board_Factory.js"></script>
-<script src="../src/Board_UI.js"></script>
 
-<script>
-</script>
+<script src="../lib/closure-library/goog/base.js"></script>
+<script src="../prime-dep.js"></script>
+
+<script src="../src/main_UI.js"></script>
+
+
+<!-- css style-->
+<link rel="stylesheet" href="drecco.css">
+<link rel="stylesheet" href="../css/palette.css">
+<link rel="stylesheet" href="../css/common.css">
+<link rel="stylesheet" href="../css/prompt.css">
+<link rel="stylesheet" href="../css/sudokill.css">
+<link rel="stylesheet" href="../css/player_list.css">
+<link rel="stylesheet" href="../css/flatbutton.css">
+
+
+
+
+
 </head>
 
-<body onload="sayHi()">
 
-<script>
-
-</script>
-
-
+<body>
+  <div id='board'></div>
+  <script>
+     var ui = new hps.prime.MainUI(goog.dom.getElement('board'));
+  </script>
 </body>
 </html>
