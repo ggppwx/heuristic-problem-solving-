@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>bord_ui_test</title>
+
+<!-- css style-->
+<link rel="stylesheet" href="test/drecco.css">
+<link rel="stylesheet" href="css/palette.css">
+<link rel="stylesheet" href="css/common.css">
+<link rel="stylesheet" href="css/prompt.css">
+<link rel="stylesheet" href="css/prime.css">
+<link rel="stylesheet" href="css/player_list.css">
+<link rel="stylesheet" href="css/flatbutton.css">
+
+</head>
+
+<body>
+
+<div class="post">
+	 <h2 class="title"><a href="#">prime</a></h2>
+</div>
+
+ 
+
+<SCRIPT>
+
+	function theWinner(){
+		
+                var boardContent =  hps.prime.MainUI.getWinnerBoardContent();
+		// alert(boardContent);
+	        var sub0 = boardContent.substring(0,9);
+                if(sub0 !== 'Game over'){
+	            alert('the winner is not known!');
+	
+		}else{
+                var begin = 'Game over, '.length;
+	        var sub1 = boardContent.substring(begin);
+             	if (sub1 !== 'tie!'){
+                     var sub2 = sub1.substring(0,sub1.length - 6);
+                    alert(sub2);
+                     top.document.location = "index.php?task=prime&winner="+ sub2 +"&ws=won";
+                }else{
+                    alert('game ties');
+                }
+
+
+
+                }
+
+		
+	}
+	
+	
+</SCRIPT>
+ 
+<center> 
+<FORM name ="primeWinner">
+<input type="button" value="Save my score" onClick="theWinner()">
+</FORM>
+
+<div id='board'></div>
+
+<script src="lib/closure-library/goog/base.js"></script>
+<script src="prime-dep.js"></script>
+
+<script src="src/Boot.js"></script>
+
+<script >
+    var ui = hps.prime.MainUI(goog.dom.getElement('board'));
+</script>
+
+
+
+</center>
+
+<br /><br />
+
+<!-- display the last and best scores -->
+
+	<!-- open the connection with the dabatase -->
+	
+
+
+</body>
+
+</html>

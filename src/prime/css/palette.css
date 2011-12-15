@@ -6,7 +6,7 @@
 .goog-palette-table {
   border: 1px solid #666;
   border-collapse: collapse;
-  margin: 5px;
+  margin: 1px;
 }
 
 .goog-palette-body {
@@ -51,8 +51,8 @@
 
 .simple-palette .goog-palette-cell {
   border: 1px solid #cccccc;
-  height: 40px;
-  width: 40px;
+  height: 80px;
+  width: 80px;
   margin: 0;
   padding: 1px;
   text-align: center;

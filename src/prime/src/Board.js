@@ -148,7 +148,7 @@ hps.prime.Board.prototype._checkCol = function(x, y){
 hps.prime.Board.prototype._checkDiag1 = function(x, y){
     var score = 0;
     if(x === y){ // in diagonal 1
-	var num = 0;p
+	var num = 0;
 	var i = 0;
 	var j = 0;
 	for(i = 0,j=0; i< BOARD_WIDTH && j<BOARD_WIDTH; i++,j++){
@@ -214,7 +214,7 @@ hps.prime.Board.prototype._checkDiag2 = function(x, y){
 	if(this._isValidPrime(num)){
 	    score ++; 
 	}
-	return score;6
+	return score;
 	
     }else{
 	return -1;

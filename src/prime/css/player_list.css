@@ -1,35 +1,44 @@
+#player-list{
+  margin-left: 5px;
+
+}
+
 #add-player-btn {
   float: right;
 }
 
+
 .player-table {
   display: table;
   width: 100%;
+
 }
 
 .player-list-entry {
   display: table-row;
+  border: 1px solid white;
+  padding: 3px;
+  background-color: beige;
 }
 
 .player-list-entry * {
-  vertical-align: middle;
+  vertical-align: top;
 }
 
 .player-list-entry-name {
   float: left;
+  color: black;
+   padding: 3px;
 }
 
 .player-list-entry-btn {
   float: right;
 }
 
-.player-list-up {
-  background-position: -16px 0px;
+.player-list-rm{
+
 }
 
-.player-list-down {
-  background-position: -32px 0px;
-}
 
 .player-list-icon {
 /*

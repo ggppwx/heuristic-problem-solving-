@@ -87,8 +87,16 @@ hps.prime.BoardUI.prototype._selectCell = function(palette){
 	prompt = new goog.ui.Prompt('','Set the value',handler);
 
 	prompt.setValidationFunction(function(input){
+		if(!hps.prime.BoardUI.is_int(input)){
+		    return false;
+		}
 		var num = parseInt(input);
-		return (num >=0 && num <=9);
+		if(x === 1 && y ===1){
+		    return (num >=0 && num <=9);
+		}else{
+		    return (num >0 && num <=9);
+		}
+		
 	    });
 	prompt.setVisible(true);
     }
@@ -141,6 +149,14 @@ hps.prime.BoardUI.createEmptyBoard = function(node){
 };
 
 
+
+hps.prime.BoardUI.is_int = function(value){
+    if((parseFloat(value) == parseInt(value))){
+      return true;
+    } else { 
+	return false;
+    } 
+};
 
 
 function sayHi() {
