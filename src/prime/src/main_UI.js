@@ -201,18 +201,24 @@ hps.prime.MainUI.prototype._handleGameOver = function(e){
     if(player1.getScore() > player2.getScore()){
 	goog.dom.setTextContent(this._winnerDom, 
 				'Game over, '+player1.getName()+' wins!');
+	alert('Game over, '+player1.getName()+' wins!');
     }else if(player1.getScore() < player2.getScore()){
 	goog.dom.setTextContent(this._winnerDom, 
 				'Game over, '+player2.getName()+' wins!');
+	alert('Game over, '+player2.getName()+' wins!');
     }else{
 	goog.dom.setTextContent(this._winnerDom, 
 				'Game over, tie!');
+	alert('Game over, tie!');
     }
 
     goog.dom.setTextContent(this._startGameBtn.getElement(),'start game');
     this._playerListUI.enable();
     this._isPlaying = false;
     // this._saveScoreBtn.setEnabled(true);
+    
+
+    
     
 };
 
